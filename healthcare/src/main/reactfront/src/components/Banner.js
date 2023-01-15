@@ -3,9 +3,9 @@ import {Carousel} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import bg_black from '../img/bg_black.jpg';
 
-function Header() {
+function Banner() {
     return(
-        <div className="Header">
+        <div className="Banner">
             <Carousel>
                 <Carousel.Item>
                     <img
@@ -20,6 +20,7 @@ function Header() {
                         <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                     </Carousel.Caption>
                 </Carousel.Item>
+
                 <Carousel.Item>
                     <img
                         className="d-block w-100"
@@ -34,6 +35,7 @@ function Header() {
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                     </Carousel.Caption>
                 </Carousel.Item>
+
                 <Carousel.Item>
                     <img
                         className="d-block w-100"
@@ -55,4 +57,4 @@ function Header() {
     );
 }
 
-export default Header;
+export default Banner;
