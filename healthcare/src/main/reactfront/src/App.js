@@ -6,7 +6,7 @@ import Navigation from "./components/Navigation";
 import Banner from './components/Banner';
 import Home from "./components/Home";
 import Introduce from "./components/Introduce";
-import Support from "./components/Support";
+import FAQ from "./components/support/FAQ";
 import MyPage from "./components/MyPage";
 import NotFound from "./components/NotFound";
 import Footer from "./components/Footer";
@@ -21,7 +21,7 @@ function App() {
                   <Route path="/" element={<Home />}></Route>
                   <Route path="/home" element={<Home />}></Route>
                   <Route path="/introduce" element={<Introduce />}></Route>
-                  <Route path="/support" element={<Support />}></Route>
+                  <Route path="/support" element={<FAQ />}></Route>
                   <Route path="/my-page" element={<MyPage />}></Route>
                   <Route path="*" element={<NotFound />}></Route>
               </Routes>
