@@ -16,6 +16,7 @@ function App() {
           rel="noopener noreferrer"
         >
           Learn React
+          <div>정영도 일 좀 해</div>
         </a>
       </header>
     </div>
