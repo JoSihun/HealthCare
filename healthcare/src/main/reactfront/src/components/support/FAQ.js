@@ -14,9 +14,9 @@ function FAQ() {
                         <Row className="p-2 sidebar">
                             <div className="sidebarTitle">Support</div>
                             <hr/>
-                            <Link to="#FAQ" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- FAQ</div></Link>
-                            <Link to="#Q&A" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Q&A</div></Link>
-                            <Link to="#LiveChat" style={{ textDecoration: 'none' }}><div className="sidebarItem">- LiveChat</div></Link>
+                            <Link to="/support/faq" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- FAQ</div></Link>
+                            <Link to="/support/qna" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Q&A</div></Link>
+                            <Link to="/support/livechat" style={{ textDecoration: 'none' }}><div className="sidebarItem">- LiveChat</div></Link>
                         </Row>
                     </Col>
                     <Col className="col-md-8 m-4">
