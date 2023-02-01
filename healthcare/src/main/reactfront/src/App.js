@@ -11,6 +11,7 @@ import NotFound from "./components/NotFound";
 import Footer from "./components/Footer";
 import QNA from "./components/support/QNA";
 import LiveChat from "./components/support/LiveChat";
+import TestPage from './components/TestPage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
 
                   <Route path="/my-page" element={<MyPage />}></Route>
+                  <Route path="/testpage" element={<TestPage />}></Route>
                   <Route path="*" element={<NotFound />}></Route>
               </Routes>
               <Footer />

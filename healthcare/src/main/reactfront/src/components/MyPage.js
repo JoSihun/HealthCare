@@ -18,7 +18,7 @@ function MyPage() {
                                             src={bg_black}
                                             width="100"
                                             height="100"
-                                            alt="profile-image"
+                                            alt="profile"
                                         />
                                     </Col>
                                     <Col className="col-md-10">
@@ -48,7 +48,7 @@ function MyPage() {
                                         src={bg_black}
                                         width="200"
                                         height="200"
-                                        alt="profile-image"
+                                        alt="profile"
                                     />
                                 </div>
                                 <hr/>
@@ -87,7 +87,7 @@ function MyPage() {
                                         src={bg_black}
                                         width="800"
                                         height="400"
-                                        alt="undefined-image"
+                                        alt="undefined"
                                     />
                                 </div>
                                 <hr/>
