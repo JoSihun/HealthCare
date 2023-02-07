@@ -3,7 +3,6 @@ package com.shyd.healthcare.dto;
 import com.shyd.healthcare.domain.Post;
 import lombok.Getter;
 
-import javax.persistence.Column;
 import java.time.format.DateTimeFormatter;
 
 @Getter
