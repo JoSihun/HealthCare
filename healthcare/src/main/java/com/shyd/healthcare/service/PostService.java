@@ -1,6 +1,7 @@
 package com.shyd.healthcare.service;
 
 import com.shyd.healthcare.domain.Post;
+import com.shyd.healthcare.dto.PostCreateRequestDto;
 import com.shyd.healthcare.dto.PostResponseDto;
 import com.shyd.healthcare.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,4 +24,14 @@ public class PostService {
         return new PostResponseDto(entity);
     }
 
+    /* 게시글 저장 */
+    @Transactional
+    public Long save(final PostCreateRequestDto requestDto) {
+        Long postId = this.postRepository.save(requestDto.toEntity()).getId();
+        Post entity = this.postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + postId)
+        );
+        
+        return postId;
+    }
 }
