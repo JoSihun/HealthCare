@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.*;
 
 class PostResponseDtoTest {
     @Test
-    void createTest() {
+    void postCreateTest() {
         Post post = Post.builder()
                 .hits(10)
                 .title("title")
