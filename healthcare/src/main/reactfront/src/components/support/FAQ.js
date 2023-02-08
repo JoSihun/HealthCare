@@ -1,6 +1,6 @@
 import './FAQ.css'
 import React from "react";
-import {Accordion, Row, Col} from "react-bootstrap";
+import {Accordion, Row, Col, Button} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import {Link} from "react-router-dom";
 //SideBar 참고: https://citylock77.tistory.com/130
@@ -10,6 +10,7 @@ function FAQ() {
         <div className="FAQ">
             <Container fluid>
                 <Row className="justify-content-center vh-100">
+                    {/* SideBar */}
                     <Col className="col-md-2 m-4">
                         <Row className="p-2 sidebar">
                             <div className="sidebarTitle">Support</div>
@@ -19,8 +20,10 @@ function FAQ() {
                             <Link to="/support/livechat" style={{ textDecoration: 'none' }}><div className="sidebarItem">- LiveChat</div></Link>
                         </Row>
                     </Col>
+
+                    {/* Main Content */}
                     <Col className="col-md-8 m-4">
-                        <Row className="p-4 content h-100 align-content-start">
+                        <Row className="p-4 content h-75 align-content-start">
                             <h1><b>FAQ</b></h1>
                             <hr/>
                             <Accordion>
@@ -67,6 +70,12 @@ function FAQ() {
                                     </Accordion.Body>
                                 </Accordion.Item>
                             </Accordion>
+                        </Row>
+                        <Row className="p-2 h-25 align-content-start">
+                            <div className="p-0 d-flex justify-content-end">
+                                <Link to="/support/faq" style={{ textDecoration: 'none' }}><Button className="mx-2">Create</Button></Link>
+                                <Link to="/support/faq" style={{ textDecoration: 'none' }}><Button className="mx-2">Delete</Button></Link>
+                            </div>
                         </Row>
                     </Col>
                 </Row>
