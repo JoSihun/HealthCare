@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import QNA from "./components/support/QNA";
 import LiveChat from "./components/support/LiveChat";
 import TestPage from './components/TestPage';
+import FAQPostForm from './components/support/FAQPostForm';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
                   <Route path="/introduce" element={<Introduce />}></Route>
 
                   <Route path="/support/faq" element={<FAQ />}></Route>
+                  <Route path="/support/faq/form" element={<FAQPostForm />}></Route>
                   <Route path="/support/qna" element={<QNA />}></Route>
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
 

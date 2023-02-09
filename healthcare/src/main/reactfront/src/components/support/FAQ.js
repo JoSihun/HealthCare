@@ -1,9 +1,42 @@
 import './FAQ.css'
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {Accordion, Row, Col, Button} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import {Link} from "react-router-dom";
+import axios from 'axios';
 //SideBar 참고: https://citylock77.tistory.com/130
+
+const GetFAQList = () => {
+    const [faqs, setFaqs] = useState([]);
+
+    useEffect( () => {
+        // 방법3 비동기
+        const getAxios = async () => {
+            try {
+                const response = await axios.get("/support/faq");
+                setFaqs(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getAxios();
+    }, []);
+
+    return (
+        <>
+            <Accordion>
+                {faqs.map(faq => (
+                    <Accordion.Item eventKey="0">
+                    <Accordion.Header><h3>Q. { faq.title }</h3></Accordion.Header>
+                    <Accordion.Body>
+                        <h5>{ faq.content }</h5>
+                    </Accordion.Body>
+                </Accordion.Item>
+                ))}
+            </Accordion>
+        </>
+    );
+}
 
 function FAQ() {
     return (
@@ -26,7 +59,8 @@ function FAQ() {
                         <Row className="p-4 content h-75 align-content-start">
                             <h1><b>FAQ</b></h1>
                             <hr/>
-                            <Accordion>
+                            <GetFAQList />
+                            {/* <Accordion>
                                 <Accordion.Item eventKey="0">
                                     <Accordion.Header><h3>Q. Accordion Item #1</h3></Accordion.Header>
                                     <Accordion.Body>
@@ -69,12 +103,12 @@ function FAQ() {
                                         </h5>
                                     </Accordion.Body>
                                 </Accordion.Item>
-                            </Accordion>
+                            </Accordion> */}
                         </Row>
                         <Row className="p-2 h-25 align-content-start">
                             <div className="p-0 d-flex justify-content-end">
-                                <Link to="/support/faq" style={{ textDecoration: 'none' }}><Button className="mx-2">Create</Button></Link>
-                                <Link to="/support/faq" style={{ textDecoration: 'none' }}><Button className="mx-2">Delete</Button></Link>
+                                <Link to="/support/faq/form" style={{ textDecoration: 'none' }}><Button className="mx-2">Create</Button></Link>
+                                <Link to="/support/faq/list" style={{ textDecoration: 'none' }}><Button className="mx-2">Delete</Button></Link>
                             </div>
                         </Row>
                     </Col>
