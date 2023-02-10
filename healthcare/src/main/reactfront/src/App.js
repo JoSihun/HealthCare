@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import Introduce from "./components/Introduce";
 import FAQ from "./components/support/FAQ";
 import MyPage from "./components/MyPage";
+import Login from "./components/Login";
 import NotFound from "./components/NotFound";
 import Footer from "./components/Footer";
 import QNA from "./components/support/QNA";
@@ -32,6 +33,10 @@ function App() {
 
                   <Route path="/my-page" element={<MyPage />}></Route>
                   <Route path="/testpage" element={<TestPage />}></Route>
+                  
+                  {/* 수정중입니다 */}
+                  <Route path="/login" element={<Login />}></Route>
+
                   <Route path="*" element={<NotFound />}></Route>
               </Routes>
               <Footer />
