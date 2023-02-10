@@ -17,6 +17,7 @@ function Navigation() {
                         <Link className="nav-link" to="/introduce">Introduce</Link>
                         <Link className="nav-link" to="/support">Support</Link>
                         <Link className="nav-link" to="/my-page">MyPage</Link>
+                        <Link className="nav-link" to="/Login">Login</Link>
                     </Nav>
                 </Container>
             </Navbar>
