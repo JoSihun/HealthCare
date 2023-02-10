@@ -11,6 +11,8 @@ import MyPage from "./components/MyPage";
 import Login from "./components/Login";
 import NotFound from "./components/NotFound";
 import Footer from "./components/Footer";
+import QNA from "./components/support/QNA";
+import LiveChat from "./components/support/LiveChat";
 
 function App() {
   return (
@@ -22,7 +24,11 @@ function App() {
                   <Route path="/" element={<Home />}></Route>
                   <Route path="/home" element={<Home />}></Route>
                   <Route path="/introduce" element={<Introduce />}></Route>
-                  <Route path="/support" element={<FAQ />}></Route>
+
+                  <Route path="/support/faq" element={<FAQ />}></Route>
+                  <Route path="/support/qna" element={<QNA />}></Route>
+                  <Route path="/support/livechat" element={<LiveChat />}></Route>
+
                   <Route path="/my-page" element={<MyPage />}></Route>
                   <Route path="/login" element={<Login />}></Route> // 수정중입니다
                   <Route path="*" element={<NotFound />}></Route>
