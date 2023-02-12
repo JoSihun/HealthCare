@@ -3,6 +3,7 @@ package com.shyd.healthcare.service;
 import com.shyd.healthcare.domain.Post;
 import com.shyd.healthcare.dto.PostSaveRequestDto;
 import com.shyd.healthcare.dto.PostResponseDto;
+import com.shyd.healthcare.dto.PostUpdateRequestDto;
 import com.shyd.healthcare.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -46,6 +47,7 @@ public class PostService {
         return new PostResponseDto(entity);
     }
 
+
     /* 게시글 저장 */
     @Transactional
     public Long save(final PostSaveRequestDto requestDto) {
@@ -55,5 +57,27 @@ public class PostService {
         );
 
         return postId;
+    }
+
+    @Transactional
+    public Long update(final Long id, final PostUpdateRequestDto requestDto) {
+        Post entity = this.postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id)
+        );
+
+        // entity.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getSecretYn());
+        // return id;
+        return entity.update(requestDto);
+
+    }
+
+    @Transactional
+    public Long delete(final Long id) {
+        Post entity = this.postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id)
+        );
+
+        this.postRepository.delete(entity);
+        return id;
     }
 }
