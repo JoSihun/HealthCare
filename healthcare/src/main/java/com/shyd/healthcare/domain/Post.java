@@ -22,16 +22,18 @@ public class Post extends BaseTime {
     private String content;
 
     private String author;
+    private String category;
     private Boolean secretYn;
 
 
     @Builder
     public Post(String title, String content, String author,
-                Integer hits, Boolean secretYn) {
+                String category, Integer hits, Boolean secretYn) {
         this.title = title;
         this.content = content;
         this.author = author;
         this.hits = hits;
+        this.category = category;
         this.secretYn = secretYn;
     }
 

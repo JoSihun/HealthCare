@@ -12,6 +12,7 @@ public class PostResponseDto {
     private String title;
     private String content;
     private String author;
+    private String category;
     private Boolean secretYn;
     private String createdDate;
     private String updatedDate;
@@ -23,6 +24,8 @@ public class PostResponseDto {
         this.title = entity.getTitle();
         this.content = entity.getContent();
         this.author = entity.getAuthor();
+
+        this.category = entity.getCategory();
         this.secretYn = entity.getSecretYn();
 
         this.createdDate = entity.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
