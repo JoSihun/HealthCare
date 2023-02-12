@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 import {Link} from "react-router-dom";
 import axios from 'axios';
 //SideBar 참고: https://citylock77.tistory.com/130
+//React GET, POST 통신: https://velog.io/@easyhyun00/Spring-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-Spring-React-%EC%97%B0%EA%B2%B0
 
 const GetFAQList = () => {
     const [faqs, setFaqs] = useState([]);
@@ -13,7 +14,7 @@ const GetFAQList = () => {
         // 방법3 비동기
         const getAxios = async () => {
             try {
-                const response = await axios.get("/support/faq");
+                const response = await axios.get("/support/faqboard");
                 setFaqs(response.data);
             } catch (error) {
                 console.log(error);
