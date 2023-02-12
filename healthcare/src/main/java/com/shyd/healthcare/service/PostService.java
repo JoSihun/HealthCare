@@ -5,6 +5,7 @@ import com.shyd.healthcare.dto.PostSaveRequestDto;
 import com.shyd.healthcare.dto.PostResponseDto;
 import com.shyd.healthcare.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,12 +17,21 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
 
-    /* FAQ 목록 조회 */
-    /* 추후 카테고리 분류 및 정렬작업 필요 */
+    /* FAQ 목록 조회 - 작성순 */
     /* 추후 FaqListResponseDto 분리 검토 */
     @Transactional
-    public List<PostResponseDto> findAllFaq() {
-        List<Post> postList = this.postRepository.findAll();
+    public List<PostResponseDto> findAllFaqAsc(String category) {
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        List<Post> postList = this.postRepository.findAllByCategory(category, sort);
+        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+    }
+
+    /* FAQ 목록 조회 - 최신순 */
+    /* 추후 FaqListResponseDto 분리 검토 */
+    @Transactional
+    public List<PostResponseDto> findAllFaqDesc(String category) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        List<Post> postList = this.postRepository.findAllByCategory(category, sort);
         return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
