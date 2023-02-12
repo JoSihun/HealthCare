@@ -5,7 +5,7 @@ import Navigation from "./components/Navigation";
 import Banner from './components/Banner';
 import Home from "./components/Home";
 import Introduce from "./components/Introduce";
-import FAQ from "./components/support/FAQ";
+import FAQ from "./components/support/FAQBoard";
 import MyPage from "./components/MyPage";
 import Login from "./components/Login";
 import NotFound from "./components/NotFound";

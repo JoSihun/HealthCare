@@ -1,4 +1,4 @@
-import './FAQ.css'
+import './FAQBoard.css'
 import React, { useEffect, useState } from "react";
 import {Accordion, Row, Col, Button} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
@@ -26,7 +26,7 @@ const GetFAQList = () => {
         <>
             <Accordion>
                 {faqs.map(faq => (
-                    <Accordion.Item eventKey="0">
+                    <Accordion.Item eventKey={ faq.id }>
                     <Accordion.Header><h3>Q. { faq.title }</h3></Accordion.Header>
                     <Accordion.Body>
                         <h5>{ faq.content }</h5>
