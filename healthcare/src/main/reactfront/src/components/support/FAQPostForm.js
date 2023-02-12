@@ -40,8 +40,8 @@ function FAQPostForm() {
                         <Row className="p-2 h-25 align-content-start">
                             
                             <div className="p-0 d-flex justify-content-end">
-                                <Link to="/support/faq/form" style={{ textDecoration: 'none' }}><Button className="mx-2">Create</Button></Link>
-                                <Link to="/support/faq/list" style={{ textDecoration: 'none' }}><Button className="mx-2">Delete</Button></Link>
+                                <Link to="/support/faqboard/form" style={{ textDecoration: 'none' }}><Button className="mx-2">Create</Button></Link>
+                                <Link to="/support/faqboard" style={{ textDecoration: 'none' }}><Button className="mx-2">Cancel</Button></Link>
                             </div>
                         </Row>
                     </Col>

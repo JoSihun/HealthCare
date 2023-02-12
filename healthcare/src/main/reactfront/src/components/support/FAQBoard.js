@@ -48,8 +48,8 @@ function FAQ() {
                         <Row className="p-2 sidebar">
                             <div className="sidebarTitle">Support</div>
                             <hr/>
-                            <Link to="/support/faq" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- FAQ</div></Link>
-                            <Link to="/support/qna" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Q&A</div></Link>
+                            <Link to="/support/faqboard" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- FAQ</div></Link>
+                            <Link to="/support/qnaboard" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Q&A</div></Link>
                             <Link to="/support/livechat" style={{ textDecoration: 'none' }}><div className="sidebarItem">- LiveChat</div></Link>
                         </Row>
                     </Col>
@@ -60,55 +60,11 @@ function FAQ() {
                             <h1><b>FAQ</b></h1>
                             <hr/>
                             <GetFAQList />
-                            {/* <Accordion>
-                                <Accordion.Item eventKey="0">
-                                    <Accordion.Header><h3>Q. Accordion Item #1</h3></Accordion.Header>
-                                    <Accordion.Body>
-                                        <h5>
-                                            A. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                            minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                            aliquip ex ea commodo consequat. Duis aute irure dolor in
-                                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                                            culpa qui officia deserunt mollit anim id est laborum.
-                                        </h5>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item eventKey="1">
-                                    <Accordion.Header><h3>Q. Accordion Item #2</h3></Accordion.Header>
-                                    <Accordion.Body className="bg-primary">
-                                        <h5>
-                                            A. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                            minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                            aliquip ex ea commodo consequat. Duis aute irure dolor in
-                                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                                            culpa qui officia deserunt mollit anim id est laborum.
-                                        </h5>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item eventKey="2">
-                                    <Accordion.Header><h3>Q. Accordion Item #3</h3></Accordion.Header>
-                                    <Accordion.Body className="bg-primary">
-                                        <h5>
-                                            A. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                                            minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                            aliquip ex ea commodo consequat. Duis aute irure dolor in
-                                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                                            culpa qui officia deserunt mollit anim id est laborum.
-                                        </h5>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                            </Accordion> */}
                         </Row>
                         <Row className="p-2 h-25 align-content-start">
                             <div className="p-0 d-flex justify-content-end">
-                                <Link to="/support/faq/form" style={{ textDecoration: 'none' }}><Button className="mx-2">Create</Button></Link>
-                                <Link to="/support/faq/list" style={{ textDecoration: 'none' }}><Button className="mx-2">Delete</Button></Link>
+                                <Link to="/support/faqboard/form" style={{ textDecoration: 'none' }}><Button className="mx-2">Create</Button></Link>
+                                <Link to="/support/faqboard" style={{ textDecoration: 'none' }}><Button className="mx-2">Cancel</Button></Link>
                             </div>
                         </Row>
                     </Col>

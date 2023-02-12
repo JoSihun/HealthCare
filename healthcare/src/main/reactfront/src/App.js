@@ -26,8 +26,9 @@ function App() {
                   <Route path="/home" element={<Home />}></Route>
                   <Route path="/introduce" element={<Introduce />}></Route>
 
-                  <Route path="/support/faq" element={<FAQ />}></Route>
-                  <Route path="/support/faq/form" element={<FAQPostForm />}></Route>
+                  <Route path="/support/faqboard" element={<FAQ />}></Route>
+                  <Route path="/support/faqboard/form" element={<FAQPostForm />}></Route>
+                  
                   <Route path="/support/qna" element={<QNA />}></Route>
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
 
