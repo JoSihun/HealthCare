@@ -12,7 +12,7 @@ public class PostRestController {
     private final PostService postService;
 
     @PostMapping("/api/post")
-    public Long postSave(PostSaveRequestDto requestDto) {
+    public Long postSave(@RequestBody PostSaveRequestDto requestDto) {
         System.out.println("DEBUG POINT!!! TITLE, CONTENT, AUTHOR, HITS, SECRETYN");
         System.out.println(requestDto.getTitle());
         System.out.println(requestDto.getContent());
@@ -23,7 +23,7 @@ public class PostRestController {
     }
 
     @PutMapping("/api/post/{id}")
-    public Long postUpdate(@PathVariable Long id, PostUpdateRequestDto requestDto) {
+    public Long postUpdate(@PathVariable Long id, @RequestBody PostUpdateRequestDto requestDto) {
         return this.postService.update(id, requestDto);
     }
 

@@ -28,21 +28,16 @@ function FAQPostForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios
-        .post("/api/post", {
-            data: {
-                title: title,
-                content: content,
-                author: author,
-                hits: hits,
-                category: category,
-                secretYn: secretYn,
-            }
-        })
-        .then((response) => {
+        await axios.post('/api/post', {
+            title: title,
+            content: content,
+            author: author,
+            hits: hits,
+            category: category,
+            secretYn: secretYn
+        }).then((response) => {
             console.log(response.data)
-        })
-        .catch((error) => {
+        }).catch((error) => {
             console.log(error)
         });
     }
