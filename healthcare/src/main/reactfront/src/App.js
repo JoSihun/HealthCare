@@ -5,12 +5,12 @@ import Navigation from "./components/Navigation";
 import Banner from './components/Banner';
 import Home from "./components/Home";
 import Introduce from "./components/Introduce";
-import FAQ from "./components/support/FAQBoard";
+import FAQBoard from "./components/support/FAQBoard";
 import MyPage from "./components/MyPage";
 import Login from "./components/Login";
 import NotFound from "./components/NotFound";
 import Footer from "./components/Footer";
-import QNA from "./components/support/QNA";
+import QNABoard from "./components/support/QNABoard";
 import LiveChat from "./components/support/LiveChat";
 import TestPage from './components/TestPage';
 import FAQPostForm from './components/support/FAQPostForm';
@@ -26,10 +26,10 @@ function App() {
                   <Route path="/home" element={<Home />}></Route>
                   <Route path="/introduce" element={<Introduce />}></Route>
 
-                  <Route path="/support/faqboard" element={<FAQ />}></Route>
+                  <Route path="/support/faqboard" element={<FAQBoard />}></Route>
                   <Route path="/support/faqboard/form" element={<FAQPostForm />}></Route>
                   
-                  <Route path="/support/qna" element={<QNA />}></Route>
+                  <Route path="/support/qnaboard" element={<QNABoard />}></Route>
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
 
                   <Route path="/my-page" element={<MyPage />}></Route>

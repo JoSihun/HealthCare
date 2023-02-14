@@ -17,13 +17,11 @@ function FAQPostForm() {
     const handleChangeTitle = (e) => {
         e.preventDefault();
         setTitle(e.target.value);
-        console.log(title);
     }
 
     const handleChangeContent = (e) => {
         e.preventDefault();
         setContent(e.target.value);
-        console.log(content);
     }
 
     const handleSubmit = async (e) => {
@@ -87,9 +85,7 @@ function FAQPostForm() {
                         </form>
                     </Col>
 
-
                 </Row>
-
             </Container>
         </>
     );

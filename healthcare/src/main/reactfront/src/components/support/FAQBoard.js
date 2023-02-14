@@ -27,7 +27,7 @@ const GetFAQList = () => {
         <>
             <Accordion>
                 {faqs.map(faq => (
-                    <Accordion.Item eventKey={ faq.id }>
+                    <Accordion.Item key={ faq.id } eventKey={ faq.id }>
                     <Accordion.Header><h3>Q. { faq.title }</h3></Accordion.Header>
                     <Accordion.Body>
                         <h5>{ faq.content }</h5>
