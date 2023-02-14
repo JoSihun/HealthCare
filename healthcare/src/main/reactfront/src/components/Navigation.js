@@ -26,6 +26,7 @@ function Navigation() {
                             <NavDropdown title="Support" id="collasible-nav-dropdown">
                                 <NavDropdown.Item href="/support/faqboard">FAQ</NavDropdown.Item>
                                 <NavDropdown.Item href="/support/qnaboard">Q&A</NavDropdown.Item>
+                                <NavDropdown.Item href="/support/freeboard">자유게시판</NavDropdown.Item>
                                 <NavDropdown.Item href="/support/livechat">LiveChat</NavDropdown.Item>
                             </NavDropdown>
                             <Nav.Link href="/my-page">MyPage</Nav.Link>

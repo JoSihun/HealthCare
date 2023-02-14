@@ -14,6 +14,7 @@ import QNABoard from "./components/support/QNABoard";
 import LiveChat from "./components/support/LiveChat";
 import TestPage from './components/TestPage';
 import FAQPostForm from './components/support/FAQPostForm';
+import FreeBoard from './components/support/FreeBoard';
 
 function App() {
   return (
@@ -30,6 +31,12 @@ function App() {
                   <Route path="/support/faqboard/form" element={<FAQPostForm />}></Route>
                   
                   <Route path="/support/qnaboard" element={<QNABoard />}></Route>
+
+                  <Route path="/support/freeboard" element={<FreeBoard />}></Route>
+                  <Route path="/support/freeboard/form" element={<FreeBoard />}></Route>
+                  <Route path="/support/freeboard/form/:id" element={<FreeBoard />}></Route>
+                  <Route path="/support/freeboard/post/:id" element={<FreeBoard />}></Route>
+
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
 
                   <Route path="/my-page" element={<MyPage />}></Route>
