@@ -22,10 +22,6 @@ const menuStyle = {
     lineHeight: 1,
 };
 
-const menuActiveStyle = {
-
-};
-
 export default function SideBar() {
     const isActive = (path) => {
         return window.location.pathname.startsWith(path);

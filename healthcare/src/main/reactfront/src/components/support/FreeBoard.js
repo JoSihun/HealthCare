@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, Col, Container, Pagination, Row, Table } from "react-bootstrap";
+import { Button, Card, Col, Container, Pagination, Row, Table } from "react-bootstrap";
 import SideBar from "./SidBar";
 import { Link } from "react-router-dom";
 
@@ -63,6 +63,9 @@ export default function FreeBoard() {
                                     })}
                                 </tbody>
                             </Table>
+                            <div className="d-flex justify-content-end">
+                                <Button variant="dark" href="/support/freeboard/form">글쓰기</Button>
+                            </div>                        
                             <Pagination className="justify-content-center">
                                 <Pagination.First />
                                 <Pagination.Prev />
