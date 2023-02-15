@@ -15,6 +15,7 @@ import LiveChat from "./components/support/LiveChat";
 import TestPage from './components/TestPage';
 import FAQPostForm from './components/support/FAQPostForm';
 import FreeBoard from './components/support/FreeBoard';
+import FreeBoardPost from './components/support/FreeBoardPost';
 
 function App() {
   return (
@@ -35,7 +36,7 @@ function App() {
                   <Route path="/support/freeboard" element={<FreeBoard />}></Route>
                   <Route path="/support/freeboard/form" element={<FreeBoard />}></Route>
                   <Route path="/support/freeboard/form/:id" element={<FreeBoard />}></Route>
-                  <Route path="/support/freeboard/post/:id" element={<FreeBoard />}></Route>
+                  <Route path="/support/freeboard/post/:id" element={<FreeBoardPost />}></Route>
 
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
 

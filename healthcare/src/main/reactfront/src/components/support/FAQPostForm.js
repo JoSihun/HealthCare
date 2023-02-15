@@ -49,8 +49,8 @@ function FAQPostForm() {
                         <Row className="p-2 sidebar">
                             <div className="sidebarTitle">Support</div>
                             <hr/>
-                            <Link to="/support/faq" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- FAQ</div></Link>
-                            <Link to="/support/qna" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Q&A</div></Link>
+                            <Link to="/support/faqboard" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- FAQ</div></Link>
+                            <Link to="/support/qnaboard" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Q&A</div></Link>
                             <Link to="/support/livechat" style={{ textDecoration: 'none' }}><div className="sidebarItem">- LiveChat</div></Link>
                         </Row>
                     </Col>

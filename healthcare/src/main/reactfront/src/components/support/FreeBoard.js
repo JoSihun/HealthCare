@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, Col, Container, Dropdown, DropdownButton, Pagination, Row, Table } from "react-bootstrap";
+import { Card, Col, Container, Pagination, Row, Table } from "react-bootstrap";
 import SideBar from "./SidBar";
-import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import { Link } from "react-router-dom";
 
 export default function FreeBoard() {
@@ -50,7 +49,7 @@ export default function FreeBoard() {
                                                 <tr>
                                                     <td className="text-left">{post.id}</td>
                                                     <td className="text-left">
-                                                        <Link to={`/support/freeboard/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
+                                                        <Link to={`/support/freeboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
                                                             {post.title}
                                                         </Link>
                                                     </td>

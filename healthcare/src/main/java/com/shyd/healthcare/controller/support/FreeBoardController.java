@@ -23,7 +23,7 @@ public class FreeBoardController {
 
     @GetMapping("/freeboard/post/{id}")
     public PostResponseDto freeBoardPost(@PathVariable Long id) {
-        return null;
+        return this.postService.findById(id);
     }
 
     @GetMapping("/freeboard/form")
