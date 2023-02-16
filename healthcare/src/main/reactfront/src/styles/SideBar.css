@@ -1,0 +1,25 @@
+.SideBar {
+    color: black;
+}
+
+.sidebar-item {
+    color: black;
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: bolder;
+    line-height: 1;
+    text-decoration: none;
+    border: 2;
+}
+
+.sidebar-item:active,
+.sidebar-item:hover {
+    color: white;
+    background: black !important;
+    background-color: black !important;
+}
+
+.nav-pills .nav-link.active {
+    color: white;
+    background-color: black;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import SideBar from "./SidBar";
+import SideBar from "./SideBar";
 import { useNavigate, useParams } from "react-router-dom";
 // 파일 업로드: https://cookinghoil.tistory.com/114
 
@@ -98,7 +98,7 @@ export default function FreeBoardForm() {
                 <Col className="col-md-2 mx-2 my-4">
                     <SideBar />
                 </Col>
-                <Col className="col-md-8 mx-2 my-4">
+                <Col className="col-md-9 mx-2 my-4">
                     <Card style={{ minHeight: "75vh" }}>
                         <Card.Body>
                             <Card.Text><h2><strong>자유게시판</strong></h2></Card.Text>

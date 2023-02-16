@@ -4,19 +4,26 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Navigation from "./components/Navigation";
 import Banner from './components/Banner';
 import Home from "./components/Home";
-import Introduce from "./components/Introduce";
-import FAQBoard from "./components/support/FAQBoard";
-import MyPage from "./components/MyPage";
-import Login from "./components/Login";
-import NotFound from "./components/NotFound";
 import Footer from "./components/Footer";
-import QNABoard from "./components/support/QNABoard";
-import LiveChat from "./components/support/LiveChat";
+import NotFound from "./components/NotFound";
+
+import Introduce from "./components/Introduce";
+
+import Login from "./components/Login";
+import MyPage from "./components/MyPage";
+
+import FAQBoard from "./pages/support/FAQBoard";
+import FAQPostForm from './pages/support/FAQPostForm';
+
+import QNABoard from "./pages/support/QNABoard";
+
+import FreeBoard from './pages/support/FreeBoard';
+import FreeBoardPost from './pages/support/FreeBoardPost';
+import FreeBoardForm from './pages/support/FreeBoardForm';
+
+import LiveChat from "./pages/support/LiveChat";
 import TestPage from './components/TestPage';
-import FAQPostForm from './components/support/FAQPostForm';
-import FreeBoard from './components/support/FreeBoard';
-import FreeBoardPost from './components/support/FreeBoardPost';
-import FreeBoardForm from './components/support/FreeBoardForm';
+
 
 function App() {
   return (

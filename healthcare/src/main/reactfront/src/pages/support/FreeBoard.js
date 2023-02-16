@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, Col, Container, Pagination, Row, Table } from "react-bootstrap";
-import SideBar from "./SidBar";
 import { Link } from "react-router-dom";
+import SideBar from "./SideBar";
 
 export default function FreeBoard() {
     const [posts, setPosts] = useState([]);
@@ -24,7 +24,7 @@ export default function FreeBoard() {
         <Container fluid className="vh-100">
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />                
+                    <SideBar />    
                 </Col>
 
                 <Col className="col-md-9 mx-2 my-4">
@@ -58,7 +58,7 @@ export default function FreeBoard() {
                                                     <td className="text-center">{post.createdDate}</td>
                                                 </tr>
                                             </>
-                                        );
+                                        )
                                     })}
                                 </tbody>
                             </Table>

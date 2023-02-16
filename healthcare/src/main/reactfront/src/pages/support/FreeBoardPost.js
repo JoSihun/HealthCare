@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import SideBar from "./SidBar";
+import SideBar from "./SideBar";
 
 export default function FreeBoardPost() {
     const navigate = useNavigate();
@@ -28,7 +28,7 @@ export default function FreeBoardPost() {
             navigate('/support/freeboard')
         }).catch((error) => {
             console.log(error);
-        })
+        });
     }
 
     return (

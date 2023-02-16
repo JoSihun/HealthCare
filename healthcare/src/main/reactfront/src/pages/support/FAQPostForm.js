@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import SideBar from "./SideBar";
 //React GET, POST 통신: https://infodon.tistory.com/m/116
 //React GET, POST 통신: https://velog.io/@easyhyun00/Spring-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-Spring-React-%EC%97%B0%EA%B2%B0
 
@@ -46,13 +47,7 @@ function FAQPostForm() {
                 <Row className="vh-100">
                     {/* SideBar */}
                     <Col className="col-md-2 m-4">
-                        <Row className="p-2 sidebar">
-                            <div className="sidebarTitle">Support</div>
-                            <hr/>
-                            <Link to="/support/faqboard" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- FAQ</div></Link>
-                            <Link to="/support/qnaboard" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Q&A</div></Link>
-                            <Link to="/support/livechat" style={{ textDecoration: 'none' }}><div className="sidebarItem">- LiveChat</div></Link>
-                        </Row>
+                        <SideBar />
                     </Col>
 
                     {/* Main Content */}

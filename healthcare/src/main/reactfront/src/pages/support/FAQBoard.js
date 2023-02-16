@@ -4,6 +4,7 @@ import {Accordion, Row, Col, Button} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import {Link} from "react-router-dom";
 import axios from 'axios';
+import SideBar from './SideBar';
 //SideBar 참고: https://citylock77.tistory.com/130
 //React GET, POST 통신: https://velog.io/@easyhyun00/Spring-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-Spring-React-%EC%97%B0%EA%B2%B0
 
@@ -46,13 +47,7 @@ function FAQ() {
                 <Row className="justify-content-center vh-100">
                     {/* SideBar */}
                     <Col className="col-md-2 m-4">
-                        <Row className="p-2 sidebar">
-                            <div className="sidebarTitle">Support</div>
-                            <hr/>
-                            <Link to="/support/faqboard" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- FAQ</div></Link>
-                            <Link to="/support/qnaboard" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Q&A</div></Link>
-                            <Link to="/support/livechat" style={{ textDecoration: 'none' }}><div className="sidebarItem">- LiveChat</div></Link>
-                        </Row>
+                        <SideBar />
                     </Col>
 
                     {/* Main Content */}
