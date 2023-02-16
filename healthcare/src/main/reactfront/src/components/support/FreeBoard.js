@@ -58,8 +58,7 @@ export default function FreeBoard() {
                                                     <td className="text-center">{post.createdDate}</td>
                                                 </tr>
                                             </>
-                                            
-                                        )
+                                        );
                                     })}
                                 </tbody>
                             </Table>
