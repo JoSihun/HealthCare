@@ -1,6 +1,5 @@
 import React from "react";
 import {Col, Pagination, Row, Table} from "react-bootstrap";
-import {Link} from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import SideBar from "./SideBar";
 

@@ -1,4 +1,4 @@
-import './FAQBoard.css'
+import '../../styles/FAQBoard.css'
 import React, { useEffect, useState } from "react";
 import {Accordion, Row, Col, Button} from "react-bootstrap";
 import Container from "react-bootstrap/Container";

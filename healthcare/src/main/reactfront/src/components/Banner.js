@@ -1,7 +1,7 @@
 import React from "react";
 import {Carousel} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import bg_black from '../img/bg_black.jpg';
+import bg_black from '../assets/images/bg_black.jpg'
 
 function Banner() {
     return(

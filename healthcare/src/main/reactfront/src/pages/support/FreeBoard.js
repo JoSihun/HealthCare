@@ -21,7 +21,7 @@ export default function FreeBoard() {
 
     return (
         <>
-        <Container fluid className="vh-100">
+        <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
                     <SideBar />    
@@ -63,7 +63,9 @@ export default function FreeBoard() {
                                 </tbody>
                             </Table>
                             <div className="d-flex justify-content-end">
-                                <Button variant="dark" href="/support/freeboard/form">글쓰기</Button>
+                                <Link to={"/support/freeboard/form"}>
+                                    <Button variant="dark" style={{ width: "100px" }}>글쓰기</Button>
+                                </Link>
                             </div>                        
                             <Pagination className="justify-content-center">
                                 <Pagination.First />
@@ -102,8 +104,6 @@ export default function FreeBoard() {
                 </Col>
 
             </Row>
-
-
         </Container>
         </>
     );

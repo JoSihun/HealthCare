@@ -18,7 +18,7 @@ public class FreeBoardController {
 
     @GetMapping("/freeboard")
     public List<PostResponseDto> freeBoard() {
-        return this.postService.findAllFaqAsc("FreeBoard");
+        return this.postService.findAllFaqDesc("FreeBoard");
     }
 
     @GetMapping("/freeboard/post/{id}")

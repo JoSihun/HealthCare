@@ -30,6 +30,7 @@ function Navigation() {
                                 <NavDropdown.Item href="/support/livechat">LiveChat</NavDropdown.Item>
                             </NavDropdown>
                             <Nav.Link href="/my-page">MyPage</Nav.Link>
+                            <Nav.Link href="/login">Login</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

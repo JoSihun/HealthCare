@@ -1,4 +1,4 @@
-import bg_black from '../img/bg_black.jpg';
+import bg_black from '../assets/images/bg_black.jpg'
 import React from "react";
 import {Card, Col, Row} from "react-bootstrap";
 import Container from "react-bootstrap/Container";

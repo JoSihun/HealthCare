@@ -9,11 +9,6 @@ import SideBar from "./SideBar";
 function FAQPostForm() {
     const [title, setTitle] = useState();
     const [content, setContent] = useState();
-    const [author, setAuthor] = useState("Admin");
-
-    const [hits, setHits] = useState(0);
-    const [category, setCategory] = useState("FAQBoard");
-    const [secretYn, setSecretYn] = useState(false);
 
     const handleChangeTitle = (e) => {
         e.preventDefault();
@@ -30,10 +25,10 @@ function FAQPostForm() {
         await axios.post('/api/post', {
             title: title,
             content: content,
-            author: author,
-            hits: hits,
-            category: category,
-            secretYn: secretYn
+            author: "Admin",
+            hits: 0,
+            category: "FAQBoard",
+            secreteYn: false
         }).then((response) => {
             console.log(response.data)
         }).catch((error) => {

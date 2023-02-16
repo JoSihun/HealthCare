@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import '../../styles/SideBar.css';
 import { Card, Nav } from "react-bootstrap";
 

@@ -36,22 +36,22 @@ export default function FreeBoardForm() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
-    const getPost = async () => {
-        await axios.get(`/support/freeboard/post/${id}`)
-        .then((response) => {
-            setPost(response.data)
-            setTitle(response.data.title)
-            setContent(response.data.content)
-        }).catch((error) => {
-            console.log(error)
-        });
-    }
-
     useEffect(() => {
+        const getPost = async () => {
+            await axios.get(`/support/freeboard/post/${id}`)
+            .then((response) => {
+                setPost(response.data)
+                setTitle(post.title)
+                setContent(post.content)
+            }).catch((error) => {
+                console.log(error)
+            });
+        }
+
         if (id) {
             getPost();
         }
-    }, []);
+    }, [id, post]);
 
     const handleChangeTitle = (e) => {
         setTitle(e.target.value);
@@ -64,7 +64,7 @@ export default function FreeBoardForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id) {
-            await axios.put('/api/post/' + id, {
+            await axios.put(`/api/post/${id}`, {
                 title: title,
                 content: content,
                 author: "Admin",
@@ -98,8 +98,9 @@ export default function FreeBoardForm() {
                 <Col className="col-md-2 mx-2 my-4">
                     <SideBar />
                 </Col>
+
                 <Col className="col-md-9 mx-2 my-4">
-                    <Card style={{ minHeight: "75vh" }}>
+                    <Card>
                         <Card.Body>
                             <Card.Text><h2><strong>자유게시판</strong></h2></Card.Text>
                             <hr/>
