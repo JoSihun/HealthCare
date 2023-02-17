@@ -4,17 +4,26 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Navigation from "./components/Navigation";
 import Banner from './components/Banner';
 import Home from "./components/Home";
+import Footer from "./components/Footer";
+import NotFound from "./components/NotFound";
+
 import Facilities from "./components/introduce/Facilities";
 import Staff from "./components/introduce/Staff";
-import FAQ from "./components/support/FAQ";
-import MyPage from "./components/MyPage";
+
 import Login from "./components/Login";
-import NotFound from "./components/NotFound";
-import Footer from "./components/Footer";
-import QNA from "./components/support/QNA";
-import LiveChat from "./components/support/LiveChat";
+import MyPage from "./components/MyPage";
+
+import FAQBoard from "./pages/support/FAQBoard";
+import FAQPostForm from './pages/support/FAQPostForm';
+
+import QNABoard from "./pages/support/QNABoard";
+
+import FreeBoard from './pages/support/FreeBoard';
+import FreeBoardPost from './pages/support/FreeBoardPost';
+import FreeBoardForm from './pages/support/FreeBoardForm';
+
+import LiveChat from "./pages/support/LiveChat";
 import TestPage from './components/TestPage';
-import FAQPostForm from './components/support/FAQPostForm';
 
 function App() {
   return (
@@ -29,9 +38,16 @@ function App() {
                   <Route path="/introduce/facilities" element={<Facilities />}></Route>
                   <Route path="/introduce/staff" element={<Staff />}></Route>
 
-                  <Route path="/support/faq" element={<FAQ />}></Route>
-                  <Route path="/support/faq/form" element={<FAQPostForm />}></Route>
-                  <Route path="/support/qna" element={<QNA />}></Route>
+                  <Route path="/support/faqboard" element={<FAQBoard />}></Route>
+                  <Route path="/support/faqboard/form" element={<FAQPostForm />}></Route>
+                  
+                  <Route path="/support/qnaboard" element={<QNABoard />}></Route>
+
+                  <Route path="/support/freeboard" element={<FreeBoard />}></Route>
+                  <Route path="/support/freeboard/form" element={<FreeBoardForm />}></Route>
+                  <Route path="/support/freeboard/form/:id" element={<FreeBoardForm />}></Route>
+                  <Route path="/support/freeboard/post/:id" element={<FreeBoardPost />}></Route>
+
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
 
                   <Route path="/my-page" element={<MyPage />}></Route>

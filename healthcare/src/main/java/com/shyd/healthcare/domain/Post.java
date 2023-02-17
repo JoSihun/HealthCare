@@ -1,5 +1,6 @@
 package com.shyd.healthcare.domain;
 
+import com.shyd.healthcare.dto.PostUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,22 +23,32 @@ public class Post extends BaseTime {
     private String content;
 
     private String author;
+    private String category;
     private Boolean secretYn;
 
 
     @Builder
     public Post(String title, String content, String author,
-                Integer hits, Boolean secretYn) {
+                String category, Integer hits, Boolean secretYn) {
         this.title = title;
         this.content = content;
         this.author = author;
         this.hits = hits;
+        this.category = category;
         this.secretYn = secretYn;
     }
 
 
     public void increaseHits() {
         this.hits++;
+    }
+
+    /* 추후 어떤 것으로 사용할 것인지 선택 필요 */
+    public Long update(PostUpdateRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.secretYn = requestDto.getSecretYn();
+        return this.id;
     }
 
     public void update(String title, String content, Boolean secretYn) {

@@ -12,7 +12,7 @@ function Navigation() {
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
                 <Container>
                     <Navbar.Brand href="/">
-                        <img src={logo} width="40" height="35" />
+                        <img src={logo} width="40" height="35" alt="" />
                         HealthCare
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -28,8 +28,9 @@ function Navigation() {
                                 <NavDropdown.Item href="/introduce/staff">Staff</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Support" id="collasible-nav-dropdown">
-                                <NavDropdown.Item href="/support/faq">FAQ</NavDropdown.Item>
-                                <NavDropdown.Item href="/support/qna">Q&A</NavDropdown.Item>
+                                <NavDropdown.Item href="/support/faqboard">FAQ</NavDropdown.Item>
+                                <NavDropdown.Item href="/support/qnaboard">Q&A</NavDropdown.Item>
+                                <NavDropdown.Item href="/support/freeboard">자유게시판</NavDropdown.Item>
                                 <NavDropdown.Item href="/support/livechat">LiveChat</NavDropdown.Item>
                             </NavDropdown>
                             <Nav.Link href="/my-page">MyPage</Nav.Link>

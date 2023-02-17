@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, Col, Row} from "react-bootstrap";
-import {Link} from "react-router-dom";
 import Container from "react-bootstrap/Container";
+import SideBar from "./SideBar";
 
 function LiveChat() {
     return (
@@ -9,13 +9,7 @@ function LiveChat() {
             <Container fluid>
                 <Row className="justify-content-center vh-100">
                     <Col className="col-md-2 m-4">
-                        <Row className="p-2 sidebar">
-                            <div className="sidebarTitle">Support</div>
-                            <hr/>
-                            <Link to="/support/faq" style={{ textDecoration: 'none' }}><div className="sidebarItem">- FAQ</div></Link>
-                            <Link to="/support/qna" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Q&A</div></Link>
-                            <Link to="/support/livechat" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- LiveChat</div></Link>
-                        </Row>
+                        <SideBar />
                     </Col>
                     <Col className="col-md-8 m-4">
                         <Row className="p-4 content h-100 align-content-start">

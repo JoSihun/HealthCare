@@ -1,22 +1,19 @@
 import React from "react";
 import {Col, Pagination, Row, Table} from "react-bootstrap";
-import {Link} from "react-router-dom";
 import Container from "react-bootstrap/Container";
+import SideBar from "./SideBar";
 
 function QNA() {
     return (
-        <div className="QNA">
+        <div className="QNABoard">
             <Container fluid>
                 <Row className="justify-content-center vh-100">
+                    {/* SideBar */}
                     <Col className="col-md-2 m-4">
-                        <Row className="p-2 sidebar">
-                            <div className="sidebarTitle">Support</div>
-                            <hr/>
-                            <Link to="/support/faq" style={{ textDecoration: 'none' }}><div className="sidebarItem">- FAQ</div></Link>
-                            <Link to="/support/qna" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- Q&A</div></Link>
-                            <Link to="/support/livechat" style={{ textDecoration: 'none' }}><div className="sidebarItem">- LiveChat</div></Link>
-                        </Row>
+                        <SideBar />
                     </Col>
+
+                    {/* Main Content */}
                     <Col className="col-md-8 m-4">
                         <Row className="p-4 content h-100 align-content-start">
                             <h1><b>Q&A</b></h1>

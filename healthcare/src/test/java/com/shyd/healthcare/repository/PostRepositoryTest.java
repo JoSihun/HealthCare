@@ -17,10 +17,10 @@ class PostRepositoryTest {
 
     @Test
     void postJpaSaveTest() {
-        Post p1 = new Post("TestTitle1", "TestContent1", "TestAuthor1", 1, true);
-        Post p2 = new Post("TestTitle2", "TestContent2", "TestAuthor2", 2, true);
-        Post p3 = new Post("TestTitle3", "TestContent3", "TestAuthor3", 3, false);
-        Post p4 = new Post("TestTitle4", "TestContent4", "TestAuthor4", 4, false);
+        Post p1 = new Post("TestTitle1", "TestContent1", "TestAuthor1", "FAQBoard", 1,  true);
+        Post p2 = new Post("TestTitle2", "TestContent2", "TestAuthor2", "QNABoard", 2,  true);
+        Post p3 = new Post("TestTitle3", "TestContent3", "TestAuthor3", "FreeBoard", 3, false);
+        Post p4 = new Post("TestTitle4", "TestContent4", "TestAuthor4", "FreeBoard", 4, false);
         this.postRepository.save(p1);
         this.postRepository.save(p2);
         this.postRepository.save(p3);

@@ -62,7 +62,7 @@ const TestUseEffect = () => {
                 {posts.map(post => (
                     <li key={ post.id }>
                         <div>{ post.title }</div>
-                        <div><img src={ post.thumbnailUrl }/></div>
+                        <div><img src={ post.thumbnailUrl } alt="" /></div>
                     </li>
                 ))}
             </ul>
@@ -75,7 +75,7 @@ const TestBackend = () => {
     const [testString, setTestString] = useState('');
 
     useEffect(() => {
-        axios.get(baseUrl + '/')
+        axios.get(baseUrl + '/testpage')
             .then(response => setTestString(response.data))
             .catch(error => console.log(error))
     }, []);
