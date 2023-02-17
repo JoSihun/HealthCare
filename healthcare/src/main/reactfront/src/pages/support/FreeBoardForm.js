@@ -31,36 +31,42 @@ export default function FreeBoardForm() {
     const [content, setContent] = useState("");
 
     useEffect(() => {
-        const getPost = async () => {
+        const axiosGetPost = async () => {
             await axios.get(`/support/freeboard/post/${id}`)
             .then((response) => {
                 setPost(response.data)
-                setTitle(post.title)
-                setContent(post.content)
+                setTitle(response.data.title)        // 임시방편
+                setContent(response.data.content)    // 임시방편
             }).catch((error) => {
                 console.log(error)
             });
         }
 
-        if (id) {
-            getPost();
-        }
-    }, [id, post]);
+        if (id !== undefined) { axiosGetPost(); }
+    }, [id]);
 
     const handleChangeTitle = (e) => {
+        e.preventDefault();
         setTitle(e.target.value);
+        setPost({...post,
+            "title": e.target.value
+        });
     }
 
     const handleChangeContent = (e) => {
+        e.preventDefault();
         setContent(e.target.value);
+        setPost({...post,
+            "content": e.target.value
+        });
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (id) {
             await axios.put(`/api/post/${id}`, {
-                title: title,
-                content: content,
+                title: post.title,
+                content: post.content,
                 author: "Admin",
                 hits: 0,
                 category: "FreeBoard",

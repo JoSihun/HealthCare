@@ -21,7 +21,7 @@ export default function QNABoard() {
     }, []);
 
     return (
-        <>
+        <div>
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
@@ -44,21 +44,19 @@ export default function QNABoard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {posts.map((post) => {
+                                    {posts.map((post, index) => {
                                         return (
-                                            <>
-                                                <tr>
-                                                    <td className="text-left">{post.id}</td>
-                                                    <td className="text-left">
-                                                        <Link to={`/support/qnaboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
-                                                            {post.title}
-                                                        </Link>
-                                                    </td>
-                                                    <td className="text-center">{post.hits}</td>
-                                                    <td className="text-center">{post.author}</td>
-                                                    <td className="text-center">{post.createdDate}</td>
-                                                </tr>
-                                            </>
+                                            <tr key={index}>
+                                                <td className="text-left">{post.id}</td>
+                                                <td className="text-left">
+                                                    <Link to={`/support/qnaboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
+                                                        {post.title}
+                                                    </Link>
+                                                </td>
+                                                <td className="text-center">{post.hits}</td>
+                                                <td className="text-center">{post.author}</td>
+                                                <td className="text-center">{post.createdDate}</td>
+                                            </tr>
                                         )
                                     })}
                                 </tbody>
@@ -105,7 +103,7 @@ export default function QNABoard() {
                 </Col>
             </Row>
         </Container>
-        </>
+        </div>
     );
 
 }

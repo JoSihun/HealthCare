@@ -43,21 +43,19 @@ export default function FreeBoard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {posts.map((post) => {
+                                    {posts.map((post, index) => {
                                         return (
-                                            <>
-                                                <tr>
-                                                    <td className="text-left">{post.id}</td>
-                                                    <td className="text-left">
-                                                        <Link to={`/support/freeboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
-                                                            {post.title}
-                                                        </Link>
-                                                    </td>
-                                                    <td className="text-center">{post.hits}</td>
-                                                    <td className="text-center">{post.author}</td>
-                                                    <td className="text-center">{post.createdDate}</td>
-                                                </tr>
-                                            </>
+                                            <tr key={index}>
+                                                <td className="text-left">{post.id}</td>
+                                                <td className="text-left">
+                                                    <Link to={`/support/freeboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
+                                                        {post.title}
+                                                    </Link>
+                                                </td>
+                                                <td className="text-center">{post.hits}</td>
+                                                <td className="text-center">{post.author}</td>
+                                                <td className="text-center">{post.createdDate}</td>
+                                            </tr>
                                         )
                                     })}
                                 </tbody>

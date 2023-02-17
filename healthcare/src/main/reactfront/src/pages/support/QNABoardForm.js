@@ -6,61 +6,68 @@ import { useNavigate, useParams } from "react-router-dom";
 // 파일 업로드: https://cookinghoil.tistory.com/114
 
 const FormButtons = ({id}) => {
-    if (id) {
-        return (
-            <>
-            <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">수정</Button>
-            <Button href="/support/qnaboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
-            </>
-        );
-    } else {
-        return (
-            <>
-            <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">등록</Button>
-            <Button href="/support/qnaboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
-            </>
-        );
-    }
+    return (
+        <div>
+        { id 
+        ?
+            <div>
+                <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">수정</Button>
+                <Button href="/support/qnaboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
+            </div>
+        :
+            <div>
+                <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">등록</Button>
+                <Button href="/support/qnaboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
+            </div>
+        }
+        </div>
+    );
 }
 
 export default function QNABoardForm() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [post, setPost] = useState(null);
+    const [post, setPost] = useState({});
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
     useEffect(() => {
-        const getPost = async () => {
+        const axiosGetPost = async () => {
             await axios.get(`/support/qnaboard/post/${id}`)
             .then((response) => {
                 setPost(response.data)
-                setTitle(post.title)
-                setContent(post.content)
+                setTitle(response.data.title)       // 임시방편
+                setContent(response.data.content)   // 임시방편
             }).catch((error) => {
                 console.log(error)
             });
         }
 
-        if (id) {
-            getPost();
-        }
-    }, [id, post]);
+        if (id !== undefined) { axiosGetPost(); }
+    }, [id]);
 
     const handleChangeTitle = (e) => {
+        e.preventDefault();
         setTitle(e.target.value);
+        setPost({...post,
+            "title": e.target.value
+        });
     }
 
     const handleChangeContent = (e) => {
+        e.preventDefault();
         setContent(e.target.value);
+        setPost({...post,
+            "content": e.target.value
+        });
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (id) {
+        if (id !== undefined) {
             await axios.put(`/api/post/${id}`, {
-                title: title,
-                content: content,
+                title: post.title,
+                content: post.content,
                 author: "Admin",
                 hits: 0,
                 category: "QNABoard",
@@ -87,6 +94,7 @@ export default function QNABoardForm() {
     }
 
     return (
+        <div>
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
@@ -120,5 +128,6 @@ export default function QNABoardForm() {
                 </Col>
             </Row>
         </Container>
+        </div>
     );
 }
