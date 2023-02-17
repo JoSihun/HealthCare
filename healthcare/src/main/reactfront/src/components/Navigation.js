@@ -22,13 +22,18 @@ function Navigation() {
                         </Nav>
                         <Nav>
                             <Nav.Link href="/home">Home</Nav.Link>
-                            <Nav.Link href="/introduce">Introduce</Nav.Link>
+
+                            <NavDropdown title="Introduce" id="collasible-nav-dropdown">
+                                <NavDropdown.Item href="/introduce/facilities">Facilities</NavDropdown.Item>
+                                <NavDropdown.Item href="/introduce/staff">Staff</NavDropdown.Item>
+                            </NavDropdown>
                             <NavDropdown title="Support" id="collasible-nav-dropdown">
                                 <NavDropdown.Item href="/support/faq">FAQ</NavDropdown.Item>
                                 <NavDropdown.Item href="/support/qna">Q&A</NavDropdown.Item>
                                 <NavDropdown.Item href="/support/livechat">LiveChat</NavDropdown.Item>
                             </NavDropdown>
                             <Nav.Link href="/my-page">MyPage</Nav.Link>
+                            <Nav.Link href="/login">Login</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

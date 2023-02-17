@@ -1,28 +1,30 @@
-import './Introduce.css'
-import React from "react";
+import './Staff.css'
 import {Accordion, Row, Col} from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import Container from "react-bootstrap/Container";
+import axios from 'axios';
 
 
 import {Link} from "react-router-dom";
 //SideBar 참고: https://citylock77.tistory.com/130
 
-function Introduce() {
+function Staff() {
     return (
-        <div className="Introduce">
+        <div className="Staff">
             <container fluid>
                 <Row className="justify-content-center vh-100">
                     <Col className="col-md-2 m-4">
                         <Row className="p-2 sidebar">
                             <div className="sidebarTitle">Introduce</div>
                                 <hr/>
-                                <Link to="#Facilities" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- Facilities</div></Link>
-                                <Link to="#Staff" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Staff</div></Link>
+                                <Link to="/introduce/facilities" style={{ textDecoration: 'none' }}><div className="sidebarItem active">- Facilities</div></Link>
+                                <Link to="/introduce/staff" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Staff</div></Link>
                                 <Link to="#Direction" style={{ textDecoration: 'none' }}><div className="sidebarItem">- Direction</div></Link>
                         </Row>
                     </Col>
                     <Col className="col-md-8 m-4">
                         <Row className="p-4 content h-100 align-content-start">
-                            <h1><b>Facilities</b></h1>
+                            <h1><b>Staff</b></h1>
                             <hr/>
                                 <Row className="my-4">
                                     <Col className="1">
@@ -74,4 +76,4 @@ function Introduce() {
     );
 }
 
-export default Introduce;
+export default Staff;

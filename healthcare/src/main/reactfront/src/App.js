@@ -4,7 +4,8 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Navigation from "./components/Navigation";
 import Banner from './components/Banner';
 import Home from "./components/Home";
-import Introduce from "./components/Introduce";
+import Facilities from "./components/introduce/Facilities";
+import Staff from "./components/introduce/Staff";
 import FAQ from "./components/support/FAQ";
 import MyPage from "./components/MyPage";
 import Login from "./components/Login";
@@ -24,7 +25,9 @@ function App() {
               <Routes>
                   <Route path="/" element={<Home />}></Route>
                   <Route path="/home" element={<Home />}></Route>
-                  <Route path="/introduce" element={<Introduce />}></Route>
+
+                  <Route path="/introduce/facilities" element={<Facilities />}></Route>
+                  <Route path="/introduce/staff" element={<Staff />}></Route>
 
                   <Route path="/support/faq" element={<FAQ />}></Route>
                   <Route path="/support/faq/form" element={<FAQPostForm />}></Route>
