@@ -4,14 +4,14 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "./SideBar";
 
-export default function FreeBoardPost() {
+export default function QNABoardPost() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [post, setPost] = useState({});
 
     useEffect(() => {
         const getPost = async () => {
-            await axios.get(`/support/freeboard/post/${id}`)
+            await axios.get(`/support/qnaboard/post/${id}`)
             .then((response) => {
                 setPost(response.data)
             }).catch((error) => {
@@ -26,7 +26,7 @@ export default function FreeBoardPost() {
         e.preventDefault();
         await axios.delete(`/api/post/${id}`)
         .then((response) => {
-            navigate('/support/freeboard')
+            navigate('/support/qnaboard')
         }).catch((error) => {
             console.log(error);
         });
@@ -43,7 +43,7 @@ export default function FreeBoardPost() {
                 <Col className="col-md-9 mx-2 my-4">
                     <Card>
                         <Card.Body>
-                            <Card.Title><h2><strong>자유게시판</strong></h2></Card.Title>
+                            <Card.Title><h2><strong>Q&A</strong></h2></Card.Title>
                             <hr/>
 
                             <Card.Title><h3><strong>{ post.title }</strong></h3></Card.Title>
@@ -54,7 +54,7 @@ export default function FreeBoardPost() {
                             </Card>
 
                             <div className="d-flex justify-content-end">
-                                <Link to={`/support/freeboard/form/${post.id}`}>
+                                <Link to={`/support/qnaboard/form/${post.id}`}>
                                     <Button variant="dark" className="ms-2" style={{ width: "100px" }}>수정</Button>
                                 </Link>
                                 <Button variant="danger" className="ms-2" style={{ width: "100px" }} onClick={handleDelete}>삭제</Button>

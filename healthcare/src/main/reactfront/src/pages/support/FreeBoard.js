@@ -102,7 +102,6 @@ export default function FreeBoard() {
                         </Card.Body>
                     </Card>
                 </Col>
-
             </Row>
         </Container>
         </>

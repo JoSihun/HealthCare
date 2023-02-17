@@ -37,7 +37,21 @@ public class PostService {
     }
 
     //////////////////////////////////////////////////////QNABoard//////////////////////////////////////////////////////
+    /** QNABoard 목록 조회 - 작성순 */
+    @Transactional
+    public List<PostResponseDto> findAllQnaBoardAsc() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        List<Post> postList = this.postRepository.findAllByCategory("QNABoard", sort);
+        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+    }
 
+    /** QNABoard 목록 조회 - 최신순 */
+    @Transactional
+    public List<PostResponseDto> findAllQnaBoardDesc() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        List<Post> postList = this.postRepository.findAllByCategory("QNABoard", sort);
+        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+    }
     //////////////////////////////////////////////////////FreeBoard/////////////////////////////////////////////////////
     /** FreeBoard 목록 조회 - 작성순 */
     @Transactional
