@@ -21,21 +21,41 @@ public class PostService {
     /* FAQ 목록 조회 - 작성순 */
     /* 추후 FaqListResponseDto 분리 검토 */
     @Transactional
-    public List<PostResponseDto> findAllFaqAsc(String category) {
+    public List<PostResponseDto> findAllFaqBoardAsc() {
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        List<Post> postList = this.postRepository.findAllByCategory(category, sort);
+        List<Post> postList = this.postRepository.findAllByCategory("FAQBoard", sort);
         return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
     /* FAQ 목록 조회 - 최신순 */
     /* 추후 FaqListResponseDto 분리 검토 */
     @Transactional
-    public List<PostResponseDto> findAllFaqDesc(String category) {
+    public List<PostResponseDto> findAllFaqBoardDesc() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<Post> postList = this.postRepository.findAllByCategory(category, sort);
+        List<Post> postList = this.postRepository.findAllByCategory("FAQBoard", sort);
         return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
+    //////////////////////////////////////////////////////QNABoard//////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////FreeBoard/////////////////////////////////////////////////////
+    /** FreeBoard 목록 조회 - 작성순 */
+    @Transactional
+    public List<PostResponseDto> findAllFreeBoardAsc() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        List<Post> postList = this.postRepository.findAllByCategory("FreeBoard", sort);
+        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+    }
+
+    /** FreeBoard 목록 조회 - 최신순 */
+    @Transactional
+    public List<PostResponseDto> findAllFreeBoardDesc() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        List<Post> postList = this.postRepository.findAllByCategory("FreeBoard", sort);
+        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+    }
+
+    ////////////////////////////////////////////////////////Post////////////////////////////////////////////////////////
 
     /* 게시글 조회 */
     @Transactional

@@ -18,7 +18,7 @@ public class FreeBoardController {
 
     @GetMapping("/freeboard")
     public List<PostResponseDto> freeBoard() {
-        return this.postService.findAllFaqDesc("FreeBoard");
+        return this.postService.findAllFreeBoardDesc();
     }
 
     @GetMapping("/freeboard/post/{id}")
@@ -33,6 +33,6 @@ public class FreeBoardController {
 
     @GetMapping("/freeboard/form/{id}")
     public PostResponseDto freeBoardForm(@PathVariable Long id) {
-        return null;
+        return this.postService.findById(id);
     }
 }
