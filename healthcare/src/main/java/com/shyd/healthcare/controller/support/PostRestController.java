@@ -13,12 +13,6 @@ public class PostRestController {
 
     @PostMapping("/api/post")
     public Long postSave(@RequestBody PostSaveRequestDto requestDto) {
-        System.out.println("DEBUG POINT!!! TITLE, CONTENT, AUTHOR, HITS, SECRETYN");
-        System.out.println(requestDto.getTitle());
-        System.out.println(requestDto.getContent());
-        System.out.println(requestDto.getAuthor());
-        System.out.println(requestDto.getHits());
-        System.out.println(requestDto.getSecretYn());
         return this.postService.save(requestDto);
     }
 
