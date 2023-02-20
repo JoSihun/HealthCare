@@ -2,7 +2,6 @@ import '../../styles/FAQBoard.css'
 import React, { useEffect, useState } from "react";
 import {Accordion, Row, Col, Button, Card} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
-import {Link} from "react-router-dom";
 import axios from 'axios';
 import SideBar from './SideBar';
 //SideBar 참고: https://citylock77.tistory.com/130
