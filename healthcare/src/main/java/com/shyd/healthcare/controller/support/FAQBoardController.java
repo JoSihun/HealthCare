@@ -28,6 +28,6 @@ public class FAQBoardController {
 
     @GetMapping("/faqboard/form/{id}")
     public PostResponseDto faqBoardForm(@PathVariable Long id) {
-        return null;
+        return this.postService.findById(id);
     }
 }
