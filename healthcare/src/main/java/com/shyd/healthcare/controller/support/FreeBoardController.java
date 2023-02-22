@@ -3,10 +3,11 @@ package com.shyd.healthcare.controller.support;
 import com.shyd.healthcare.dto.PostResponseDto;
 import com.shyd.healthcare.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +20,12 @@ public class FreeBoardController {
     @GetMapping("/freeboard")
     public List<PostResponseDto> freeBoard() {
         return this.postService.findAllFreeBoardDesc();
+    }
+
+    @GetMapping("/freeboard/")
+    public Page<PostResponseDto> freeBoard(
+            @PageableDefault(sort = "id", size = 20, direction = Sort.Direction.DESC) Pageable pageable) {
+        return this.postService.findAllFreeBoardDesc(pageable);
     }
 
     @GetMapping("/freeboard/post/{id}")

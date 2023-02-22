@@ -1,11 +1,59 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, Col, Container, Pagination, Row, Table } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import SideBar from "./SideBar";
 
+const GetPagination = ({ pages, size }) => {
+    const [number, setNumber] = useState([]);
+    const [paginations, setPaginations] = useState({
+        "number": [1, 2, 3, 4, 5],
+        "active": [true, false, false, false, false]
+    });
+
+    const initPaginations = () => {
+        if (5 < pages.totalPages) {
+            for (var i = 0; i < 5; i++) {
+                if (pages.number < 2) {
+                    paginations.number[i] = i + 1;
+                    paginations.active[i] = pages.number % 5 === i ? true : false;
+                } else if (2 <= pages.number && pages.number <= pages.totalPages - 3) {
+                    paginations.number[i] = pages.number - 2 + i + 1;
+                    paginations.active[i] = i === 2 ? true : false;
+                } else if (pages.totalPages - 3 < pages.number) {
+                    paginations.number[i] = pages.totalPages - 5 + i + 1;
+                    paginations.active[i] = pages.number % 5 === (i + 1) % 5 ? true : false;
+                }
+            }
+        }
+    }
+    initPaginations();
+
+    return (
+        <Pagination className="justify-content-center">
+            <Pagination.First href={`/support/freeboard/${1}/${size}`} disabled={pages.first}/>
+            <Pagination.Prev href={`/support/freeboard/${pages.number}/${size}`} disabled={pages.first}/>
+
+            {/* 5개씩? 인데 양끝단에서 예외처리 필요 + 5개 미만일 떄 몇개 표시? */}
+            <Pagination.Ellipsis /> 
+            <Pagination.Item href={`/support/freeboard/${paginations.number[0]}/${size}`} active={paginations.active[0]}>{paginations.number[0]}</Pagination.Item>
+            <Pagination.Item href={`/support/freeboard/${paginations.number[1]}/${size}`} active={paginations.active[1]}>{paginations.number[1]}</Pagination.Item>
+            <Pagination.Item href={`/support/freeboard/${paginations.number[2]}/${size}`} active={paginations.active[2]}>{paginations.number[2]}</Pagination.Item>
+            <Pagination.Item href={`/support/freeboard/${paginations.number[3]}/${size}`} active={paginations.active[3]}>{paginations.number[3]}</Pagination.Item>
+            <Pagination.Item href={`/support/freeboard/${paginations.number[4]}/${size}`} active={paginations.active[4]}>{paginations.number[4]}</Pagination.Item>
+            <Pagination.Ellipsis />
+            {/* 5개씩? 인데 양끝단에서 예외처리 필요 + 5개 미만일 떄 몇개 표시? */}
+
+            <Pagination.Next href={`/support/freeboard/${pages.number+2}/${size}`} disabled={pages.last}/>
+            <Pagination.Last href={`/support/freeboard/${pages.totalPages}/${size}`} disabled={pages.last}/>
+        </Pagination>
+    );
+}
+
 export default function FreeBoard() {
+    const { id, size } = useParams();
     const [posts, setPosts] = useState([]);
+    const [pages, setPages] = useState({});
 
     useEffect(() => {
         const getPosts = async () => {
@@ -16,7 +64,20 @@ export default function FreeBoard() {
                 console.log(error)
             });
         }
-        getPosts();
+
+        const getPages = async () => {
+            await axios.get(`/support/freeboard/?page=${id-1}&size=${size}`)
+            .then((response) => {
+                setPages(response.data);
+                setPosts(response.data.content);
+                console.log("This is getPage = ", response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
+        // getPosts();
+        getPages();
     }, []);
 
     return (
@@ -64,22 +125,25 @@ export default function FreeBoard() {
                                 <Link to={"/support/freeboard/form"}>
                                     <Button variant="dark" style={{ width: "100px" }}>글쓰기</Button>
                                 </Link>
-                            </div>                        
-                            <Pagination className="justify-content-center">
+                            </div>
+                            
+                            <GetPagination pages={pages} size={20} />
+
+                            {/* <Pagination className="justify-content-center">
                                 <Pagination.First />
                                 <Pagination.Prev />
 
                                 <Pagination.Ellipsis />
-                                <Pagination.Item>{10}</Pagination.Item>
-                                <Pagination.Item>{11}</Pagination.Item>
-                                <Pagination.Item active>{12}</Pagination.Item>
-                                <Pagination.Item>{13}</Pagination.Item>
-                                <Pagination.Item>{14}</Pagination.Item>
+                                <Pagination.Item href={`/support/freeboard/?page=${1}`}>{1}</Pagination.Item>
+                                <Pagination.Item href={`/support/freeboard/?page=${2}`}>{2}</Pagination.Item>
+                                <Pagination.Item href={`/support/freeboard/?page=${3}`} active>{3}</Pagination.Item>
+                                <Pagination.Item href={`/support/freeboard/?page=${4}`}>{4}</Pagination.Item>
+                                <Pagination.Item href={`/support/freeboard/?page=${5}`}>{5}</Pagination.Item>
                                 <Pagination.Ellipsis />
 
                                 <Pagination.Next />
                                 <Pagination.Last />
-                            </Pagination>
+                            </Pagination> */}
                             <div className="mb-3 text-center">
                                 <form>
                                     <div className="d-inline mx-2">

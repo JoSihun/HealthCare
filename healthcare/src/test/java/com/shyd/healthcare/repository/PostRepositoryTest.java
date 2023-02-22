@@ -28,6 +28,20 @@ class PostRepositoryTest {
     }
 
     @Test
+    void postJpaSaveHugeDataTest() {
+        for (int i = 0; i < 300; i++) {
+            String title = "TestTitle" + (i + 1);
+            String content = "TestContent" + (i + 1);
+            String author = "TestAuthor" + (i + 1);
+            String category = "FreeBoard";
+            int hits = i + 1;
+            boolean secretYn = (i % 2 == 0) ? true : false;
+            Post post = new Post(title, content, author, category, hits, secretYn);
+            this.postRepository.save(post);
+        }
+    }
+
+    @Test
     void postJpaReadTest() {
         List<Post> postList = this.postRepository.findAll();
         Post p1 = postList.get(0);

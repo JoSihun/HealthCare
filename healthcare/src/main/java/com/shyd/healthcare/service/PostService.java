@@ -6,6 +6,9 @@ import com.shyd.healthcare.dto.PostResponseDto;
 import com.shyd.healthcare.dto.PostUpdateRequestDto;
 import com.shyd.healthcare.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +70,24 @@ public class PostService {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         List<Post> postList = this.postRepository.findAllByCategory("FreeBoard", sort);
         return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+    }
+
+    /** FreeBoard 목록 조회 - 작성순, 페이징 적용 */
+    @Transactional
+    public Page<PostResponseDto> findAllFreeBoardBoardAsc(Pageable pageable) {
+//        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+//        Pageable pageable = PageRequest.of(curPage, maxPage, sort);
+        Page<Post> postList = this.postRepository.findAllByCategory("FreeBoard", pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    /** FreeBoard 목록 조회 - 최신순, 페이징 적용 */
+    @Transactional
+    public Page<PostResponseDto> findAllFreeBoardDesc(Pageable pageable) {
+//        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+//        Pageable pageable = PageRequest.of(curPage, maxPage, sort);
+        Page<Post> postList = this.postRepository.findAllByCategory("FreeBoard", pageable);
+        return postList.map(PostResponseDto::new);
     }
 
     ////////////////////////////////////////////////////////Post////////////////////////////////////////////////////////
