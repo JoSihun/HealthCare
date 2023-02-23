@@ -5,44 +5,61 @@ import { Link, useParams } from "react-router-dom";
 import SideBar from "./SideBar";
 
 const GetPagination = ({ pages, size }) => {
-    const [number, setNumber] = useState([]);
-    const [paginations, setPaginations] = useState({
-        "number": [1, 2, 3, 4, 5],
-        "active": [true, false, false, false, false]
+    const [paginations,] = useState({
+        "numbers": [1, 2, 3, 4, 5],
+        "actives": [true, false, false, false, false],
     });
+    const [ellipsePrev, setEllipsePrev] = useState(1);
+    const [ellipseNext, setEllipseNext] = useState(1);
 
-    const initPaginations = () => {
-        if (5 < pages.totalPages) {
-            for (var i = 0; i < 5; i++) {
-                if (pages.number < 2) {
-                    paginations.number[i] = i + 1;
-                    paginations.active[i] = pages.number % 5 === i ? true : false;
-                } else if (2 <= pages.number && pages.number <= pages.totalPages - 3) {
-                    paginations.number[i] = pages.number - 2 + i + 1;
-                    paginations.active[i] = i === 2 ? true : false;
-                } else if (pages.totalPages - 3 < pages.number) {
-                    paginations.number[i] = pages.totalPages - 5 + i + 1;
-                    paginations.active[i] = pages.number % 5 === (i + 1) % 5 ? true : false;
+    useEffect(() => {
+        const initPaginations = () => {
+            if (pages.number - 5 < 0) {
+                setEllipsePrev(1);
+            } else {
+                setEllipsePrev(pages.number - 4);
+            }
+
+            if (pages.number + 5 > pages.totalPages) {
+                setEllipseNext(pages.totalPages);
+            } else {
+                setEllipseNext(pages.number + 6);
+            }
+
+
+            if (5 < pages.totalPages) {
+                for (var i = 0; i < 5; i++) {
+                    if (pages.number < 2) {
+                        paginations.numbers[i] = i + 1;
+                        paginations.actives[i] = pages.number % 5 === i ? true : false;
+                    } else if (2 <= pages.number && pages.number <= pages.totalPages - 3) {
+                        paginations.numbers[i] = pages.number - 2 + i + 1;
+                        paginations.actives[i] = i === 2 ? true : false;
+                    } else if (pages.totalPages - 3 < pages.number) {
+                        paginations.numbers[i] = pages.totalPages - 5 + i + 1;
+                        paginations.actives[i] = pages.number % 5 === (i + 1) % 5 ? true : false;
+                    }
                 }
             }
         }
-    }
-    initPaginations();
+
+        initPaginations();
+    });
 
     return (
         <Pagination className="justify-content-center">
             <Pagination.First href={`/support/freeboard/${1}/${size}`} disabled={pages.first}/>
             <Pagination.Prev href={`/support/freeboard/${pages.number}/${size}`} disabled={pages.first}/>
 
-            {/* 5개씩? 인데 양끝단에서 예외처리 필요 + 5개 미만일 떄 몇개 표시? */}
-            <Pagination.Ellipsis /> 
-            <Pagination.Item href={`/support/freeboard/${paginations.number[0]}/${size}`} active={paginations.active[0]}>{paginations.number[0]}</Pagination.Item>
-            <Pagination.Item href={`/support/freeboard/${paginations.number[1]}/${size}`} active={paginations.active[1]}>{paginations.number[1]}</Pagination.Item>
-            <Pagination.Item href={`/support/freeboard/${paginations.number[2]}/${size}`} active={paginations.active[2]}>{paginations.number[2]}</Pagination.Item>
-            <Pagination.Item href={`/support/freeboard/${paginations.number[3]}/${size}`} active={paginations.active[3]}>{paginations.number[3]}</Pagination.Item>
-            <Pagination.Item href={`/support/freeboard/${paginations.number[4]}/${size}`} active={paginations.active[4]}>{paginations.number[4]}</Pagination.Item>
-            <Pagination.Ellipsis />
-            {/* 5개씩? 인데 양끝단에서 예외처리 필요 + 5개 미만일 떄 몇개 표시? */}
+            {/* 5개 미만일 떄 몇개 표시? */}
+            <Pagination.Ellipsis href={`/support/freeboard/${ellipsePrev}/${size}`} disabled={pages.first}/> 
+            <Pagination.Item href={`/support/freeboard/${paginations.numbers[0]}/${size}`} active={paginations.actives[0]}>{paginations.numbers[0]}</Pagination.Item>
+            <Pagination.Item href={`/support/freeboard/${paginations.numbers[1]}/${size}`} active={paginations.actives[1]}>{paginations.numbers[1]}</Pagination.Item>
+            <Pagination.Item href={`/support/freeboard/${paginations.numbers[2]}/${size}`} active={paginations.actives[2]}>{paginations.numbers[2]}</Pagination.Item>
+            <Pagination.Item href={`/support/freeboard/${paginations.numbers[3]}/${size}`} active={paginations.actives[3]}>{paginations.numbers[3]}</Pagination.Item>
+            <Pagination.Item href={`/support/freeboard/${paginations.numbers[4]}/${size}`} active={paginations.actives[4]}>{paginations.numbers[4]}</Pagination.Item>
+            <Pagination.Ellipsis href={`/support/freeboard/${ellipseNext}/${size}`} disabled={pages.last}/>
+            {/* 5개 미만일 떄 몇개 표시? */}
 
             <Pagination.Next href={`/support/freeboard/${pages.number+2}/${size}`} disabled={pages.last}/>
             <Pagination.Last href={`/support/freeboard/${pages.totalPages}/${size}`} disabled={pages.last}/>
@@ -56,29 +73,42 @@ export default function FreeBoard() {
     const [pages, setPages] = useState({});
 
     useEffect(() => {
-        const getPosts = async () => {
-            await axios.get("/support/freeboard")
-            .then((response) => {
-                setPosts(response.data)
-            }).catch((error) => {
-                console.log(error)
-            });
-        }
-
-        const getPages = async () => {
+        const axiosGetPages = async () => {
             await axios.get(`/support/freeboard/?page=${id-1}&size=${size}`)
             .then((response) => {
                 setPages(response.data);
                 setPosts(response.data.content);
-                console.log("This is getPage = ", response.data);
             }).catch((error) => {
                 console.log(error);
             });
         }
 
-        // getPosts();
-        getPages();
-    }, []);
+        axiosGetPages();
+    }, [id, size]);
+
+    const [newPage, setNewPage] = useState(pages.number);
+    const [newSize, setNewSize] = useState(pages.size);
+
+    const handleSelect = (e) => {
+        e.preventDefault();
+        setNewSize(e.target.value);
+        setNewPage(pages.number * pages.size / newSize);
+    }
+
+    // 개수변경은 되는데, 페이지 이동이 안됨
+    useEffect(() => {
+        const axiosGetPages = async () => {
+            await axios.get(`/support/freeboard/?page=${newPage}&size=${newSize}`)
+            .then((response) => {
+                setPages(response.data);
+                setPosts(response.data.content);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
+        axiosGetPages();
+    }, [newPage, newSize]);
 
     return (
         <>
@@ -93,6 +123,16 @@ export default function FreeBoard() {
                         <Card.Body>
                             <Card.Title><h2><strong>자유게시판</strong></h2></Card.Title>
                             <hr/>
+                            <div className="d-flex justify-content-end mb-3">
+                                <div className="me-2">보기 옵션</div>
+                                <select onChange={handleSelect} defaultValue={newSize}>
+                                    <option value={10}>10개씩</option>
+                                    <option value={20}>20개씩</option>
+                                    <option value={30}>30개씩</option>
+                                    <option value={50}>50개씩</option>
+                                    <option value={100}>100개씩</option>
+                                </select>
+                            </div>
                             <Table responsive hover border="2px">
                                 <thead>
                                     <tr style={{ color: "white", backgroundColor: "black" }}>
@@ -127,23 +167,8 @@ export default function FreeBoard() {
                                 </Link>
                             </div>
                             
-                            <GetPagination pages={pages} size={20} />
+                            <GetPagination pages={pages} size={newSize} />
 
-                            {/* <Pagination className="justify-content-center">
-                                <Pagination.First />
-                                <Pagination.Prev />
-
-                                <Pagination.Ellipsis />
-                                <Pagination.Item href={`/support/freeboard/?page=${1}`}>{1}</Pagination.Item>
-                                <Pagination.Item href={`/support/freeboard/?page=${2}`}>{2}</Pagination.Item>
-                                <Pagination.Item href={`/support/freeboard/?page=${3}`} active>{3}</Pagination.Item>
-                                <Pagination.Item href={`/support/freeboard/?page=${4}`}>{4}</Pagination.Item>
-                                <Pagination.Item href={`/support/freeboard/?page=${5}`}>{5}</Pagination.Item>
-                                <Pagination.Ellipsis />
-
-                                <Pagination.Next />
-                                <Pagination.Last />
-                            </Pagination> */}
                             <div className="mb-3 text-center">
                                 <form>
                                     <div className="d-inline mx-2">
