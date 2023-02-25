@@ -1,13 +1,12 @@
 package com.shyd.healthcare.service;
 
 import com.shyd.healthcare.domain.Post;
-import com.shyd.healthcare.dto.PostSaveRequestDto;
-import com.shyd.healthcare.dto.PostResponseDto;
-import com.shyd.healthcare.dto.PostUpdateRequestDto;
+import com.shyd.healthcare.dto.post.PostSaveRequestDto;
+import com.shyd.healthcare.dto.post.PostResponseDto;
+import com.shyd.healthcare.dto.post.PostUpdateRequestDto;
 import com.shyd.healthcare.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

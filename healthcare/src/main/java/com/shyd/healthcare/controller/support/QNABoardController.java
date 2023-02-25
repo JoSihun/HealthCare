@@ -1,6 +1,6 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.PostResponseDto;
+import com.shyd.healthcare.dto.post.PostResponseDto;
 import com.shyd.healthcare.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

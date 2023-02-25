@@ -1,6 +1,7 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.PostResponseDto;
+import com.shyd.healthcare.dto.post.PostResponseDto;
+import com.shyd.healthcare.service.AttachmentService;
 import com.shyd.healthcare.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequestMapping("/support")
 public class FreeBoardController {
     private final PostService postService;
+    private final AttachmentService attachmentService;
 
     @GetMapping("/freeboard")
     public List<PostResponseDto> freeBoard() {

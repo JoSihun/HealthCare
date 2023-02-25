@@ -1,7 +1,7 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.PostSaveRequestDto;
-import com.shyd.healthcare.dto.PostUpdateRequestDto;
+import com.shyd.healthcare.dto.post.PostSaveRequestDto;
+import com.shyd.healthcare.dto.post.PostUpdateRequestDto;
 import com.shyd.healthcare.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
