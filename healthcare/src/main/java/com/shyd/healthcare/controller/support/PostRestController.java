@@ -5,6 +5,9 @@ import com.shyd.healthcare.dto.post.PostUpdateRequestDto;
 import com.shyd.healthcare.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -12,7 +15,7 @@ public class PostRestController {
     private final PostService postService;
 
     @PostMapping("/api/post")
-    public Long postSave(@RequestBody PostSaveRequestDto requestDto) {
+    public Long postSave(PostSaveRequestDto requestDto, List<MultipartFile> files) throws Exception {
         return this.postService.save(requestDto);
     }
 
