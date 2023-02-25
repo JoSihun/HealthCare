@@ -1,11 +1,12 @@
 package com.shyd.healthcare.domain;
 
-import com.shyd.healthcare.dto.PostUpdateRequestDto;
+import com.shyd.healthcare.dto.post.PostUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -25,6 +26,9 @@ public class Post extends BaseTime {
     private String author;
     private String category;
     private Boolean secretYn;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Attachment> attachmentList;
 
 
     @Builder

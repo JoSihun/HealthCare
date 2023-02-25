@@ -21,16 +21,14 @@ export default function SideBar() {
         <div className="SideBar">
             <Card>
                 <Card.Body>
-                    <Card.Title><h2><strong><i>Support</i></strong></h2></Card.Title>
+                    <Card.Title style={{ fontSize: "35px", fontWeight: "bold", fontStyle: "italic" }}>Support</Card.Title>
                     <hr/>
-                    <Card.Text>
-                        <Nav variant="pills" activeKey={handleActiveKey()} className="flex-column">
-                            <Nav.Link eventKey="1" href="/support/faqboard" className="sidebar-item">FAQ</Nav.Link>
-                            <Nav.Link eventKey="2" href="/support/qnaboard" className="sidebar-item">Q&A</Nav.Link>
-                            <Nav.Link eventKey="3" href="/support/freeboard" className="sidebar-item">자유게시판</Nav.Link>
-                            <Nav.Link eventKey="4" href="/support/livechat" className="sidebar-item">LiveChat</Nav.Link>
-                        </Nav>
-                    </Card.Text>
+                    <Nav variant="pills" activeKey={handleActiveKey()} className="flex-column">
+                        <Nav.Link eventKey="1" href="/support/faqboard" className="sidebar-item">FAQ</Nav.Link>
+                        <Nav.Link eventKey="2" href="/support/qnaboard" className="sidebar-item">Q&A</Nav.Link>
+                        <Nav.Link eventKey="3" href="/support/freeboard" className="sidebar-item">자유게시판</Nav.Link>
+                        <Nav.Link eventKey="4" href="/support/livechat" className="sidebar-item">LiveChat</Nav.Link>
+                    </Nav>
                 </Card.Body>
             </Card>
         </div>

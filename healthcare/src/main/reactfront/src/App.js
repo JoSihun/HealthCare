@@ -24,6 +24,8 @@ import FreeBoardForm from './pages/support/FreeBoardForm';
 
 import LiveChat from "./pages/support/LiveChat";
 import TestPage from './components/TestPage';
+import QNABoardForm from './pages/support/QNABoardForm';
+import QNABoardPost from './pages/support/QNABoardPost';
 
 function App() {
   return (
@@ -42,11 +44,15 @@ function App() {
                   <Route path="/support/faqboard/form" element={<FAQPostForm />}></Route>
                   
                   <Route path="/support/qnaboard" element={<QNABoard />}></Route>
+                  <Route path="/support/qnaboard/form" element={<QNABoardForm />}></Route>
+                  <Route path="/support/qnaboard/form/:id" element={<QNABoardForm />}></Route>
+                  <Route path="/support/qnaboard/post/:id" element={<QNABoardPost />}></Route>
 
                   <Route path="/support/freeboard" element={<FreeBoard />}></Route>
                   <Route path="/support/freeboard/form" element={<FreeBoardForm />}></Route>
                   <Route path="/support/freeboard/form/:id" element={<FreeBoardForm />}></Route>
                   <Route path="/support/freeboard/post/:id" element={<FreeBoardPost />}></Route>
+                  <Route path="/support/freeboard/:id/:size" element={<FreeBoard />}></Route>
 
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
 

@@ -1,6 +1,6 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.PostResponseDto;
+import com.shyd.healthcare.dto.post.PostResponseDto;
 import com.shyd.healthcare.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +18,12 @@ public class QNABoardController {
 
     @GetMapping("/qnaboard")
     public List<PostResponseDto> qnaBoard() {
-        return null;
+        return this.postService.findAllQnaBoardDesc();
     }
 
     @GetMapping("/qnaboard/post/{id}")
     public PostResponseDto qnaBoardPost(@PathVariable Long id) {
-        return null;
+        return this.postService.findById(id);
     }
 
     @GetMapping("/qnaboard/form")
@@ -33,6 +33,6 @@ public class QNABoardController {
 
     @GetMapping("/qnaboard/form/{id}")
     public PostResponseDto qnaBoardForm(@PathVariable Long id) {
-        return null;
+        return this.postService.findById(id);
     }
 }

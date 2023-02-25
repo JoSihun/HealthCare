@@ -1,4 +1,4 @@
-package com.shyd.healthcare.dto;
+package com.shyd.healthcare.dto.post;
 
 import com.shyd.healthcare.domain.Post;
 import lombok.Getter;

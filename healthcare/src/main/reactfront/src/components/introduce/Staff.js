@@ -1,10 +1,6 @@
 import './Staff.css'
-import {Accordion, Row, Col} from "react-bootstrap";
-import React, { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
-import axios from 'axios';
-
-
+import { Row, Col } from "react-bootstrap";
+import React from "react";
 import {Link} from "react-router-dom";
 //SideBar 참고: https://citylock77.tistory.com/130
 
