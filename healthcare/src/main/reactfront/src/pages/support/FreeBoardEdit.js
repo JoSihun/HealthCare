@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import SideBar from "./SideBar";
+// 파일 업로드: https://cookinghoil.tistory.com/114
 
 const FormButtons = ({ id }) => {
     return (

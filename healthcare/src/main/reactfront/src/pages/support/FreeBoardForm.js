@@ -3,7 +3,6 @@ import axios from "axios";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "./SideBar";
 import { useNavigate } from "react-router-dom";
-// 파일 업로드: https://cookinghoil.tistory.com/114
 
 const FormButtons = ({ id }) => {
     if (id) {
@@ -45,8 +44,12 @@ const InputForm = () => {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append("data", values);
-        formData.append("files", e.target.file.files);
+        formData.append("data", new Blob([JSON.stringify(values)], {
+            type: "application/json"
+        }));
+        for (var i = 0; i < e.target.file.files.length; i++) {
+            formData.append("files", e.target.file.files[i]);
+        }
         
         await axios.post(`/api/post`, formData, {
             headers: {
@@ -81,86 +84,6 @@ const InputForm = () => {
 }
 
 export default function FreeBoardForm() {
-    // const navigate = useNavigate();
-    // const [post, setPost] = useState({});
-    // const [title, setTitle] = useState("");
-    // const [content, setContent] = useState("");
-
-    // useEffect(() => {
-    //     const axiosGetPost = async () => {
-    //         await axios.get(`/support/freeboard/post`)
-    //         .then((response) => {
-    //             setPost(response.data)
-    //         }).catch((error) => {
-    //             console.log(error)
-    //         });
-    //     }
-
-    //     axiosGetPost();
-    // }, []);
-
-    // useEffect(() => {
-    //     const axiosGetPost = async () => {
-    //         await axios.get(`/support/freeboard/post/${id}`)
-    //         .then((response) => {
-    //             setPost(response.data)
-    //             setTitle(response.data.title)        // 임시방편
-    //             setContent(response.data.content)    // 임시방편
-    //         }).catch((error) => {
-    //             console.log(error)
-    //         });
-    //     }
-
-    //     if (id !== undefined) { axiosGetPost(); }
-    // }, [id]);
-
-    // const handleChangeTitle = (e) => {
-    //     e.preventDefault();
-    //     setTitle(e.target.value);
-    //     setPost({...post,
-    //         "title": e.target.value
-    //     });
-    // }
-
-    // const handleChangeContent = (e) => {
-    //     e.preventDefault();
-    //     setContent(e.target.value);
-    //     setPost({...post,
-    //         "content": e.target.value
-    //     });
-    // }
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     if (id) {
-    //         await axios.put(`/api/post/${id}`, {
-    //             title: post.title,
-    //             content: post.content,
-    //             author: "Admin",
-    //             hits: 0,
-    //             category: "FreeBoard",
-    //             secreteYn: false
-    //         }).then((response) => {
-    //             navigate('/support/freeboard/post/' + response.data)
-    //         }).catch((error) => {
-    //             console.log(error)
-    //         });
-    //     } else {
-    //         await axios.post('/api/post', {
-    //             title: title,
-    //             content: content,
-    //             author: "Admin",
-    //             hits: 0,
-    //             category: "FreeBoard",
-    //             secreteYn: false
-    //         }).then((response) => {
-    //             navigate('/support/freeboard/post/' + response.data)
-    //         }).catch((error) => {
-    //             console.log(error)
-    //         });
-    //     }
-    // }
-
     return (
         <Container fluid>
             <Row className="justify-content-center">
@@ -174,23 +97,6 @@ export default function FreeBoardForm() {
                             <Card.Title><h2><strong>자유게시판</strong></h2></Card.Title>
                             <hr/>
                             <InputForm />
-                            {/* <form onSubmit={handleSubmit}>
-                                <div className="form-group mb-2">
-                                    <label htmlFor="title" style={{ fontSize: "20px", fontWeight: "bold"}}>제목</label>
-                                    <input type="text" className="form-control" id="title" onChange={handleChangeTitle} value={title}></input>
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label htmlFor="file" style={{ fontSize: "20px", fontWeight: "bold"}}>첨부파일</label>
-                                    <input type="file" className="form-control" id="file" multiple="multiple"></input>
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용</label>
-                                    <textarea className="form-control" id="content" rows="20" onChange={handleChangeContent} value={content}></textarea>
-                                </div>
-                                <div className="form-group d-flex justify-content-end">
-                                    <FormButtons id={id} />
-                                </div>
-                            </form> */}
                         </Card.Body>
                     </Card>
                 </Col>

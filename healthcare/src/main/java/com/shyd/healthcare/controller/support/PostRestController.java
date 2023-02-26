@@ -15,7 +15,10 @@ public class PostRestController {
     private final PostService postService;
 
     @PostMapping("/api/post")
-    public Long postSave(PostSaveRequestDto requestDto, List<MultipartFile> files) throws Exception {
+    public Long postSave(@RequestPart("data") PostSaveRequestDto requestDto,
+                         @RequestPart("files") List<MultipartFile> files) {
+        System.out.println("DEBUGGING POINT 1: requestDto = " + requestDto.getTitle());
+        System.out.println("DEBUGGING POINT 2: files = " + files);
         return this.postService.save(requestDto);
     }
 
