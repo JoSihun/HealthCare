@@ -26,6 +26,7 @@ const FormButtons = ({ id }) => {
 
 const EditForm = ({ id, post }) => {
     const navigate = useNavigate();
+    const [files, setFiles] = useState([]);
     const [values, setValues] = useState({});
 
     useEffect(() => {
@@ -39,12 +40,21 @@ const EditForm = ({ id, post }) => {
         });
     }
 
+    const handleChangeFiles = async (e) => {
+        e.preventDefault();
+        setFiles(e.target.files);
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append("data", values);
-        formData.append("files", e.target.file.files);
+        formData.append("data", new Blob([JSON.stringify(values)], {
+            type: "application/json"
+        }));
+        for (var i = 0; i < e.target.file.files.length; i++) {
+            formData.append("files", e.target.file.files[i]);
+        }
         
         await axios.put(`/api/post/${id}`, formData, {
             headers: {
@@ -55,26 +65,17 @@ const EditForm = ({ id, post }) => {
         }).catch((error) => {
             console.log(error);
         });
-
-        // await axios({
-        //     method: "PUT",
-        //     headers: {
-        //         "Content-Type": "multipart/form-data"
-        //     },
-        //     data: formData,
-        //     url: "/api/post/" + id,
-        // })
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="form-group mb-2">
                 <label htmlFor="title" style={{ fontSize: "20px", fontWeight: "bold"}}>제목</label>
                 <input type="text" className="form-control" id="title" onChange={handleChange} value={values.title||''}></input>
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="file" style={{ fontSize: "20px", fontWeight: "bold"}}>첨부파일</label>
-                <input type="file" className="form-control" id="file" name="file" multiple="multiple"></input>
+                <input type="file" className="form-control" id="file" name="file" multiple="multiple" onChange={handleChangeFiles}></input>
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용</label>

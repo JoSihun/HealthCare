@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -15,15 +16,17 @@ public class PostRestController {
     private final PostService postService;
 
     @PostMapping("/api/post")
-    public Long postSave(@RequestPart("data") PostSaveRequestDto requestDto,
-                         @RequestPart("files") List<MultipartFile> files) {
-        System.out.println("DEBUGGING POINT 1: requestDto = " + requestDto.getTitle());
-        System.out.println("DEBUGGING POINT 2: files = " + files);
+    public Long postSave(@RequestPart(value = "data") PostSaveRequestDto requestDto,
+                         @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         return this.postService.save(requestDto);
     }
 
     @PutMapping("/api/post/{id}")
-    public Long postUpdate(@PathVariable Long id, @RequestBody PostUpdateRequestDto requestDto) {
+    public Long postUpdate(@PathVariable(value = "id") Long id,
+                           @RequestPart(value = "data") PostUpdateRequestDto requestDto,
+                           @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+        System.out.println("DEBUGGING POINT 1: requestDto = " + requestDto.getTitle());
+        System.out.println("DEBUGGING POINT 2: files = " + files);
         return this.postService.update(id, requestDto);
     }
 

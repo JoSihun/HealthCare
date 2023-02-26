@@ -24,6 +24,7 @@ const FormButtons = ({ id }) => {
 
 const InputForm = () => {
     const navigate = useNavigate();
+    const [files, setFiles] = useState([]);
     const [values, setValues] = useState({
         hits: 0,
         title: "",
@@ -39,6 +40,11 @@ const InputForm = () => {
             [e.target.id]: e.target.value
         });
     }
+    
+    const handleChangeFiles = async (e) => {
+        e.preventDefault();
+        setFiles(e.target.files);
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -47,8 +53,8 @@ const InputForm = () => {
         formData.append("data", new Blob([JSON.stringify(values)], {
             type: "application/json"
         }));
-        for (var i = 0; i < e.target.file.files.length; i++) {
-            formData.append("files", e.target.file.files[i]);
+        for (var i = 0; i < files.length; i++) {
+            formData.append("files", files[i]);
         }
         
         await axios.post(`/api/post`, formData, {
@@ -70,7 +76,7 @@ const InputForm = () => {
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="file" style={{ fontSize: "20px", fontWeight: "bold"}}>첨부파일</label>
-                <input type="file" className="form-control" id="file" name="file" multiple="multiple"></input>
+                <input type="file" className="form-control" id="file" name="file" multiple="multiple" onChange={handleChangeFiles}></input>
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용</label>
