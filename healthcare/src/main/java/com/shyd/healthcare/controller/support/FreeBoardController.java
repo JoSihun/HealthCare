@@ -1,5 +1,6 @@
 package com.shyd.healthcare.controller.support;
 
+import com.shyd.healthcare.dto.attachment.AttachmentResponseDto;
 import com.shyd.healthcare.dto.post.PostResponseDto;
 import com.shyd.healthcare.service.AttachmentService;
 import com.shyd.healthcare.service.PostService;

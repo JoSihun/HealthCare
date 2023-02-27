@@ -1,32 +1,44 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "./SideBar";
 
 export default function FreeBoardPost() {
     const { id } = useParams();
-    const navigate = useNavigate();
     const [post, setPost] = useState({});
+    const [files, setFiles] = useState([]);
 
     useEffect(() => {
-        const getPost = async () => {
+        const axiosGetPost = async () => {
             await axios.get(`/support/freeboard/post/${id}`)
             .then((response) => {
-                setPost(response.data)
+                setPost(response.data);
             }).catch((error) => {
-                console.log(error)
+                console.log(error);
             });
         }
 
-        getPost();
+        const axiosGetFiles = async () => {
+            await axios.get(`/api/attachment/${id}`)
+            .then((response) => {
+                setFiles(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
+        axiosGetPost();
+        axiosGetFiles();
     }, [id]);
 
     const handleDelete = async (e) => {
         e.preventDefault();
+        // axios.delete(`/api/attachment/${id}`) 해야하는지 고민
+
         await axios.delete(`/api/post/${id}`)
         .then((response) => {
-            navigate('/support/freeboard')
+            window.location.href = `/support/freeboard`;
         }).catch((error) => {
             console.log(error);
         });
@@ -52,6 +64,22 @@ export default function FreeBoardPost() {
                                     <Card.Text>{ post.content }</Card.Text>
                                 </Card.Body>
                             </Card>
+                            {0 < files.length
+                            ?
+                            <Card className="mb-3">
+                                <Card.Body>
+                                    {files.map((file, index) => {
+                                        return (
+                                            // https://peachsoong.tistory.com/68
+                                            <Card.Text key={index}>{ file.fileName } { file.createdDate }</Card.Text>
+                                        )
+                                    })}
+                                </Card.Body>
+                            </Card>
+                            :
+                            <></>
+                            }
+
 
                             <div className="d-flex justify-content-end">
                                 <Link to={`/support/freeboard/form/${post.id}`}>

@@ -60,7 +60,7 @@ public class AttachmentService {
             File saveFile = new File(filePath, fileName);
             file.transferTo(saveFile);
 
-            // Linux? 파일 권한 적용
+            // Linux 파일 권한 적용
             // Runtime.getRuntime().exec("chmod -R 777 " + saveFile);
 
             // AttachmentSaveRequestDto 생성
