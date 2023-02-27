@@ -31,8 +31,7 @@ public class FreeBoardController {
     }
 
     @GetMapping("/freeboard/?page={page}&size={size}")
-    public Page<PostResponseDto> freeBoardPage(
-            @PageableDefault(sort = "id", size = 20, direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<PostResponseDto> freeBoardPage(Pageable pageable) {
         return this.postService.findAllFreeBoardDesc(pageable);
     }
 

@@ -5,7 +5,9 @@ import com.shyd.healthcare.domain.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
 @Getter
 @NoArgsConstructor
 public class AttachmentSaveRequestDto {
