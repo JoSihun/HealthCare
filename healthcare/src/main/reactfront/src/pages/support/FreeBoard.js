@@ -1,80 +1,142 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, Col, Container, Pagination, Row, Table } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import SideBar from "./SideBar";
+import "../../styles/FreeBoard.css";
 
-const GetPagination = ({ pages, size }) => {
-    const [paginations,] = useState({
-        "numbers": [1, 2, 3, 4, 5],
-        "actives": [true, false, false, false, false],
-    });
-    const [ellipsePrev, setEllipsePrev] = useState(1);
-    const [ellipseNext, setEllipseNext] = useState(1);
+const GetPagination = (props) => {
+    const [numbers, setNumbers] = useState([]);
+    const [actives, setActives] = useState([]);
 
     useEffect(() => {
-        const initPaginations = () => {
-            if (pages.number - 5 < 0) {
-                setEllipsePrev(1);
+        const initItems = async () => {
+            const listNumbers = [];
+            const listActives = [];
+            if (props.pages.totalPages < 5) {
+                for (let i = 0; i < props.pages.totalPages; i++) {
+                    listNumbers.push(i + 1)
+                    listActives.push(props.page === i ? true : false);
+                }
             } else {
-                setEllipsePrev(pages.number - 4);
-            }
-
-            if (pages.number + 5 > pages.totalPages) {
-                setEllipseNext(pages.totalPages);
-            } else {
-                setEllipseNext(pages.number + 6);
-            }
-
-
-            if (5 < pages.totalPages) {
-                for (var i = 0; i < 5; i++) {
-                    if (pages.number < 2) {
-                        paginations.numbers[i] = i + 1;
-                        paginations.actives[i] = pages.number % 5 === i ? true : false;
-                    } else if (2 <= pages.number && pages.number <= pages.totalPages - 3) {
-                        paginations.numbers[i] = pages.number - 2 + i + 1;
-                        paginations.actives[i] = i === 2 ? true : false;
-                    } else if (pages.totalPages - 3 < pages.number) {
-                        paginations.numbers[i] = pages.totalPages - 5 + i + 1;
-                        paginations.actives[i] = pages.number % 5 === (i + 1) % 5 ? true : false;
+                for (let i = 0; i < 5; i++) {
+                    if (props.page <= 2) {
+                        listNumbers.push(i + 1);
+                        listActives.push(props.page === i ? true : false);
+                    } else if (2 < props.page && props.page <= props.pages.totalPages - 3) {
+                        listNumbers.push(props.page - 2 + i + 1);
+                        listActives.push(i === 2 ? true : false);
+                    } else if (props.pages.totalPages - 3 < props.page) {
+                        listNumbers.push(props.pages.totalPages - 5 + i + 1);
+                        listActives.push(5 - (props.pages.totalPages - props.page) === i ? true : false);
                     }
                 }
             }
-        }
+            setNumbers(listNumbers);
+            setActives(listActives);
+        };
+        
+        initItems();
+    }, [props]);
 
-        initPaginations();
-    });
+    const handleEllipsis = (params, e) => {
+        e.preventDefault();
+        const maxPage = props.pages.totalPages - 1
+        params = params < 0 ? 0 : params;
+        params = params > maxPage ? maxPage : params;
+        props.setPage(params);
+    }
+
+    const handleClick = (params, e) => {
+        e.preventDefault();
+        props.setPage(params);
+    }
+
+    // 새로고침 문제로 인해 결국 href= "~/?page=value&size=value" 로 수정해야할 듯
+    const PaginationItems = () => {
+        const paginationItems = [];
+        for (let i = 0; i < numbers.length; i++) {
+            paginationItems.push(
+                <Pagination.Item key={i} onClick={(e) => {handleClick(numbers[i] - 1, e)}} active={actives[i]}>{numbers[i]}</Pagination.Item>
+            );
+        }
+        return paginationItems;
+    }
 
     return (
         <Pagination className="justify-content-center">
-            <Pagination.First href={`/support/freeboard/${1}/${size}`} disabled={pages.first}/>
-            <Pagination.Prev href={`/support/freeboard/${pages.number}/${size}`} disabled={pages.first}/>
+            <Pagination.First onClick={(e) => {handleClick(0, e)}} disabled={props.pages.first} />
+            <Pagination.Prev onClick={(e) => {handleClick(props.page - 1, e)}} disabled={props.pages.first} />
 
-            {/* 5개 미만일 떄 몇개 표시? */}
-            <Pagination.Ellipsis href={`/support/freeboard/${ellipsePrev}/${size}`} disabled={pages.first}/> 
-            <Pagination.Item href={`/support/freeboard/${paginations.numbers[0]}/${size}`} active={paginations.actives[0]}>{paginations.numbers[0]}</Pagination.Item>
-            <Pagination.Item href={`/support/freeboard/${paginations.numbers[1]}/${size}`} active={paginations.actives[1]}>{paginations.numbers[1]}</Pagination.Item>
-            <Pagination.Item href={`/support/freeboard/${paginations.numbers[2]}/${size}`} active={paginations.actives[2]}>{paginations.numbers[2]}</Pagination.Item>
-            <Pagination.Item href={`/support/freeboard/${paginations.numbers[3]}/${size}`} active={paginations.actives[3]}>{paginations.numbers[3]}</Pagination.Item>
-            <Pagination.Item href={`/support/freeboard/${paginations.numbers[4]}/${size}`} active={paginations.actives[4]}>{paginations.numbers[4]}</Pagination.Item>
-            <Pagination.Ellipsis href={`/support/freeboard/${ellipseNext}/${size}`} disabled={pages.last}/>
-            {/* 5개 미만일 떄 몇개 표시? */}
+            <Pagination.Ellipsis onClick={(e) => {handleEllipsis(props.page - 5, e)}} disabled={props.pages.first} />
+            <PaginationItems />
+            {/* 새로고침 문제로 인해 결국 href= "~/?page=value&size=value" 로 수정해야할 듯 */}
+            {/* <Pagination.Item onClick={(e) => {handleClick(numbers[0] - 1, e)}} active={actives[0]}>{numbers[0]}</Pagination.Item>
+            <Pagination.Item onClick={(e) => {handleClick(numbers[1] - 1, e)}} active={actives[1]}>{numbers[1]}</Pagination.Item>
+            <Pagination.Item onClick={(e) => {handleClick(numbers[2] - 1, e)}} active={actives[2]}>{numbers[2]}</Pagination.Item>
+            <Pagination.Item onClick={(e) => {handleClick(numbers[3] - 1, e)}} active={actives[3]}>{numbers[3]}</Pagination.Item>
+            <Pagination.Item onClick={(e) => {handleClick(numbers[4] - 1, e)}} active={actives[4]}>{numbers[4]}</Pagination.Item> */}
+            <Pagination.Ellipsis onClick={(e) => {handleEllipsis(props.page + 5, e)}} disabled={props.pages.last} />
 
-            <Pagination.Next href={`/support/freeboard/${pages.number+2}/${size}`} disabled={pages.last}/>
-            <Pagination.Last href={`/support/freeboard/${pages.totalPages}/${size}`} disabled={pages.last}/>
+            <Pagination.Next onClick={(e) => {handleClick(props.page + 1, e)}} disabled={props.pages.last} />
+            <Pagination.Last onClick={(e) => {handleClick(props.pages.totalPages - 1, e)}} disabled={props.pages.last} />
         </Pagination>
     );
 }
 
+const SelectSize = (props) => {
+    // 보기 옵션이 바뀌면 page도 바뀌어야 함, 새로운 수식 필요
+    const handleSelect = async (e) => {
+        e.preventDefault();
+        props.setSize(e.target.value);
+        props.setPage(parseInt(props.pages.pageable.offset / e.target.value));
+    }
+
+    return (
+        <div className="d-flex justify-content-end mb-3">
+            <div className="me-2">보기 옵션</div>
+            <select onChange={handleSelect} value={props.size}>
+                <option value={10}>10개씩</option>
+                <option value={20}>20개씩</option>
+                <option value={30}>30개씩</option>
+                <option value={50}>50개씩</option>
+                <option value={100}>100개씩</option>
+            </select>
+        </div>
+    );
+}
+
+const Search = () => {
+    return (
+        <div className="mb-3 text-center">
+            <form>
+                <div className="d-inline mx-2">
+                    <select className="mx-2">
+                        <option value="1">제목</option>
+                        <option value="2">작성자</option>
+                        <option value="3">제목+작성자</option>
+                    </select>
+                </div>
+                <div className="d-inline mx-2">
+                    <input type="text" />
+                </div>
+                <div className="d-inline mx-2">
+                    <button type="submit">검색</button>
+                </div>
+            </form>
+        </div>
+    );
+}
+
 export default function FreeBoard() {
-    const { id, size } = useParams();
+    const [page, setPage] = useState(0);
+    const [size, setSize] = useState(20);
     const [posts, setPosts] = useState([]);
     const [pages, setPages] = useState({});
 
     useEffect(() => {
         const axiosGetPages = async () => {
-            await axios.get(`/support/freeboard/?page=${id-1}&size=${size}`)
+            await axios.get(`/support/freeboard/?page=${page}&size=${size}`)
             .then((response) => {
                 setPages(response.data);
                 setPosts(response.data.content);
@@ -84,31 +146,7 @@ export default function FreeBoard() {
         }
 
         axiosGetPages();
-    }, [id, size]);
-
-    const [newPage, setNewPage] = useState(pages.number);
-    const [newSize, setNewSize] = useState(pages.size);
-
-    const handleSelect = (e) => {
-        e.preventDefault();
-        setNewSize(e.target.value);
-        setNewPage(pages.number * pages.size / newSize);
-    }
-
-    // 개수변경은 되는데, 페이지 이동이 안됨
-    useEffect(() => {
-        const axiosGetPages = async () => {
-            await axios.get(`/support/freeboard/?page=${newPage}&size=${newSize}`)
-            .then((response) => {
-                setPages(response.data);
-                setPosts(response.data.content);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
-        axiosGetPages();
-    }, [newPage, newSize]);
+    }, [page, size]);
 
     return (
         <>
@@ -123,16 +161,8 @@ export default function FreeBoard() {
                         <Card.Body>
                             <Card.Title><h2><strong>자유게시판</strong></h2></Card.Title>
                             <hr/>
-                            <div className="d-flex justify-content-end mb-3">
-                                <div className="me-2">보기 옵션</div>
-                                <select onChange={handleSelect} defaultValue={newSize}>
-                                    <option value={10}>10개씩</option>
-                                    <option value={20}>20개씩</option>
-                                    <option value={30}>30개씩</option>
-                                    <option value={50}>50개씩</option>
-                                    <option value={100}>100개씩</option>
-                                </select>
-                            </div>
+                            <SelectSize size={size} setSize={setSize} setPage={setPage} pages={pages} />
+
                             <Table responsive hover border="2px">
                                 <thead>
                                     <tr style={{ color: "white", backgroundColor: "black" }}>
@@ -167,25 +197,8 @@ export default function FreeBoard() {
                                 </Link>
                             </div>
                             
-                            <GetPagination pages={pages} size={newSize} />
-
-                            <div className="mb-3 text-center">
-                                <form>
-                                    <div className="d-inline mx-2">
-                                        <select className="mx-2">
-                                            <option value="1">제목</option>
-                                            <option value="2">작성자</option>
-                                            <option value="3">제목+작성자</option>
-                                        </select>
-                                    </div>
-                                    <div className="d-inline mx-2">
-                                        <input type="text" />
-                                    </div>
-                                    <div className="d-inline mx-2">
-                                        <button type="submit">검색</button>
-                                    </div>
-                                </form>
-                            </div>
+                            <GetPagination pages={pages} page={page} size={size} setPage={setPage} />
+                            <Search />
                         </Card.Body>
                     </Card>
                 </Col>

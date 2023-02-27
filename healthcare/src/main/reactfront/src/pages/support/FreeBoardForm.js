@@ -3,24 +3,7 @@ import axios from "axios";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "./SideBar";
 import { useNavigate } from "react-router-dom";
-
-const FormButtons = ({ id }) => {
-    if (id) {
-        return (
-            <>
-            <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">수정</Button>
-            <Button href="/support/freeboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
-            </>
-        );
-    } else {
-        return (
-            <>
-            <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">등록</Button>
-            <Button href="/support/freeboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
-            </>
-        );
-    }
-}
+// 파일 업로드: https://cookinghoil.tistory.com/114
 
 const InputForm = () => {
     const navigate = useNavigate();
@@ -53,6 +36,7 @@ const InputForm = () => {
         formData.append("data", new Blob([JSON.stringify(values)], {
             type: "application/json"
         }));
+
         for (var i = 0; i < files.length; i++) {
             formData.append("files", files[i]);
         }
@@ -83,7 +67,8 @@ const InputForm = () => {
                 <textarea className="form-control" id="content" rows="20" onChange={handleChange} value={values.content}></textarea>
             </div>
             <div className="form-group d-flex justify-content-end">
-                <FormButtons />
+                <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">등록</Button>
+                <Button href="/support/freeboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
             </div>
         </form>
     )

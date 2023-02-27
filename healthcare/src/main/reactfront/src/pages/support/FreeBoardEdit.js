@@ -5,25 +5,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import SideBar from "./SideBar";
 // 파일 업로드: https://cookinghoil.tistory.com/114
 
-const FormButtons = ({ id }) => {
-    return (
-        <>
-        {id
-        ?
-        <div>
-            <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">수정</Button>
-            <Button href="/support/freeboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
-        </div>
-        :
-        <div>
-           <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">등록</Button>
-           <Button href="/support/freeboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
-        </div>
-        }
-        </>
-    );
-}
-
 const EditForm = ({ id, post }) => {
     const navigate = useNavigate();
     const [files, setFiles] = useState([]);
@@ -52,8 +33,9 @@ const EditForm = ({ id, post }) => {
         formData.append("data", new Blob([JSON.stringify(values)], {
             type: "application/json"
         }));
-        for (var i = 0; i < e.target.file.files.length; i++) {
-            formData.append("files", e.target.file.files[i]);
+
+        for (var i = 0; i < files.length; i++) {
+            formData.append("files", files[i]);
         }
         
         await axios.put(`/api/post/${id}`, formData, {
@@ -82,7 +64,8 @@ const EditForm = ({ id, post }) => {
                 <textarea className="form-control" id="content" rows="20" onChange={handleChange} value={values.content}></textarea>
             </div>
             <div className="form-group d-flex justify-content-end">
-                <FormButtons id={id} />
+                <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">수정</Button>
+                <Button href={`/support/freeboard/post/${id}`} className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
             </div>
         </form>
     )

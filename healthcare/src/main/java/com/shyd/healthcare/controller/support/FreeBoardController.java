@@ -19,13 +19,19 @@ public class FreeBoardController {
     private final PostService postService;
     private final AttachmentService attachmentService;
 
+//    @GetMapping("/freeboard")
+//    public List<PostResponseDto> freeBoard() {
+//        return this.postService.findAllFreeBoardDesc();
+//    }
+
     @GetMapping("/freeboard")
-    public List<PostResponseDto> freeBoard() {
-        return this.postService.findAllFreeBoardDesc();
+    public Page<PostResponseDto> freeBoard(
+            @PageableDefault(sort = "id", size = 20, direction = Sort.Direction.DESC) Pageable pageable) {
+        return this.postService.findAllFreeBoardDesc(pageable);
     }
 
-    @GetMapping("/freeboard/")
-    public Page<PostResponseDto> freeBoard(
+    @GetMapping("/freeboard/?page={page}&size={size}")
+    public Page<PostResponseDto> freeBoardPage(
             @PageableDefault(sort = "id", size = 20, direction = Sort.Direction.DESC) Pageable pageable) {
         return this.postService.findAllFreeBoardDesc(pageable);
     }
