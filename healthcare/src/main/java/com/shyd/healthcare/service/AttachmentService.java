@@ -8,12 +8,21 @@ import com.shyd.healthcare.dto.attachment.AttachmentUpdateRequestDto;
 import com.shyd.healthcare.repository.AttachmentRepository;
 import com.shyd.healthcare.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,6 +32,20 @@ import java.util.stream.Collectors;
 public class AttachmentService {
     private final PostRepository postRepository;
     private final AttachmentRepository attachmentRepository;
+
+    /** 단일 첨부파일 다운로드 API */
+    @Transactional
+    public ResponseEntity<Resource> download(Long attachmentId) throws MalformedURLException {
+        Attachment entity = this.attachmentRepository.findById(attachmentId).orElseThrow(
+                () -> new IllegalArgumentException("해당 첨부파일이 존재하지 않습니다. id = " + attachmentId));
+        UrlResource resource = new UrlResource("file:" + entity.getFilePath());
+        String encodedFileName = UriUtils.encode(entity.getFileName(), StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=\"" + encodedFileName + "\"";
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+    }
 
     /** 단일 첨부파일 불러오기 */
     @Transactional
@@ -43,7 +66,6 @@ public class AttachmentService {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     /** 다중 첨부파일 저장 */
     @Transactional
     public void save(final Long postId, final List<MultipartFile> files) throws IOException {
