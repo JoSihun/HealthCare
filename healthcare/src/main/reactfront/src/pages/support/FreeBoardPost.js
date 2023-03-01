@@ -111,7 +111,6 @@ export default function FreeBoardPost() {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-        // axios.delete(`/api/attachment/${id}`) 해야하는지 고민
 
         await axios.delete(`/api/post/${id}`)
         .then((response) => {

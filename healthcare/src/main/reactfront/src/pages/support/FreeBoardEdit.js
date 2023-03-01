@@ -5,9 +5,32 @@ import { useParams } from "react-router-dom";
 import SideBar from "./SideBar";
 // 파일 업로드: https://cookinghoil.tistory.com/114
 
+const FileList = (props) => {
+    useEffect(() => {
+
+    }, [props]);
+
+    return (
+        <Card>
+            <Card.Body>
+                {props.fileList.map((file, index) => {
+                    return (
+                        <div key={index} className="d-flex justify-content-between">
+                            <div>{file.name}</div>
+                            <div>{file.size} Byte</div>
+                            {/* 삭제버튼 추가요망 */}
+                        </div>
+                    )
+                })}
+            </Card.Body>
+        </Card>
+    );
+}
+
 const EditForm = ({ id, post }) => {
     const [files, setFiles] = useState([]);
     const [values, setValues] = useState({});
+    const [fileList, setFileList] = useState([]);
 
     useEffect(() => {
         setValues(post);
@@ -23,6 +46,15 @@ const EditForm = ({ id, post }) => {
     const handleChangeFiles = async (e) => {
         e.preventDefault();
         setFiles(e.target.files);
+
+        const arrayList = [];
+        for (let i = 0; i < e.target.files.length; i++) {
+            arrayList.push({
+                name: e.target.files[i].name,
+                size: e.target.files[i].size
+            });
+        }
+        setFileList(arrayList);
     }
 
     const handleSubmit = async (e) => {
@@ -57,6 +89,7 @@ const EditForm = ({ id, post }) => {
             <div className="form-group mb-3">
                 <label htmlFor="file" style={{ fontSize: "20px", fontWeight: "bold"}}>첨부파일</label>
                 <input type="file" className="form-control" id="file" name="file" multiple="multiple" onChange={handleChangeFiles}></input>
+                {0 < fileList.length && <FileList fileList={fileList} />}
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용</label>
@@ -84,6 +117,7 @@ export default function FreeBoardEdit() {
             });
         }
 
+        // axiosGetFile() 추가요망?
         axiosGetPost();
     }, [id]);
 
