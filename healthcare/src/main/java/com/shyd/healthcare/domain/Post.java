@@ -27,7 +27,7 @@ public class Post extends BaseTime {
     private String category;
     private Boolean secretYn;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Attachment> attachmentList;
 
     @Builder
