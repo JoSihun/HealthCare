@@ -18,7 +18,7 @@ public class QNABoardController {
 
     @GetMapping("/qnaboard")
     public List<PostResponseDto> qnaBoard() {
-        return this.postService.findAllQnaBoardDesc();
+        return this.postService.findAllByCategoryDesc("QNABoard");
     }
 
     @GetMapping("/qnaboard/post/{id}")

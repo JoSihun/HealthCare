@@ -17,14 +17,14 @@ import java.util.List;
 public class AttachmentRestController {
     private final AttachmentService attachmentService;
 
+    @GetMapping("/api/attachment/{postId}")
+    public List<AttachmentResponseDto> readAttachment(@PathVariable Long postId) {
+        return this.attachmentService.findAllByPostId(postId);
+    }
+
     @GetMapping("/api/attachment/download/{attachmentId}")
     public ResponseEntity<Resource> downloadAttachment(@PathVariable Long attachmentId) throws MalformedURLException {
         return this.attachmentService.download(attachmentId);
-    }
-
-    @GetMapping("/api/attachment/{postId}")
-    public List<AttachmentResponseDto> attachmentRead(@PathVariable Long postId) {
-        return this.attachmentService.findAllByPostId(postId);
     }
 
 }
