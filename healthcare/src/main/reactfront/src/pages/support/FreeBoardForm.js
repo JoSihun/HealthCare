@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "./SideBar";
-import { useNavigate } from "react-router-dom";
 // 파일 업로드: https://cookinghoil.tistory.com/114
+
 const FileList = (props) => {
     useEffect(() => {
 
@@ -27,7 +27,6 @@ const FileList = (props) => {
 }
 
 const InputForm = () => {
-    const navigate = useNavigate();
     const [files, setFiles] = useState([]);
     const [fileList, setFileList] = useState([]);
     const [values, setValues] = useState({
@@ -77,7 +76,7 @@ const InputForm = () => {
                 "Content-Type": "multipart/form-data"
             }
         }).then((response) => {
-            navigate(`/support/freeboard/post/${response.data}`);
+            window.location.href = `/support/freeboard/post/${response.data}`;
         }).catch((error) => {
             console.log(error);
         });

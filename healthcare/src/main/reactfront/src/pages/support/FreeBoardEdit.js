@@ -1,12 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SideBar from "./SideBar";
 // 파일 업로드: https://cookinghoil.tistory.com/114
 
 const EditForm = ({ id, post }) => {
-    const navigate = useNavigate();
     const [files, setFiles] = useState([]);
     const [values, setValues] = useState({});
 
@@ -43,7 +42,7 @@ const EditForm = ({ id, post }) => {
                 "Content-Type": "multipart/form-data"
             }
         }).then((response) => {
-            navigate(`/support/freeboard/post/${response.data}`);
+            window.location.href = `/support/freeboard/post/${response.data}`;
         }).catch((error) => {
             console.log(error);
         });
