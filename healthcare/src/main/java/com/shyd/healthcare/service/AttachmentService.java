@@ -33,20 +33,6 @@ public class AttachmentService {
     private final PostRepository postRepository;
     private final AttachmentRepository attachmentRepository;
 
-    /** 단일 첨부파일 다운로드 API */
-    @Transactional
-    public ResponseEntity<Resource> download(Long attachmentId) throws MalformedURLException {
-        Attachment entity = this.attachmentRepository.findById(attachmentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 첨부파일이 존재하지 않습니다. id = " + attachmentId));
-        UrlResource resource = new UrlResource("file:" + entity.getFilePath());
-        String encodedFileName = UriUtils.encode(entity.getFileName(), StandardCharsets.UTF_8);
-        String contentDisposition = "attachment; filename=\"" + encodedFileName + "\"";
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
-    }
-
     /** 단일 첨부파일 불러오기 */
     @Transactional
     public AttachmentResponseDto findById(Long attachmentId) {
@@ -63,6 +49,21 @@ public class AttachmentService {
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + postId));
         List<Attachment> attachmentList = entity.getAttachmentList();
         return attachmentList.stream().map(AttachmentResponseDto::new).collect(Collectors.toList());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** 단일 첨부파일 다운로드 API */
+    @Transactional
+    public ResponseEntity<Resource> download(Long attachmentId) throws MalformedURLException {
+        Attachment entity = this.attachmentRepository.findById(attachmentId).orElseThrow(
+                () -> new IllegalArgumentException("해당 첨부파일이 존재하지 않습니다. id = " + attachmentId));
+        UrlResource resource = new UrlResource("file:" + entity.getFilePath());
+        String encodedFileName = UriUtils.encode(entity.getFileName(), StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=\"" + encodedFileName + "\"";
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,11 +97,12 @@ public class AttachmentService {
 
     /** 다중 첨부파일 업데이트 */
     @Transactional
-    public Long update(final Long id, final AttachmentUpdateRequestDto requestDto) {
-        Attachment entity = this.attachmentRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 첨부파일이 존재하지 않습니다. id = " + id)
-        );
-        return entity.update(requestDto);
+    public Long update(final Long postId, final List<MultipartFile> files) throws IOException {
+        Post postEntity = this.postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. postId = " + postId));
+        this.deleteAllByPostId(postId);
+        this.save(postId, files);
+        return postId;
     }
 
     /** 단일 첨부파일 삭제 */
@@ -111,5 +113,22 @@ public class AttachmentService {
         );
         this.attachmentRepository.delete(entity);
         return id;
+    }
+
+    /** 실제 첨부파일 삭제 */
+    @Transactional
+    public Long deleteAllByPostId(final Long postId) {
+        Post postEntity = this.postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. postId = " + postId));
+
+        List<Attachment> attachmentList = postEntity.getAttachmentList();
+        for (Attachment attachmentEntity : attachmentList) {
+            File file = new File(attachmentEntity.getFilePath());
+            if (file.exists()) {
+                file.delete();
+            }
+            this.attachmentRepository.delete(attachmentEntity);
+        }
+        return postId;
     }
 }

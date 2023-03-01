@@ -119,10 +119,7 @@ public class PostService {
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id)
         );
 
-        // entity.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getSecretYn());
-        // return id;
         return entity.update(requestDto);
-
     }
 
     @Transactional

@@ -21,21 +21,22 @@ public class PostRestController {
     public Long postSave(@RequestPart(value = "data") PostSaveRequestDto requestDto,
                          @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
         Long postId = this.postService.save(requestDto);
-        if (files != null) {
-            this.attachmentService.save(postId, files);
-        }
+        if (files != null) { this.attachmentService.save(postId, files); }
         return postId;
     }
 
     @PutMapping("/api/post/{id}")
-    public Long postUpdate(@PathVariable(value = "id") Long id,
+    public Long postUpdate(@PathVariable(value = "id") Long postId,
                            @RequestPart(value = "data") PostUpdateRequestDto requestDto,
-                           @RequestPart(value = "files", required = false) List<MultipartFile> files) {
-        return this.postService.update(id, requestDto);
+                           @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
+        this.attachmentService.deleteAllByPostId(postId);
+        if (files != null) { this.attachmentService.save(postId, files); }
+        return this.postService.update(postId, requestDto);
     }
 
     @DeleteMapping("/api/post/{id}")
     public Long postDelete(@PathVariable Long id) {
+        this.attachmentService.deleteAllByPostId(id);
         return this.postService.delete(id);
     }
 }
