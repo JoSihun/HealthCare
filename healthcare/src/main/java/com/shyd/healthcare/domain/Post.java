@@ -28,6 +28,9 @@ public class Post extends BaseTime {
     private Boolean secretYn;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> commentList;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Attachment> attachmentList;
 
     @Builder
