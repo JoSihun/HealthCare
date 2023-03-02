@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
 import SideBar from "./SideBar";
+import Comment from "./Comment";
 
 const FileList = (props) => {
     const handleDownload = async (e) => {
@@ -153,6 +154,8 @@ export default function FreeBoardPost() {
                             </div>
                         </Card.Body>
                     </Card>
+
+                    <Comment postId={id} />
                 </Col>
             </Row>
         </Container>
