@@ -1,23 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "./SideBar";
+import { Link } from "react-router-dom";
 // 파일 업로드: https://cookinghoil.tistory.com/114
 
 const FileList = (props) => {
-    useEffect(() => {
+    const [files, setFiles] = useState([]);
 
+    useEffect(() => {
+        const values = [];
+        const keys = Object.keys(props.files)
+        for (let i = 0; i < keys.length; i++) {
+            values.push({
+                key: keys[i],
+                name: props.files[keys[i]].name,
+                size: props.files[keys[i]].size,
+            });
+        }
+
+        setFiles(values);
     }, [props]);
+
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        const dataTransfer = new DataTransfer();
+        let fileArray = Array.from(props.files);
+        fileArray.splice(e.target.parentElement.id, 1);
+        fileArray.forEach(file => { dataTransfer.items.add(file); });
+        props.fileRef.current.files = dataTransfer.files;
+        props.setFiles(dataTransfer.files);
+    }
 
     return (
         <Card>
             <Card.Body>
-                {props.fileList.map((file, index) => {
+                {files.map((file, index) => {
                     return (
                         <div key={index} className="d-flex justify-content-between">
                             <div>{file.name}</div>
-                            <div>{file.size} Byte</div>
-                            {/* 삭제버튼 추가요망 */}
+                            <div>{file.size} Byte&nbsp;
+                                <Link id={file.key} onClick={handleDelete} style={{ color: "gray" }}><strong>X</strong></Link>
+                            </div>
                         </div>
                     )
                 })}
@@ -27,8 +51,8 @@ const FileList = (props) => {
 }
 
 const InputForm = () => {
+    const fileRef = useRef(null);
     const [files, setFiles] = useState([]);
-    const [fileList, setFileList] = useState([]);
     const [values, setValues] = useState({
         hits: 0,
         title: "",
@@ -48,15 +72,6 @@ const InputForm = () => {
     const handleChangeFiles = async (e) => {
         e.preventDefault();
         setFiles(e.target.files);
-
-        const arrayList = [];
-        for (let i = 0; i < e.target.files.length; i++) {
-            arrayList.push({
-                name: e.target.files[i].name,
-                size: e.target.files[i].size
-            });
-        }
-        setFileList(arrayList);
     }
 
     const handleSubmit = async (e) => {
@@ -90,8 +105,8 @@ const InputForm = () => {
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="file" style={{ fontSize: "20px", fontWeight: "bold"}}>첨부파일</label>
-                <input type="file" className="form-control" id="file" name="file" multiple="multiple" onChange={handleChangeFiles}></input>
-                {0 < fileList.length && <FileList fileList={fileList} />}
+                <input type="file" className="form-control" id="file" name="file" multiple="multiple" onChange={handleChangeFiles} ref={fileRef}></input>
+                {0 < files.length && <FileList files={files} setFiles={setFiles} fileRef={fileRef} />}
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용</label>
