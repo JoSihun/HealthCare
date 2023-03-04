@@ -55,6 +55,28 @@ public class PostService {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** 제목으로 검색 게시판 목록 조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByTitle(String category, String title, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndTitleContaining(category, title, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    /** 작성자로 검색 게시판 목록 조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByAuthor(String category, String author, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndAuthorContaining(category, author, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    /** 제목 + 작성자로 검색 게시판 목록 조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByTitleOrAuthor(String category, String title, String author, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndTitleContainingOrAuthorContaining(category, title, author, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 게시글 조회 */
     @Transactional
     public PostResponseDto findById(final Long id) {
