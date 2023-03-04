@@ -85,7 +85,6 @@ const GetPagination = (props) => {
 }
 
 const SelectSize = (props) => {
-    // 보기 옵션이 바뀌면 page도 바뀌어야 함, 새로운 수식 필요
     const handleSelect = async (e) => {
         e.preventDefault();
         props.setSize(e.target.value);
@@ -106,22 +105,51 @@ const SelectSize = (props) => {
     );
 }
 
-const Search = () => {
+const Search = (props) => {
+    const [searchValue, setSearchValue] = useState("");
+    const [searchFilter, setSearchFilter] = useState("Title");
+
+    const handleValue = async (e) => {
+        e.preventDefault();
+        setSearchValue(e.target.value);
+    }
+
+    const handleFilter = async (e) => {
+        e.preventDefault();
+        setSearchFilter(e.target.value);
+        console.log(e.target.value)
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await axios.get(`/support/freeboard/search?searchFilter=${searchFilter}&searchValue=${searchValue}`)
+        .then((response) => {
+            props.setPages(response.data);
+            props.setPosts(response.data.content);
+            console.log(response)
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     return (
-        <div className="mb-3 text-center">
-            <form>
-                <div className="d-inline mx-2">
-                    <select className="mx-2">
-                        <option value="1">제목</option>
-                        <option value="2">작성자</option>
-                        <option value="3">제목+작성자</option>
+        <div className="d-flex justify-content-center mb-3">
+            <form onSubmit={handleSubmit}>
+                <div className="form-group d-inline me-1">
+                    <select onChange={handleFilter} value={searchFilter}>
+                        <option value="Title">제목</option>
+                        <option value="Content">내용</option>
+                        <option value="Author">작성자</option>
+                        <option value="TitleContent">제목+내용</option>
+                        <option value="TitleAuthor">제목+작성자</option>
+                        <option value="ContentAuthor">내용+작성자</option>
                     </select>
                 </div>
-                <div className="d-inline mx-2">
-                    <input type="text" />
+                <div className="form-group d-inline mx-1">
+                    <input type="text" onChange={handleValue} value={searchValue} />
                 </div>
-                <div className="d-inline mx-2">
-                    <button type="submit">검색</button>
+                <div className="form-group d-inline ms-1">
+                    <button type="submit" >검색</button>
                 </div>
             </form>
         </div>
@@ -198,7 +226,7 @@ export default function FreeBoard() {
                             </div>
                             
                             <GetPagination pages={pages} page={page} size={size} setPage={setPage} />
-                            <Search />
+                            <Search page={page} size={size} setPosts={setPosts} setPages={setPages} />
                         </Card.Body>
                     </Card>
                 </Col>
