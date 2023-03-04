@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
 
-    /** 게시판별 목록 조회 - 작성순, List */
+    /** 카테고리별 게시판 목록조회 - 작성순, List */
     @Transactional
     public List<PostResponseDto> findAllByCategoryAsc(String category) {
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
@@ -28,7 +28,7 @@ public class PostService {
         return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
-    /** 게시판별 목록 조회 - 최신순, List */
+    /** 카테고리별 게시판 목록조회 - 최신순, List */
     @Transactional
     public List<PostResponseDto> findAllByCategoryDesc(String category) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
@@ -36,7 +36,7 @@ public class PostService {
         return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
-    /** 게시판별 목록 조회 - 작성순, Pageable */
+    /** 카테고리별 게시판 목록조회 - 작성순, Pageable */
     @Transactional
     public Page<PostResponseDto> findAllByCategoryAsc(String category, Pageable pageable) {
         // Sort sort = Sort.by(Sort.Direction.ASC, "id");
@@ -45,7 +45,7 @@ public class PostService {
         return postList.map(PostResponseDto::new);
     }
 
-    /** 게시판별 목록 조회 - 최신순, Pageable */
+    /** 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
     public Page<PostResponseDto> findAllByCategoryDesc(String category, Pageable pageable) {
         // Sort sort = Sort.by(Sort.Direction.DESC, "id");
@@ -55,24 +55,46 @@ public class PostService {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /** 제목으로 검색 게시판 목록 조회 - 최신순, Pageable */
+    /** 제목으로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
     public Page<PostResponseDto> findAllByTitle(String category, String title, Pageable pageable) {
         Page<Post> postList = this.postRepository.findByCategoryAndTitleContaining(category, title, pageable);
         return postList.map(PostResponseDto::new);
     }
 
-    /** 작성자로 검색 게시판 목록 조회 - 최신순, Pageable */
+    /** 내용으로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByContent(String category, String content, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndContentContaining(category, content, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    /** 작성자로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
     public Page<PostResponseDto> findAllByAuthor(String category, String author, Pageable pageable) {
         Page<Post> postList = this.postRepository.findByCategoryAndAuthorContaining(category, author, pageable);
         return postList.map(PostResponseDto::new);
     }
 
-    /** 제목 + 작성자로 검색 게시판 목록 조회 - 최신순, Pageable */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** 제목 + 내용으로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByTitleOrContent(String category, String title, String content, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndTitleContainingOrContentContaining(category, title, content, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    /** 제목 + 작성자로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
     public Page<PostResponseDto> findAllByTitleOrAuthor(String category, String title, String author, Pageable pageable) {
         Page<Post> postList = this.postRepository.findByCategoryAndTitleContainingOrAuthorContaining(category, title, author, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    /** 내용 + 작성자로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByContentOrAuthor(String category, String content, String author, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndContentContainingOrAuthorContaining(category, content, author, pageable);
         return postList.map(PostResponseDto::new);
     }
 
