@@ -21,6 +21,28 @@ public class FreeBoardController {
         return this.postService.findAllByCategoryDesc("FreeBoard", pageable);
     }
 
+    @GetMapping("/freeboard/search")
+    public Page<PostResponseDto> freeBoardSearch(
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "content", required = false) String content,
+            @RequestParam(value = "author", required = false) String author,
+            @PageableDefault(sort = "id", size = 20, direction = Sort.Direction.DESC) Pageable pageable) {
+        if (title != null && content == null && author == null)
+            return this.postService.findAllByTitle("FreeBoard", title, pageable);
+        else if (title == null && content != null && author == null)
+            return this.postService.findAllByContent("FreeBoard", content, pageable);
+        else if (title == null && content == null && author != null)
+            return this.postService.findAllByAuthor("FreeBoard", author, pageable);
+        else if (title != null && content != null && author == null)
+            return this.postService.findAllByTitleOrContent("FreeBoard", title, content, pageable);
+        else if (title != null && content == null && author != null)
+            return this.postService.findAllByTitleOrAuthor("FreeBoard", title, author, pageable);
+        else if (title == null && content != null && author != null)
+            return this.postService.findAllByContentOrAuthor("FreeBoard", content, author, pageable);
+        else
+            return this.postService.findAllByCategoryDesc("FreeBoard", pageable);
+    }
+
     @GetMapping("/freeboard/post/{id}")
     public PostResponseDto freeBoardPost(@PathVariable Long id) {
         return this.postService.findById(id);
@@ -30,4 +52,5 @@ public class FreeBoardController {
     public PostResponseDto freeBoardForm(@PathVariable Long id) {
         return this.postService.findById(id);
     }
+
 }
