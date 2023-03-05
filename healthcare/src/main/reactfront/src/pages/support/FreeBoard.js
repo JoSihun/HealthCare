@@ -1,94 +1,17 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Card, Col, Container, Pagination, Row, Table } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import SideBar from "./SideBar";
+import React, { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 import "../../styles/FreeBoard.css";
-
-const GetPagination = (props) => {
-    const [numbers, setNumbers] = useState([]);
-    const [actives, setActives] = useState([]);
-
-    useEffect(() => {
-        const initItems = async () => {
-            const listNumbers = [];
-            const listActives = [];
-            if (props.pages.totalPages < 5) {
-                for (let i = 0; i < props.pages.totalPages; i++) {
-                    listNumbers.push(i + 1)
-                    listActives.push(props.page === i ? true : false);
-                }
-            } else {
-                for (let i = 0; i < 5; i++) {
-                    if (props.page <= 2) {
-                        listNumbers.push(i + 1);
-                        listActives.push(props.page === i ? true : false);
-                    } else if (2 < props.page && props.page <= props.pages.totalPages - 3) {
-                        listNumbers.push(props.page - 2 + i + 1);
-                        listActives.push(i === 2 ? true : false);
-                    } else if (props.pages.totalPages - 3 < props.page) {
-                        listNumbers.push(props.pages.totalPages - 5 + i + 1);
-                        listActives.push(5 - (props.pages.totalPages - props.page) === i ? true : false);
-                    }
-                }
-            }
-            setNumbers(listNumbers);
-            setActives(listActives);
-        };
-        
-        initItems();
-    }, [props]);
-
-    const handleEllipsis = (params, e) => {
-        e.preventDefault();
-        const maxPage = props.pages.totalPages - 1
-        params = params < 0 ? 0 : params;
-        params = params > maxPage ? maxPage : params;
-        props.setPage(params);
-    }
-
-    const handleClick = (params, e) => {
-        e.preventDefault();
-        props.setPage(params);
-    }
-
-    // 새로고침 문제로 인해 결국 href= "~/?page=value&size=value" 로 수정해야할 듯
-    const PaginationItems = () => {
-        const paginationItems = [];
-        for (let i = 0; i < numbers.length; i++) {
-            paginationItems.push(
-                <Pagination.Item key={i} onClick={(e) => {handleClick(numbers[i] - 1, e)}} active={actives[i]}>{numbers[i]}</Pagination.Item>
-            );
-        }
-        return paginationItems;
-    }
-
-    return (
-        <Pagination className="justify-content-center">
-            <Pagination.First onClick={(e) => {handleClick(0, e)}} disabled={props.pages.first} />
-            <Pagination.Prev onClick={(e) => {handleClick(props.page - 1, e)}} disabled={props.pages.first} />
-
-            <Pagination.Ellipsis onClick={(e) => {handleEllipsis(props.page - 5, e)}} disabled={props.pages.first} />
-            <PaginationItems />
-            {/* 새로고침 문제로 인해 결국 href= "~/?page=value&size=value" 로 수정해야할 듯 */}
-            {/* <Pagination.Item onClick={(e) => {handleClick(numbers[0] - 1, e)}} active={actives[0]}>{numbers[0]}</Pagination.Item>
-            <Pagination.Item onClick={(e) => {handleClick(numbers[1] - 1, e)}} active={actives[1]}>{numbers[1]}</Pagination.Item>
-            <Pagination.Item onClick={(e) => {handleClick(numbers[2] - 1, e)}} active={actives[2]}>{numbers[2]}</Pagination.Item>
-            <Pagination.Item onClick={(e) => {handleClick(numbers[3] - 1, e)}} active={actives[3]}>{numbers[3]}</Pagination.Item>
-            <Pagination.Item onClick={(e) => {handleClick(numbers[4] - 1, e)}} active={actives[4]}>{numbers[4]}</Pagination.Item> */}
-            <Pagination.Ellipsis onClick={(e) => {handleEllipsis(props.page + 5, e)}} disabled={props.pages.last} />
-
-            <Pagination.Next onClick={(e) => {handleClick(props.page + 1, e)}} disabled={props.pages.last} />
-            <Pagination.Last onClick={(e) => {handleClick(props.pages.totalPages - 1, e)}} disabled={props.pages.last} />
-        </Pagination>
-    );
-}
+import Paging from "./Paging";
+import SideBar from "./SideBar";
 
 const SelectSize = (props) => {
     const handleSelect = async (e) => {
         e.preventDefault();
-        props.setSize(e.target.value);
-        props.setPage(parseInt(props.pages.pageable.offset / e.target.value));
+        props.searchParams.set("page", parseInt(props.pages.pageable.offset / e.target.value) + 1);
+        props.searchParams.set("size", e.target.value);
+        props.setSearchParams(props.searchParams);
     }
 
     return (
@@ -117,19 +40,12 @@ const Search = (props) => {
     const handleFilter = async (e) => {
         e.preventDefault();
         setSearchFilter(e.target.value);
-        console.log(e.target.value)
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.get(`/support/freeboard/search?searchFilter=${searchFilter}&searchValue=${searchValue}`)
-        .then((response) => {
-            props.setPages(response.data);
-            props.setPosts(response.data.content);
-            console.log(response)
-        }).catch((error) => {
-            console.log(error);
-        });
+        const queryString = `searchFilter=${searchFilter}&searchValue=${searchValue}`;
+        window.location.href = `/support/freeboard/search?${queryString}`;
     }
 
     return (
@@ -156,15 +72,49 @@ const Search = (props) => {
     );
 }
 
+const FreeBoardList = (props) => {
+    const { posts } = props;
+
+    return (
+        <Table responsive hover border="2px">
+            <thead>
+                <tr style={{ color: "white", backgroundColor: "black" }}>
+                    <th className="text-left">#</th>
+                    <th className="text-left">제목</th>
+                    <th className="text-center">조회수</th>
+                    <th className="text-center">작성자</th>
+                    <th className="text-center">작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                {posts.map((post, index) => (
+                    <tr key={index}>
+                        <td className="text-left">{post.id}</td>
+                        <td className="text-left">
+                            <Link to={`/support/freeboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
+                                {post.title}
+                            </Link>
+                        </td>
+                        <td className="text-center">{post.hits}</td>
+                        <td className="text-center">{post.author}</td>
+                        <td className="text-center">{post.createdDate}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </Table>
+    );
+}
+
 export default function FreeBoard() {
-    const [page, setPage] = useState(0);
-    const [size, setSize] = useState(20);
     const [posts, setPosts] = useState([]);
     const [pages, setPages] = useState({});
+    const [searchParams, setSearchParams] = useSearchParams();
+    const page = searchParams.get("page") ? searchParams.get("page") : 1;
+    const size = searchParams.get("size") ? searchParams.get("size") : 20;
 
     useEffect(() => {
         const axiosGetPages = async () => {
-            await axios.get(`/support/freeboard/?page=${page}&size=${size}`)
+            await axios.get(`/support/freeboard/?page=${page - 1}&size=${size}`)
             .then((response) => {
                 setPages(response.data);
                 setPosts(response.data.content);
@@ -189,44 +139,17 @@ export default function FreeBoard() {
                         <Card.Body>
                             <Card.Title><h2><strong>자유게시판</strong></h2></Card.Title>
                             <hr/>
-                            <SelectSize size={size} setSize={setSize} setPage={setPage} pages={pages} />
+                            <SelectSize pages={pages} size={size} searchParams={searchParams} setSearchParams={setSearchParams} />
 
-                            <Table responsive hover border="2px">
-                                <thead>
-                                    <tr style={{ color: "white", backgroundColor: "black" }}>
-                                        <th className="text-left">#</th>
-                                        <th className="text-left">제목</th>
-                                        <th className="text-center">조회수</th>
-                                        <th className="text-center">작성자</th>
-                                        <th className="text-center">작성일</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {posts.map((post, index) => {
-                                        return (
-                                            <tr key={index}>
-                                                <td className="text-left">{post.id}</td>
-                                                <td className="text-left">
-                                                    <Link to={`/support/freeboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
-                                                        {post.title}
-                                                    </Link>
-                                                </td>
-                                                <td className="text-center">{post.hits}</td>
-                                                <td className="text-center">{post.author}</td>
-                                                <td className="text-center">{post.createdDate}</td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </Table>
+                            <FreeBoardList posts={posts} />
                             <div className="d-flex justify-content-end">
                                 <Link to={"/support/freeboard/form"}>
                                     <Button variant="dark" style={{ width: "100px" }}>글쓰기</Button>
                                 </Link>
                             </div>
                             
-                            <GetPagination pages={pages} page={page} size={size} setPage={setPage} />
-                            <Search page={page} size={size} setPosts={setPosts} setPages={setPages} />
+                            <Paging pages={pages} searchParams={searchParams} setSearchParams={setSearchParams} />
+                            <Search searchParams={searchParams} setSearchParams={setSearchParams} />
                         </Card.Body>
                     </Card>
                 </Col>

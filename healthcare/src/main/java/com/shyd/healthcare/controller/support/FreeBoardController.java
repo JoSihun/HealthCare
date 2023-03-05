@@ -26,22 +26,20 @@ public class FreeBoardController {
             @RequestParam(value = "searchValue", required = false) String searchValue,
             @RequestParam(value = "searchFilter", required = false) String searchFilter,
             @PageableDefault(sort = "id", size = 20, direction = Sort.Direction.DESC) Pageable pageable) {
-        if (searchFilter != null && searchValue != null){
-            if (searchFilter.equals("Title"))
-                return this.postService.findAllByTitle("FreeBoard", searchValue, pageable);
-            else if (searchFilter.equals("Content"))
-                return this.postService.findAllByContent("FreeBoard", searchValue, pageable);
-            else if (searchFilter.equals("Author"))
-                return this.postService.findAllByAuthor("FreeBoard", searchValue, pageable);
-            else if (searchFilter.equals("TitleContent"))
-                return this.postService.findAllByTitleOrContent("FreeBoard", searchValue, searchValue, pageable);
-            else if (searchFilter.equals("TitleAuthor"))
-                return this.postService.findAllByTitleOrAuthor("FreeBoard", searchValue, searchValue, pageable);
-            else if (searchFilter.equals("ContentAuthor"))
-                return this.postService.findAllByContentOrAuthor("FreeBoard", searchValue, searchValue, pageable);
-        }
-
-        return this.postService.findAllByCategoryDesc("FreeBoard", pageable);
+        if (searchFilter.equals("Title"))
+            return this.postService.findAllByTitle("FreeBoard", searchValue, pageable);
+        else if (searchFilter.equals("Content"))
+            return this.postService.findAllByContent("FreeBoard", searchValue, pageable);
+        else if (searchFilter.equals("Author"))
+            return this.postService.findAllByAuthor("FreeBoard", searchValue, pageable);
+        else if (searchFilter.equals("TitleContent"))
+            return this.postService.findAllByTitleOrContent("FreeBoard", searchValue, searchValue, pageable);
+        else if (searchFilter.equals("TitleAuthor"))
+            return this.postService.findAllByTitleOrAuthor("FreeBoard", searchValue, searchValue, pageable);
+        else if (searchFilter.equals("ContentAuthor"))
+            return this.postService.findAllByContentOrAuthor("FreeBoard", searchValue, searchValue, pageable);
+        else
+            return this.postService.findAllByCategoryDesc("FreeBoard", pageable);
     }
 
     @GetMapping("/freeboard/post/{id}")
