@@ -27,6 +27,7 @@ import TestPage from './components/TestPage';
 import QNABoardForm from './pages/support/QNABoardForm';
 import QNABoardPost from './pages/support/QNABoardPost';
 import FreeBoardEdit from './pages/support/FreeBoardEdit';
+import FreeBoardSearch from './pages/support/FreeBoardSearch';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
                   <Route path="/support/qnaboard/post/:id" element={<QNABoardPost />}></Route>
 
                   <Route path="/support/freeboard" element={<FreeBoard />}></Route>
+                  <Route path="/support/freeboard/search" element={<FreeBoardSearch />}></Route>
                   <Route path="/support/freeboard/form" element={<FreeBoardForm />}></Route>
                   <Route path="/support/freeboard/form/:id" element={<FreeBoardEdit />}></Route>
                   <Route path="/support/freeboard/post/:id" element={<FreeBoardPost />}></Route>
