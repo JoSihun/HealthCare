@@ -96,10 +96,11 @@ public class AttachmentService {
         return postId;
     }
 
-    /** 다중 첨부파일 업데이트 */
+    /** 다중 첨부파일 수정 */
     @Transactional
     public Long update(final Long postId, final List<MultipartFile> files) throws IOException {
-        this.deleteAllByPostId(postId);
+        this.deleteAllFilesByPostId(postId);
+        this.deleteAllObjectsByPostId(postId);
         this.save(postId, files);
         return postId;
     }
@@ -113,9 +114,19 @@ public class AttachmentService {
         return id;
     }
 
+    /** 다중 첨부파일 삭제 */
+    @Transactional
+    public void deleteAllObjectsByPostId(final Long postId) {
+        Post postEntity = this.postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. postId = " + postId));
+
+        List<Attachment> attachmentList = postEntity.getAttachmentList();
+        this.attachmentRepository.deleteAll(attachmentList);
+    }
+
     /** 실제 첨부파일 삭제 */
     @Transactional
-    public void deleteAllByPostId(final Long postId) {
+    public void deleteAllFilesByPostId(final Long postId) {
         Post postEntity = this.postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. postId = " + postId));
 
@@ -125,7 +136,6 @@ public class AttachmentService {
             if (file.exists() && file.delete()) {
                 System.out.println("[DELETE] File Removed Success " + attachmentEntity.getFilePath());
             }
-            this.attachmentRepository.delete(attachmentEntity);
         }
     }
 }

@@ -34,7 +34,7 @@ public class PostRestController {
 
     @DeleteMapping("/api/post/{id}")
     public Long postDelete(@PathVariable Long id) {
-        this.attachmentService.deleteAllByPostId(id);
+        this.attachmentService.deleteAllFilesByPostId(id);
         return this.postService.delete(id);
     }
 }
