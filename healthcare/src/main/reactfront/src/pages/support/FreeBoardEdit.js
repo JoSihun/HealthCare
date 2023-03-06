@@ -1,39 +1,68 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "./SideBar";
 
 const FileList = (props) => {
-    useEffect(() => {
+    const [files, setFiles] = useState([]);
 
+    useEffect(() => {
+        const values = [];
+        const keys = Object.keys(props.files)
+        for (let i = 0; i < keys.length; i++) {
+            values.push({
+                key: keys[i],
+                name: props.files[keys[i]].name,
+                size: props.files[keys[i]].size,
+                // 추후 첨부파일 수정기능 추가요망
+                // name: props.files[keys[i]].name || props.files[keys[i]].fileName,
+                // size: props.files[keys[i]].size || props.files[keys[i]].fileSize,
+            });
+        }
+
+        setFiles(values);
     }, [props]);
+
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        const dataTransfer = new DataTransfer();
+        let fileArray = Array.from(props.files);
+        fileArray.splice(e.target.parentElement.id, 1);
+        fileArray.forEach(file => { dataTransfer.items.add(file); });
+        props.fileRef.current.files = dataTransfer.files;
+        props.setFiles(dataTransfer.files);
+    }
 
     return (
         <Card>
             <Card.Body>
-                {props.fileList.map((file, index) => {
-                    return (
-                        <div key={index} className="d-flex justify-content-between">
-                            <div>{file.name}</div>
-                            <div>{file.size} Byte</div>
-                            {/* 삭제버튼 추가요망 */}
+                {files.map((file, index) => (
+                    <div key={index} className="d-flex justify-content-between">
+                        <div>{file.name}</div>
+                        <div>{file.size} Byte&nbsp;
+                            <Link id={file.key} onClick={handleDelete} style={{ color: "gray" }}><strong>X</strong></Link>
                         </div>
-                    )
-                })}
+                    </div>
+                ))}
             </Card.Body>
         </Card>
     );
 }
 
-const EditForm = ({ id, post }) => {
-    const [files, setFiles] = useState([]);
-    const [values, setValues] = useState({});
-    const [fileList, setFileList] = useState([]);
+const EditForm = (props) => {
+    const { id } = props;
+    const fileRef = useRef(null);
+    const [files, setFiles] = useState([]); 
+    const [values, setValues] = useState(props.post);
+    // 추후 첨부파일 수정기능 추가요망
+    // const [files, setFiles] = useState(props.files);
 
     useEffect(() => {
-        setValues(post);
-    }, [id, post]);
+        // 추후 첨부파일 수정기능 추가요망
+        // setFiles(props.files); 
+        setValues(props.post);
+    }, [props]);
     
     const handleChange = async (e) => {
         e.preventDefault();
@@ -45,15 +74,6 @@ const EditForm = ({ id, post }) => {
     const handleChangeFiles = async (e) => {
         e.preventDefault();
         setFiles(e.target.files);
-
-        const arrayList = [];
-        for (let i = 0; i < e.target.files.length; i++) {
-            arrayList.push({
-                name: e.target.files[i].name,
-                size: e.target.files[i].size
-            });
-        }
-        setFileList(arrayList);
     }
 
     const handleSubmit = async (e) => {
@@ -87,8 +107,8 @@ const EditForm = ({ id, post }) => {
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="file" style={{ fontSize: "20px", fontWeight: "bold"}}>첨부파일</label>
-                <input type="file" className="form-control" id="file" name="file" multiple="multiple" onChange={handleChangeFiles}></input>
-                {0 < fileList.length && <FileList fileList={fileList} />}
+                <input type="file" className="form-control" id="file" name="file" multiple="multiple" onChange={handleChangeFiles} ref={fileRef}></input>
+                {0 < files.length && <FileList files={files} setFiles={setFiles} fileRef={fileRef} />}
             </div>
             <div className="form-group mb-3">
                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용</label>
@@ -105,19 +125,29 @@ const EditForm = ({ id, post }) => {
 export default function FreeBoardEdit() {
     const { id } = useParams();
     const [post, setPost] = useState({});
+    const [files, setFiles] = useState([]);
 
     useEffect(() => {
         const axiosGetPost = async () => {
-            await axios.get(`/support/freeboard/post/${id}`)
+            await axios.get(`/support/freeboard/form/${id}`)
             .then((response) => {
                 setPost(response.data);
             }).catch((error) => {
                 console.log(error);
             });
         }
+        
+        const axiosGetFiles = async () => {
+            await axios.get(`/api/attachment/${id}`)
+            .then((response) => {
+                setFiles(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
 
-        // axiosGetFile() 추가요망?
         axiosGetPost();
+        axiosGetFiles();
     }, [id]);
 
     return (
@@ -132,7 +162,7 @@ export default function FreeBoardEdit() {
                         <Card.Body>
                             <Card.Title><h2><strong>자유게시판</strong></h2></Card.Title>
                             <hr/>
-                            <EditForm id={id} post={post} />
+                            <EditForm id={id} post={post} files={files} />
                         </Card.Body>
                     </Card>
                 </Col>

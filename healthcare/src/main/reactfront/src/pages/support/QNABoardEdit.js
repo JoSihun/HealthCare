@@ -15,6 +15,9 @@ const FileList = (props) => {
                 key: keys[i],
                 name: props.files[keys[i]].name,
                 size: props.files[keys[i]].size,
+                // 추후 첨부파일 수정기능 추가요망
+                // name: props.files[keys[i]].name || props.files[keys[i]].fileName,
+                // size: props.files[keys[i]].size || props.files[keys[i]].fileSize,
             });
         }
 
@@ -34,32 +37,32 @@ const FileList = (props) => {
     return (
         <Card>
             <Card.Body>
-                {files.map((file, index) => {
-                    return (
-                        <div key={index} className="d-flex justify-content-between">
-                            <div>{file.name}</div>
-                            <div>{file.size} Byte&nbsp;
-                                <Link id={file.key} onClick={handleDelete} style={{ color: "gray" }}><strong>X</strong></Link>
-                            </div>
+                {files.map((file, index) => (
+                    <div key={index} className="d-flex justify-content-between">
+                        <div>{file.name}</div>
+                        <div>{file.size} Byte&nbsp;
+                            <Link id={file.key} onClick={handleDelete} style={{ color: "gray" }}><strong>X</strong></Link>
                         </div>
-                    )
-                })}
+                    </div>
+                ))}
             </Card.Body>
         </Card>
     );
 }
 
-const InputForm = () => {
+const EditForm = (props) => {
+    const { id } = props;
     const fileRef = useRef(null);
-    const [files, setFiles] = useState([]);
-    const [values, setValues] = useState({
-        hits: 0,
-        title: "",
-        content: "",
-        author: "Admin",
-        category: "FreeBoard",
-        secretYn: false,
-    });
+    const [files, setFiles] = useState([]); 
+    const [values, setValues] = useState(props.post);
+    // 추후 첨부파일 수정기능 추가요망
+    // const [files, setFiles] = useState(props.files);
+
+    useEffect(() => {
+        // 추후 첨부파일 수정기능 추가요망
+        // setFiles(props.files); 
+        setValues(props.post);
+    }, [props]);
     
     const handleChange = async (e) => {
         e.preventDefault();
@@ -67,7 +70,7 @@ const InputForm = () => {
             [e.target.id]: e.target.value
         });
     }
-    
+
     const handleChangeFiles = async (e) => {
         e.preventDefault();
         setFiles(e.target.files);
@@ -85,7 +88,7 @@ const InputForm = () => {
             formData.append("files", files[i]);
         }
         
-        await axios.post(`/api/post`, formData, {
+        await axios.put(`/api/post/${id}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -112,14 +115,41 @@ const InputForm = () => {
                 <textarea className="form-control" id="content" rows="20" onChange={handleChange} value={values.content}></textarea>
             </div>
             <div className="form-group d-flex justify-content-end">
-                <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">등록</Button>
-                <Button href="/support/freeboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
+                <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">수정</Button>
+                <Button href={`/support/freeboard/post/${id}`} className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
             </div>
         </form>
     )
 }
 
 export default function QNABoardEdit() {
+    const { id } = useParams();
+    const [post, setPost] = useState({});
+    const [files, setFiles] = useState([]);
+
+    useEffect(() => {
+        const axiosGetPost = async () => {
+            await axios.get(`/support/freeboard/form/${id}`)
+            .then((response) => {
+                setPost(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+        
+        const axiosGetFiles = async () => {
+            await axios.get(`/api/attachment/${id}`)
+            .then((response) => {
+                setFiles(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
+        axiosGetPost();
+        axiosGetFiles();
+    }, [id]);
+
     return (
         <Container fluid>
             <Row className="justify-content-center">
@@ -132,7 +162,7 @@ export default function QNABoardEdit() {
                         <Card.Body>
                             <Card.Title><h2><strong>Q&A</strong></h2></Card.Title>
                             <hr/>
-                            <InputForm />
+                            <EditForm id={id} post={post} files={files} />
                         </Card.Body>
                     </Card>
                 </Col>
