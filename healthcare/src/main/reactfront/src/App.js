@@ -17,6 +17,7 @@ import FAQBoard from "./pages/support/FAQBoard";
 import FAQPostForm from './pages/support/FAQPostForm';
 
 import QNABoard from "./pages/support/QNABoard";
+import QNABoardSearch from "./pages/support/QNABoardSearch";
 
 import FreeBoard from './pages/support/FreeBoard';
 import FreeBoardPost from './pages/support/FreeBoardPost';
@@ -46,6 +47,7 @@ function App() {
                   <Route path="/support/faqboard/form" element={<FAQPostForm />}></Route>
                   
                   <Route path="/support/qnaboard" element={<QNABoard />}></Route>
+                  <Route path="/support/qnaboard/search" element={<QNABoardSearch />}></Route>
                   <Route path="/support/qnaboard/form" element={<QNABoardForm />}></Route>
                   <Route path="/support/qnaboard/form/:id" element={<QNABoardForm />}></Route>
                   <Route path="/support/qnaboard/post/:id" element={<QNABoardPost />}></Route>

@@ -28,8 +28,8 @@ const SelectSize = (props) => {
 }
 
 const Search = (props) => {
-    const [searchValue, setSearchValue] = useState("");
-    const [searchFilter, setSearchFilter] = useState("Title");
+    const [searchValue, setSearchValue] = useState(props.searchParams.get("searchValue"));
+    const [searchFilter, setSearchFilter] = useState(props.searchParams.get("searchFilter"));
 
     const handleValue = async (e) => {
         e.preventDefault();
@@ -43,8 +43,10 @@ const Search = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const queryString = `searchFilter=${searchFilter}&searchValue=${searchValue}`;
-        window.location.href = `/support/qnaboard/search?${queryString}`;
+        props.searchParams.delete("page");
+        props.searchParams.set("searchFilter", searchFilter);
+        props.searchParams.set("searchValue", searchValue);
+        props.setSearchParams(props.searchParams);
     }
 
     return (
@@ -104,16 +106,23 @@ const QNABoardList = (props) => {
     );
 }
 
-export default function QNABoard() {
+export default function QNABoardSearch() {
     const [posts, setPosts] = useState([]);
     const [pages, setPages] = useState({});
     const [searchParams, setSearchParams] = useSearchParams();
+
+    const searchValue = searchParams.get("searchValue");
+    const searchFilter = searchParams.get("searchFilter");
     const page = searchParams.get("page") ? searchParams.get("page") : 1;
     const size = searchParams.get("size") ? searchParams.get("size") : 20;
 
     useEffect(() => {
         const axiosGetPages = async () => {
-            await axios.get(`/support/qnaboard/?page=${page - 1}&size=${size}`)
+            const queryString1 = `searchFilter=${searchFilter}&searchValue=${searchValue}`;
+            const queryString2 = `page=${page - 1}&size=${size}`;
+            const queryString = `${queryString1}&${queryString2}`;
+
+            await axios.get(`/support/qnaboard/search/?${queryString}`)
             .then((response) => {
                 setPages(response.data);
                 setPosts(response.data.content);
@@ -123,7 +132,7 @@ export default function QNABoard() {
         }
 
         axiosGetPages();
-    }, [page, size]);
+    }, [page, size, searchValue, searchFilter]);
 
     return (
         <div>

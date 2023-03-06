@@ -119,7 +119,7 @@ const InputForm = () => {
     )
 }
 
-export default function QNABoardForm() {
+export default function QNABoardEdit() {
     return (
         <Container fluid>
             <Row className="justify-content-center">
