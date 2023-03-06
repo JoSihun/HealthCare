@@ -55,7 +55,6 @@ function App() {
                   <Route path="/support/freeboard/form" element={<FreeBoardForm />}></Route>
                   <Route path="/support/freeboard/form/:id" element={<FreeBoardEdit />}></Route>
                   <Route path="/support/freeboard/post/:id" element={<FreeBoardPost />}></Route>
-                  <Route path="/support/freeboard/:id/:size" element={<FreeBoard />}></Route>
 
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
 
