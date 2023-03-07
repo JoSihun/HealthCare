@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import {Accordion, Row, Col, Button, Card} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import axios from 'axios';
-import SideBar from './SideBar';
+import SideBar from "../../components/support/SideBar";
 import FAQPostForm from './FAQPostForm';
 //SideBar 참고: https://citylock77.tistory.com/130
 //React GET, POST 통신: https://velog.io/@easyhyun00/Spring-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-Spring-React-%EC%97%B0%EA%B2%B0

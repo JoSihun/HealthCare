@@ -3,7 +3,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 import Navigation from "./components/Navigation";
 import Banner from './components/Banner';
-import Home from "./components/Home";
+import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 
@@ -17,18 +17,19 @@ import FAQBoard from "./pages/support/FAQBoard";
 import FAQPostForm from './pages/support/FAQPostForm';
 
 import QNABoard from "./pages/support/QNABoard";
+import QNABoardPost from './pages/support/QNABoardPost';
+import QNABoardForm from './pages/support/QNABoardForm';
+import QNABoardEdit from './pages/support/QNABoardEdit';
 import QNABoardSearch from "./pages/support/QNABoardSearch";
 
 import FreeBoard from './pages/support/FreeBoard';
 import FreeBoardPost from './pages/support/FreeBoardPost';
 import FreeBoardForm from './pages/support/FreeBoardForm';
-
-import LiveChat from "./pages/support/LiveChat";
-import TestPage from './components/TestPage';
-import QNABoardForm from './pages/support/QNABoardForm';
-import QNABoardPost from './pages/support/QNABoardPost';
 import FreeBoardEdit from './pages/support/FreeBoardEdit';
 import FreeBoardSearch from './pages/support/FreeBoardSearch';
+
+import LiveChat from "./pages/support/LiveChat";
+
 
 function App() {
   return (
@@ -49,7 +50,7 @@ function App() {
                   <Route path="/support/qnaboard" element={<QNABoard />}></Route>
                   <Route path="/support/qnaboard/search" element={<QNABoardSearch />}></Route>
                   <Route path="/support/qnaboard/form" element={<QNABoardForm />}></Route>
-                  <Route path="/support/qnaboard/form/:id" element={<QNABoardForm />}></Route>
+                  <Route path="/support/qnaboard/form/:id" element={<QNABoardEdit />}></Route>
                   <Route path="/support/qnaboard/post/:id" element={<QNABoardPost />}></Route>
 
                   <Route path="/support/freeboard" element={<FreeBoard />}></Route>
@@ -61,7 +62,6 @@ function App() {
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
 
                   <Route path="/my-page" element={<MyPage />}></Route>
-                  <Route path="/testpage" element={<TestPage />}></Route>
                   
                   {/* 수정중입니다 */}
                   <Route path="/login" element={<Login />}></Route>

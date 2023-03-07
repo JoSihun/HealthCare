@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Card, Col, Row} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
-import SideBar from "./SideBar";
+import SideBar from "../../components/support/SideBar";
 import bg_black from "../../assets/images/bg_black.jpg"
 
 export default function LiveChat() {

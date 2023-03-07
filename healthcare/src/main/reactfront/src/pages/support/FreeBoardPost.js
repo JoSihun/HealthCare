@@ -2,8 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
-import SideBar from "./SideBar";
-import Comment from "./Comment";
+import SideBar from "../../components/support/SideBar";
+import Comment from "../../components/support/Comment";
 
 const FileList = (props) => {
     const handleDownload = async (e) => {

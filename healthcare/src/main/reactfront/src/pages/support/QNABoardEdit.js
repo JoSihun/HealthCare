@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import SideBar from "./SideBar";
+import SideBar from "../../components/support/SideBar";
 
 const FileList = (props) => {
     const [files, setFiles] = useState([]);
