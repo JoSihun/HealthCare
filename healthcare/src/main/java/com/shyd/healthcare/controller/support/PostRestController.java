@@ -18,7 +18,7 @@ public class PostRestController {
     private final AttachmentService attachmentService;
 
     @PostMapping("/api/post")
-    public Long postSave(@RequestPart(value = "data") PostSaveRequestDto requestDto,
+    public Long postSave(@RequestBody PostSaveRequestDto requestDto,
                          @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
         Long postId = this.postService.save(requestDto);
         return this.attachmentService.save(postId, files);
@@ -26,7 +26,7 @@ public class PostRestController {
 
     @PutMapping("/api/post/{id}")
     public Long postUpdate(@PathVariable(value = "id") Long postId,
-                           @RequestPart(value = "data") PostUpdateRequestDto requestDto,
+                           @RequestBody PostUpdateRequestDto requestDto,
                            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
         this.attachmentService.update(postId, files);
         return this.postService.update(postId, requestDto);

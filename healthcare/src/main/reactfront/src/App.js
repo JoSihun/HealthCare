@@ -14,8 +14,6 @@ import Login from "./components/Login";
 import MyPage from "./components/MyPage";
 
 import FAQBoard from "./pages/support/FAQBoard";
-import FAQPostForm from './pages/support/FAQPostForm';
-
 import QNABoard from "./pages/support/QNABoard";
 import QNABoardPost from './pages/support/QNABoardPost';
 import QNABoardForm from './pages/support/QNABoardForm';
@@ -45,8 +43,6 @@ function App() {
                   <Route path="/introduce/staff" element={<Staff />}></Route>
 
                   <Route path="/support/faqboard" element={<FAQBoard />}></Route>
-                  <Route path="/support/faqboard/form" element={<FAQPostForm />}></Route>
-                  
                   <Route path="/support/qnaboard" element={<QNABoard />}></Route>
                   <Route path="/support/qnaboard/search" element={<QNABoardSearch />}></Route>
                   <Route path="/support/qnaboard/form" element={<QNABoardForm />}></Route>
