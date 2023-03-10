@@ -7,11 +7,11 @@ import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 
-import Facilities from "./components/introduce/Facilities";
-import Staff from "./components/introduce/Staff";
+import Staff from "./pages/introduce/Staff";
+import Facilities from "./pages/introduce/Facilities";
 
-import Login from "./components/Login";
-import MyPage from "./components/MyPage";
+import Login from "./pages/users/Login";
+import MyPage from "./pages/users/MyPage";
 
 import FAQBoard from "./pages/support/FAQBoard";
 import QNABoard from "./pages/support/QNABoard";

@@ -1,12 +1,12 @@
-import './Staff.css'
+import '../../styles/Facilities.css'
 import { Row, Col } from "react-bootstrap";
 import React from "react";
 import {Link} from "react-router-dom";
 //SideBar 참고: https://citylock77.tistory.com/130
 
-function Staff() {
+function Facilities() {
     return (
-        <div className="Staff">
+        <div className="Facilities">
             <container fluid>
                 <Row className="justify-content-center vh-100">
                     <Col className="col-md-2 m-4">
@@ -20,7 +20,7 @@ function Staff() {
                     </Col>
                     <Col className="col-md-8 m-4">
                         <Row className="p-4 content h-100 align-content-start">
-                            <h1><b>Staff</b></h1>
+                            <h1><b>Facilities</b></h1>
                             <hr/>
                                 <Row className="my-4">
                                     <Col className="1">
@@ -72,4 +72,4 @@ function Staff() {
     );
 }
 
-export default Staff;
+export default Facilities;

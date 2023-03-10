@@ -1,73 +1,105 @@
-import React, { useEffect, useRef, useState } from "react";
+// import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
 import bg_black from "../../assets/images/bg_black.jpg";
-import * as SocketJs from "sockjs-client";
-import * as StompJs from "@stomp/stompjs";
+// import * as SocketJs from "sockjs-client";
+// import * as StompJs from "@stomp/stompjs";
+
+// const ChatForm = (props) => {
+//     // const socketJS = new SockJS("/support/livechat");
+//     // const stomp = Stomp.over(socketJS);
+
+//     const client = useRef({});
+//     const [chatMessages, setChatMessages] = useState([]);
+
+//     useEffect(() => {
+//         connect();
+//         return () => disconnect();
+//     }, []);
+
+//     const connect = () => {
+//         client.current = new StompJs.Client({
+//             // brokerURL: `/support/livechat`,
+//             webSocketFactory: () => new SocketJs(`/support/livechat`),
+//             connectHeaders: {
+//                 "auth-token": "spring-chat-auth-token",
+//             },
+//             debug: (str) => {
+//                 console.log(str);
+//             },
+//             reconnectDelay: 5000,
+//             heartbeatIncoming: 4000,
+//             heartbeatOutgoing: 4000,
+//             onConnect: () => {
+//                 subscribe();
+//             },
+//             onStompError: (frame) => {
+//                 console.error(frame);
+//             },
+//         });
+//         client.current.activate();
+//     }
+
+//     const disconnect = () => {
+//         client.current.deactivate();
+//     };
+
+//     const subscribe = () => {
+//         // client.current.subscribe(`/sub/chat/room`, ({ body }) => {
+//         //     setChatMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
+//         // });
+//         client.current.subscribe(`/sub/chat/room`, ({ body }) => {
+//             setChatMessages([...chatMessages, JSON.parse(body)]);
+//         });
+//     };
+    
+//     const publish = () => {
+//         if (!client.current.connected) {
+//             return;
+//         }
+    
+//         client.current.publish({
+//             destination: "/pub/chat",
+//             body: JSON.stringify(data),
+//         });
+    
+//         setData({...data,
+//             message: "",
+//         })
+//     };
+
+//     const [data, setData] = useState({
+//         sender: "User",
+//         message: "",
+//     })
+
+//     const handleChange = async (e) => {
+//         e.preventDefault();
+//         setData({...data,
+//             message: e.target.value
+//         })
+//     }
+
+//     const handleSubmit = async (e) => {
+//         e.preventDefault();
+//         publish();
+//     }
+
+//     return (
+//         <form onSubmit={handleSubmit}>
+//             <div className="form-group mb-3">
+//                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용 입력</label>
+//                 <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={data.message}></textarea>
+//             </div>
+//             <div className="form-group d-flex justify-content-end">
+//                 <Button type="submit" variant="dark" style={{ width: "100px" }}>전송</Button>
+//             </div>
+//         </form>
+//     );
+// }
 
 const ChatForm = (props) => {
-    // const socketJS = new SockJS("/support/livechat");
-    // const stomp = Stomp.over(socketJS);
-
-    const client = useRef({});
-    const [chatMessages, setChatMessages] = useState([]);
-
-    useEffect(() => {
-        connect();
-        return () => disconnect();
-    }, []);
-
-    const connect = () => {
-        client.current = new StompJs.Client({
-            // brokerURL: `/support/livechat`,
-            webSocketFactory: () => new SocketJs(`/support/livechat`),
-            connectHeaders: {
-                "auth-token": "spring-chat-auth-token",
-            },
-            debug: (str) => {
-                console.log(str);
-            },
-            reconnectDelay: 5000,
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
-            onConnect: () => {
-                subscribe();
-            },
-            onStompError: (frame) => {
-                console.error(frame);
-            },
-        });
-        client.current.activate();
-    }
-
-    const disconnect = () => {
-        client.current.deactivate();
-    };
-
-    const subscribe = () => {
-        // client.current.subscribe(`/sub/chat/room`, ({ body }) => {
-        //     setChatMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
-        // });
-        client.current.subscribe(`/sub/chat/room`, ({ body }) => {
-            setChatMessages([...chatMessages, JSON.parse(body)]);
-        });
-    };
-    
-    const publish = () => {
-        if (!client.current.connected) {
-            return;
-        }
-    
-        client.current.publish({
-            destination: "/pub/chat",
-            body: JSON.stringify(data),
-        });
-    
-        setData({...data,
-            message: "",
-        })
-    };
-
     const [data, setData] = useState({
         sender: "User",
         message: "",
@@ -82,7 +114,6 @@ const ChatForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        publish();
     }
 
     return (
