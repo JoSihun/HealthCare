@@ -1,126 +1,80 @@
-// import React, { useEffect, useRef, useState } from "react";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
 import bg_black from "../../assets/images/bg_black.jpg";
-// import * as SocketJs from "sockjs-client";
-// import * as StompJs from "@stomp/stompjs";
-
-// const ChatForm = (props) => {
-//     // const socketJS = new SockJS("/support/livechat");
-//     // const stomp = Stomp.over(socketJS);
-
-//     const client = useRef({});
-//     const [chatMessages, setChatMessages] = useState([]);
-
-//     useEffect(() => {
-//         connect();
-//         return () => disconnect();
-//     }, []);
-
-//     const connect = () => {
-//         client.current = new StompJs.Client({
-//             // brokerURL: `/support/livechat`,
-//             webSocketFactory: () => new SocketJs(`/support/livechat`),
-//             connectHeaders: {
-//                 "auth-token": "spring-chat-auth-token",
-//             },
-//             debug: (str) => {
-//                 console.log(str);
-//             },
-//             reconnectDelay: 5000,
-//             heartbeatIncoming: 4000,
-//             heartbeatOutgoing: 4000,
-//             onConnect: () => {
-//                 subscribe();
-//             },
-//             onStompError: (frame) => {
-//                 console.error(frame);
-//             },
-//         });
-//         client.current.activate();
-//     }
-
-//     const disconnect = () => {
-//         client.current.deactivate();
-//     };
-
-//     const subscribe = () => {
-//         // client.current.subscribe(`/sub/chat/room`, ({ body }) => {
-//         //     setChatMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
-//         // });
-//         client.current.subscribe(`/sub/chat/room`, ({ body }) => {
-//             setChatMessages([...chatMessages, JSON.parse(body)]);
-//         });
-//     };
-    
-//     const publish = () => {
-//         if (!client.current.connected) {
-//             return;
-//         }
-    
-//         client.current.publish({
-//             destination: "/pub/chat",
-//             body: JSON.stringify(data),
-//         });
-    
-//         setData({...data,
-//             message: "",
-//         })
-//     };
-
-//     const [data, setData] = useState({
-//         sender: "User",
-//         message: "",
-//     })
-
-//     const handleChange = async (e) => {
-//         e.preventDefault();
-//         setData({...data,
-//             message: e.target.value
-//         })
-//     }
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//         publish();
-//     }
-
-//     return (
-//         <form onSubmit={handleSubmit}>
-//             <div className="form-group mb-3">
-//                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용 입력</label>
-//                 <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={data.message}></textarea>
-//             </div>
-//             <div className="form-group d-flex justify-content-end">
-//                 <Button type="submit" variant="dark" style={{ width: "100px" }}>전송</Button>
-//             </div>
-//         </form>
-//     );
-// }
+import * as SockJS from "sockjs-client";
+import * as StompJS from "@stomp/stompjs";
 
 const ChatForm = (props) => {
-    const [data, setData] = useState({
+    const client = useRef({});
+    const [chatData, setChatData] = useState({
         sender: "User",
         message: "",
-    })
+    });
+
+    const connect = () => {
+        client.current = new StompJS.Client({
+            // brokerURL: `/support/livechat`,
+            webSocketFactory: () => new SockJS(`/support/livechat`),    // endpoint
+            reconnectDelay: 5000,
+            heartbeatIncoming: 4000,
+            heartbeatOutgoing: 4000,
+            onConnect: (frame) => {
+                console.log(frame);
+                subscribe();
+            },
+            onStompError: (frame) => {
+                console.log(frame);
+            },
+        });
+
+        client.current.activate();
+    }
+
+    const disconnect = () => {
+        client.current.deactivate();
+    }
+
+    const subscribe = () => {
+        client.current.subscribe(`/sub/chat`, (response) => {
+            props.setChattings([...props.chattings, JSON.parse(response.body)]);
+        });
+    }
+
+    const publish = () => {
+        if (!client.current.connected) return;
+
+        client.current.publish({
+            destination: `/pub/chat`,
+            body: JSON.stringify(chatData),
+        });
+    }
+
+    useEffect(() => {
+        connect();
+        return () => disconnect();
+    }, []);
 
     const handleChange = async (e) => {
         e.preventDefault();
-        setData({...data,
-            message: e.target.value
-        })
+        setChatData({...chatData,
+            message: e.target.value,
+        });
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        publish();
+        setChatData({...chatData,
+            message: "",
+        });    
     }
 
     return (
         <form onSubmit={handleSubmit}>
             <div className="form-group mb-3">
                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용 입력</label>
-                <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={data.message}></textarea>
+                <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={chatData.message}></textarea>
             </div>
             <div className="form-group d-flex justify-content-end">
                 <Button type="submit" variant="dark" style={{ width: "100px" }}>전송</Button>
@@ -141,7 +95,7 @@ const AdminChat = (props) => {
                 <img className="rounded-circle me-1" width="50" height="50"
                     src={bg_black} alt="profile" />
                 <div className="border border-secondary rounded m-1 p-2" style={{ width: "40vh"}}>
-                    이거슨 답변입니다. 이거슨 답변일까요? 이거슨 답변이었습니다. 이거슨 답변일겁니다.
+                    {props.chatting.message}
                 </div>
             </div>
         </div>
@@ -152,13 +106,13 @@ const UserChat = (props) => {
     return (
         <div className="mb-2">
             <div className="d-flex justify-content-end">
-                <div className="me-1"><strong>사용자</strong></div>
+                <div className="me-1"><strong>{props.chatting.sender}</strong></div>
                 <div className="ms-1" style={{ color: "gray" }}><small>2023.03.08 16:03</small></div>
             </div>
 
             <div className="d-flex justify-content-end">
                 <div className="border border-secondary rounded m-1 p-2" style={{ width: "40vh"}}>
-                    이거슨 질문입니다. 이거슨 질문일까요? 이거슨 질문이었습니다. 이거슨 질문일겁니다.
+                    {props.chatting.message}
                 </div>
                 <img className="rounded-circle ms-1" width="50" height="50"
                     src={bg_black} alt="profile" />
@@ -169,24 +123,22 @@ const UserChat = (props) => {
 
 const ChatContent = (props) => {
     return (
-        <div>
-            <AdminChat />
-            <UserChat />
-            <AdminChat />
-            <UserChat />
-            <AdminChat />
-            <UserChat />
-            <AdminChat />
-            <UserChat />
-            <AdminChat />
-            <UserChat />
-            <AdminChat />
-            <UserChat />
-        </div>
+        <>
+        {props.chattings.map((chatting, index) => (
+            <div key={index}>
+                {/* Sender 조건문 추가 요망 */}
+                <AdminChat chatting={chatting} />
+                <UserChat chatting={chatting} />
+            </div>
+        ))}
+        </>
     )
 }
 
 export default function LiveChat() {
+    const [chattings, setChattings] = useState([]);
+    
+
     return (
         <Container fluid>
             <Row className="justify-content-center">
@@ -201,11 +153,11 @@ export default function LiveChat() {
                             <hr/>
                             <Card>
                                 <Card.Body style={{ minHeight: "25vh", maxHeight: "75vh", overflow: "auto" }}>
-                                    <ChatContent />
+                                    <ChatContent chattings={chattings} />
                                 </Card.Body>
                                 <hr/>
                                 <Card.Body>
-                                    <ChatForm />
+                                    <ChatForm chattings={chattings} setChattings={setChattings} />
                                 </Card.Body>
                             </Card>
                         </Card.Body>
