@@ -22,9 +22,6 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat")
     public void receiveMessage(@Payload WebSocketChatMessageDto messageDto) {
-        System.out.println("DEBUGGING POINT 1: messageDto.getRoomId() = " + messageDto.getRoomId());
-        System.out.println("DEBUGGING POINT 2: messageDto.getSender() = " + messageDto.getSender());
-        System.out.println("DEBUGGING POINT 3: messageDto.getMessage() = " + messageDto.getMessage());
         sendingOperations.convertAndSend("/sub/chat", messageDto);
     }
 }

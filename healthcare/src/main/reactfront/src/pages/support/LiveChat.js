@@ -6,54 +6,10 @@ import * as SockJS from "sockjs-client";
 import * as StompJS from "@stomp/stompjs";
 
 const ChatForm = (props) => {
-    const client = useRef({});
     const [chatData, setChatData] = useState({
         sender: "User",
         message: "",
     });
-
-    const connect = () => {
-        client.current = new StompJS.Client({
-            // brokerURL: `/support/livechat`,
-            webSocketFactory: () => new SockJS(`/support/livechat`),    // endpoint
-            reconnectDelay: 5000,
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
-            onConnect: (frame) => {
-                console.log(frame);
-                subscribe();
-            },
-            onStompError: (frame) => {
-                console.log(frame);
-            },
-        });
-
-        client.current.activate();
-    }
-
-    const disconnect = () => {
-        client.current.deactivate();
-    }
-
-    const subscribe = () => {
-        client.current.subscribe(`/sub/chat`, (response) => {
-            props.setChattings([...props.chattings, JSON.parse(response.body)]);
-        });
-    }
-
-    const publish = () => {
-        if (!client.current.connected) return;
-
-        client.current.publish({
-            destination: `/pub/chat`,
-            body: JSON.stringify(chatData),
-        });
-    }
-
-    useEffect(() => {
-        connect();
-        return () => disconnect();
-    }, []);
 
     const handleChange = async (e) => {
         e.preventDefault();
@@ -64,7 +20,7 @@ const ChatForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        publish();
+        props.publish(chatData);
         setChatData({...chatData,
             message: "",
         });    
@@ -74,7 +30,7 @@ const ChatForm = (props) => {
         <form onSubmit={handleSubmit}>
             <div className="form-group mb-3">
                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용 입력</label>
-                <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={chatData.message}></textarea>
+                <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={chatData.message} required></textarea>
             </div>
             <div className="form-group d-flex justify-content-end">
                 <Button type="submit" variant="dark" style={{ width: "100px" }}>전송</Button>
@@ -136,8 +92,59 @@ const ChatContent = (props) => {
 }
 
 export default function LiveChat() {
+    const client = useRef({});
     const [chattings, setChattings] = useState([]);
     
+    useEffect(() => {
+        const connect = () => {
+            client.current = new StompJS.Client({
+                // brokerURL: `/support/livechat`,
+                webSocketFactory: () => new SockJS(`/support/livechat`),    // endpoint
+                reconnectDelay: 5000,
+                heartbeatIncoming: 4000,
+                heartbeatOutgoing: 4000,
+                onConnect: (frame) => {
+                    console.log(frame);
+                    subscribe();
+                },
+                onStompError: (frame) => {
+                    console.log(frame);
+                },
+            });
+            client.current.activate();
+        }
+
+        const disconnect = () => {
+            client.current.deactivate();
+        }
+
+        const subscribe = () => {
+            client.current.subscribe(`/sub/chat`, (response) => {
+                setChattings(_chattings => [..._chattings, JSON.parse(response.body)]);
+            });
+        }
+
+        connect();
+        return () => disconnect();
+    }, []);
+
+    const publish = (chatData) => {
+        if (!client.current.connected) {
+            console.log("WebSocket NOT CONNECTED!!!");
+            return;
+        }
+
+        client.current.publish({
+            destination: `/pub/chat`,
+            body: JSON.stringify(chatData),
+        });        
+    }
+
+    const scrollRef = useRef(null);
+
+    useEffect(() => {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    });
 
     return (
         <Container fluid>
@@ -152,12 +159,12 @@ export default function LiveChat() {
                             <Card.Title><h2><strong>LiveChat Support</strong></h2></Card.Title>
                             <hr/>
                             <Card>
-                                <Card.Body style={{ minHeight: "25vh", maxHeight: "75vh", overflow: "auto" }}>
+                                <Card.Body ref={scrollRef} style={{ minHeight: "25vh", maxHeight: "75vh", overflow: "auto"}}>
                                     <ChatContent chattings={chattings} />
                                 </Card.Body>
                                 <hr/>
                                 <Card.Body>
-                                    <ChatForm chattings={chattings} setChattings={setChattings} />
+                                    <ChatForm publish={publish} />
                                 </Card.Body>
                             </Card>
                         </Card.Body>
