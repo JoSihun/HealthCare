@@ -16,8 +16,13 @@ public class LiveChatRestController {
     private final ChatMessageService chatMessageService;
     private final SimpMessageSendingOperations sendingOperations;
 
-    @MessageMapping("/chat/temp")
+    @MessageMapping("/chat")
     public void receiveMessage(@Payload ChatMessageRequestDto requestDto) {
+        sendingOperations.convertAndSend("/sub/chat", requestDto);
+    }
+
+    @MessageMapping("/chat/temp")
+    public void receiveMessageTest(@Payload ChatMessageRequestDto requestDto) {
         sendingOperations.convertAndSend("/sub/chat/" + requestDto.getRoomId(), requestDto);
     }
 }

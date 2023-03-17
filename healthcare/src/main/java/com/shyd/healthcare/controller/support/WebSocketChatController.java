@@ -14,8 +14,8 @@ public class WebSocketChatController {
     private final WebSocketChatService webSocketChatService;
     private final SimpMessageSendingOperations sendingOperations;
 
-    @MessageMapping("/chat")
-    public void receiveMessage(@Payload WebSocketChatMessageDto messageDto) {
-        sendingOperations.convertAndSend("/sub/chat", messageDto);
-    }
+//    @MessageMapping("/chat")
+//    public void receiveMessage(@Payload WebSocketChatMessageDto messageDto) {
+//        sendingOperations.convertAndSend("/sub/chat", messageDto);
+//    }
 }

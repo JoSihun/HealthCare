@@ -27,6 +27,7 @@ import FreeBoardEdit from './pages/support/FreeBoardEdit';
 import FreeBoardSearch from './pages/support/FreeBoardSearch';
 
 import LiveChat from "./pages/support/LiveChat";
+import LiveChatList from "./pages/support/LiveChatList";
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
                   <Route path="/support/freeboard/post/:id" element={<FreeBoardPost />}></Route>
 
                   <Route path="/support/livechat" element={<LiveChat />}></Route>
+                  <Route path="/support/livechat/list" element={<LiveChatList />}></Route>
 
                   <Route path="/my-page" element={<MyPage />}></Route>
                   
