@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
@@ -5,7 +6,6 @@ import bg_black from "../../assets/images/bg_black.jpg";
 import * as SockJS from "sockjs-client";
 import * as StompJS from "@stomp/stompjs";
 import { useSearchParams } from "react-router-dom";
-import axios from "axios";
 
 const ChatForm = (props) => {
     const [chatData, setChatData] = useState({
@@ -47,14 +47,14 @@ const AdminChat = (props) => {
         <div className="mb-2">
             <div className="d-flex justify-content-start">
                 <div className="me-1"><strong>운영자</strong></div>
-                <div className="ms-1" style={{ color: "gray" }}><small>2023.03.08 15:53</small></div>
+                <div className="ms-1" style={{ color: "gray" }}><small>{props.chatMessage.createdDate}</small></div>
             </div>
 
             <div className="d-flex justify-content-start">
                 <img className="rounded-circle me-1" width="50" height="50"
                     src={bg_black} alt="profile" />
                 <div className="border border-secondary rounded m-1 p-2" style={{ width: "40vh"}}>
-                    {props.chatting.message}
+                    {props.chatMessage.message}
                 </div>
             </div>
         </div>
@@ -65,13 +65,13 @@ const UserChat = (props) => {
     return (
         <div className="mb-2">
             <div className="d-flex justify-content-end">
-                <div className="me-1"><strong>{props.chatting.sender}</strong></div>
-                <div className="ms-1" style={{ color: "gray" }}><small>2023.03.08 16:03</small></div>
+                <div className="me-1"><strong>{props.chatMessage.sender}</strong></div>
+                <div className="ms-1" style={{ color: "gray" }}><small>{props.chatMessage.createdDate}</small></div>
             </div>
 
             <div className="d-flex justify-content-end">
                 <div className="border border-secondary rounded m-1 p-2" style={{ width: "40vh"}}>
-                    {props.chatting.message}
+                    {props.chatMessage.message}
                 </div>
                 <img className="rounded-circle ms-1" width="50" height="50"
                     src={bg_black} alt="profile" />
@@ -83,28 +83,31 @@ const UserChat = (props) => {
 const ChatContent = (props) => {
     return (
         <>
-        {props.chattings.map((chatting, index) => (
+        {props.chatMessages.map((chatMessage, index) => (
             <div key={index}>
-                {/* Sender 조건문 추가 요망 */}
-                <AdminChat chatting={chatting} />
-                <UserChat chatting={chatting} />
+                {/* Sender 조건문 정상동작 확인필요 */}
+                {chatMessage["sender"] === "Admin"
+                ? <AdminChat chatMessage={chatMessage} />
+                : <UserChat chatMessage={chatMessage} />
+                }
             </div>
         ))}
         </>
     )
 }
 
-export default function LiveChat() {
-    const client = useRef({});
+export default function LiveChatRoom() {
     const [chatRoom, setChatRoom] = useState({});
-    const [chattings, setChattings] = useState([]);
-    // const {searchParams, setSearchParams} = useSearchParams();
-    // const queryString = `roomId=`;
-    // window.location.href = `/support/livechat?${queryString}`;
+    const [chatMessages, setChatMessages] = useState([]);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const client = useRef({});
+    const roomId = searchParams.get("id");
 
     useEffect(() => {
         const axiosGetChatRoom = async () => {
-            await axios.get(`/support/livechat?roomId=${chatRoom.roomdId}`)
+            const queryString = `uuid=${roomId}`;
+            await axios.get(`/api/livechat/room?${queryString}`)
             .then((response) => {
                 setChatRoom(response.data);
             }).catch((error) => {
@@ -113,6 +116,19 @@ export default function LiveChat() {
         }
         axiosGetChatRoom();
 
+        const axiosGetChatMessages = async () => {
+            const queryString = `uuid=${roomId}`;
+            await axios.get(`/api/livechat/message?${queryString}`)
+            .then((response) => {
+                setChatMessages(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+        axiosGetChatMessages();
+
+        ///////////////////////////////////////////////////////////////////////
+        // 최초 메세지 발송지점에 채팅방 만드는 Backend 기능필요
         const connect = () => {
             client.current = new StompJS.Client({
                 // brokerURL: `/support/livechat`,
@@ -137,13 +153,13 @@ export default function LiveChat() {
 
         const subscribe = () => {
             client.current.subscribe(`/sub/chat`, (response) => {
-                setChattings(_chattings => [..._chattings, JSON.parse(response.body)]);
+                setChatMessages(_chattings => [..._chattings, JSON.parse(response.body)]);
             });
         }
 
-        connect();
-        return () => disconnect();
-    }, []);
+        // connect();
+        // return () => disconnect();
+    }, [roomId]);
 
     const publish = (chatData) => {
         if (!client.current.connected) {
@@ -152,13 +168,12 @@ export default function LiveChat() {
         }
 
         client.current.publish({
-            destination: `/pub/chat`,
+            destination: `/pub/chat/temp`,      // backend 수정후 url 원상복귀
             body: JSON.stringify(chatData),
         });        
     }
 
     const scrollRef = useRef(null);
-
     useEffect(() => {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     });
@@ -174,10 +189,11 @@ export default function LiveChat() {
                     <Card>
                         <Card.Body>
                             <Card.Title><h2><strong>LiveChat Support</strong></h2></Card.Title>
+                            <Card.Title><h5><strong>{chatRoom.roomName}님의 문의사항({chatRoom.uuid})</strong></h5></Card.Title>
                             <hr/>
                             <Card>
                                 <Card.Body ref={scrollRef} style={{ minHeight: "25vh", maxHeight: "75vh", overflow: "auto"}}>
-                                    <ChatContent chattings={chattings} />
+                                    <ChatContent chatMessages={chatMessages} />
                                 </Card.Body>
                                 <hr/>
                                 <Card.Body>

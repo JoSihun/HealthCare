@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
-    /** 고객지원 LiveChatRoom 목록조회 - 생성순, List */
+    /** LiveChat Room 목록조회 - 작성순, List */
     @Transactional
-    public List<ChatRoomResponseDto> findALlAsc() {
+    public List<ChatRoomResponseDto> findAllAsc() {
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
         List<ChatRoom> chatRoomList = this.chatRoomRepository.findAll(sort);
         return chatRoomList.stream().map(ChatRoomResponseDto::new).collect(Collectors.toList());
     }
 
-    /** 고객지원 LiveChatRoom 목록조회 - 최신순, List */
+    /** LiveChat Room 목록조회 - 최신순, List */
     @Transactional
     public List<ChatRoomResponseDto> findALlDesc() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
@@ -34,26 +34,48 @@ public class ChatRoomService {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /** 고객지원 LiveChatRoom 조회 */
+    /** [임시] 특정유저 LiveChat Room 목록조회 - 작성순, List */
     @Transactional
-    public ChatRoomResponseDto findById(final Long id) {
-        ChatRoom entity = this.chatRoomRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 고객지원 LiveChatRoom이 존재하지 않습니다. id = " + id));
+    public List<ChatRoomResponseDto> findAllByUserIdAsc(String userId) {
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        List<ChatRoom> chatRoomList = this.chatRoomRepository.findAllByRoomName(userId, sort);
+        return chatRoomList.stream().map(ChatRoomResponseDto::new).collect(Collectors.toList());
+    }
+
+    /** [임시] 특정유저 LiveChat Room 목록조회 - 최신순, List */
+    @Transactional
+    public List<ChatRoomResponseDto> findAllByUserIdDesc(String userId) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        List<ChatRoom> chatRoomList = this.chatRoomRepository.findAllByRoomName(userId, sort);
+        return chatRoomList.stream().map(ChatRoomResponseDto::new).collect(Collectors.toList());
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** LiveChat Room 조회 - Uuid 검색 */
+    @Transactional
+    public ChatRoomResponseDto findByUuid(final String uuid) {
+        ChatRoom entity = this.chatRoomRepository.findByUuid(uuid);
         return new ChatRoomResponseDto(entity);
     }
 
-    /** 고객지원 LiveChatRoom 저장 */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** LiveChat Room 조회 */
+    @Transactional
+    public ChatRoomResponseDto findById(final Long id) {
+        ChatRoom entity = this.chatRoomRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 고객지원 LiveChat Room이 존재하지 않습니다. id = " + id));
+        return new ChatRoomResponseDto(entity);
+    }
+
+    /** LiveChat Room 생성 */
     @Transactional
     public Long save(final ChatRoomRequestDto requestDto) {
         return this.chatRoomRepository.save(requestDto.toEntity()).getId();
     }
 
-    /** 고객지원 LiveChatRoom 삭제 */
-    @Transactional
-    public Long delete(final Long id) {
+    /** LiveChat Room 삭제 */
+    public void delete(final Long id) {
         ChatRoom entity = this.chatRoomRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 고객지원 LiveChatRoom이 존재하지 않습니다. id = " + id));
+                () -> new IllegalArgumentException("해당 고객지원 LiveChat Room이 존재하지 않습니다. id = " + id));
         this.chatRoomRepository.delete(entity);
-        return id;
     }
 }

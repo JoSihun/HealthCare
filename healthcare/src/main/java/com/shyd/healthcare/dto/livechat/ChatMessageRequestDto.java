@@ -11,24 +11,24 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ChatMessageRequestDto {
-    private String roomId;
     private String sender;
     private String message;
+    private String roomUuid;
     private ChatRoom chatRoom;
 
     @Builder
-    public ChatMessageRequestDto(String roomId, String sender, String message, ChatRoom chatRoom) {
-        this.roomId = roomId;
+    public ChatMessageRequestDto(String roomUuid, String sender, String message, ChatRoom chatRoom) {
         this.sender = sender;
         this.message = message;
+        this.roomUuid = roomUuid;
         this.chatRoom = chatRoom;
     }
 
     public ChatMessage toEntity() {
         return ChatMessage.builder()
-                .roomId(this.roomId)
                 .sender(this.sender)
                 .message(this.message)
+                .roomUuid(this.roomUuid)
                 .chatRoom(this.chatRoom)
                 .build();
     }

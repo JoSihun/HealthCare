@@ -13,18 +13,18 @@ public class ChatMessage extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String roomId;
     private String sender;
     private String message;
+    private String roomUuid;
 
     @ManyToOne
     private ChatRoom chatRoom;
 
     @Builder
-    public ChatMessage(String roomId, String sender, String message, ChatRoom chatRoom) {
-        this.roomId = roomId;
+    public ChatMessage(String roomUuid, String sender, String message, ChatRoom chatRoom) {
         this.sender = sender;
         this.message = message;
+        this.roomUuid = roomUuid;
         this.chatRoom = chatRoom;
     }
 }
