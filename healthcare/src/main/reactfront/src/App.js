@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 
 import Staff from "./pages/introduce/Staff";
-import Facilities from "./pages/introduce/Facilities";
+import Facility from "./pages/introduce/Facility";
 
 import Login from "./pages/users/Login";
 import MyPage from "./pages/users/MyPage";
@@ -40,7 +40,7 @@ function App() {
                   <Route path="/" element={<Home />}></Route>
                   <Route path="/home" element={<Home />}></Route>
 
-                  <Route path="/introduce/facilities" element={<Facilities />}></Route>
+                  <Route path="/introduce/facilities" element={<Facility />}></Route>
                   <Route path="/introduce/staff" element={<Staff />}></Route>
 
                   <Route path="/support/faqboard" element={<FAQBoard />}></Route>

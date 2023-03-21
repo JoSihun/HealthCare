@@ -1,10 +1,10 @@
-import '../../styles/Facilities.css'
+import '../../styles/Facility.css'
 import { Row, Col } from "react-bootstrap";
 import React from "react";
 import {Link} from "react-router-dom";
 //SideBar 참고: https://citylock77.tistory.com/130
 
-function Facilities() {
+function Facility() {
     return (
         <div className="Facilities">
             <container fluid>
@@ -72,4 +72,4 @@ function Facilities() {
     );
 }
 
-export default Facilities;
+export default Facility;
