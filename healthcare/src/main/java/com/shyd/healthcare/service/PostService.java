@@ -20,117 +20,113 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
 
-    /* FAQ 목록 조회 - 작성순 */
-    /* 추후 FaqListResponseDto 분리 검토 */
+    /** 카테고리별 게시판 목록조회 - 작성순, List */
     @Transactional
-    public List<PostResponseDto> findAllFaqBoardAsc() {
+    public List<PostResponseDto> findAllByCategoryAsc(String category) {
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        List<Post> postList = this.postRepository.findAllByCategory("FAQBoard", sort);
+        List<Post> postList = this.postRepository.findAllByCategory(category, sort);
         return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
-    /* FAQ 목록 조회 - 최신순 */
-    /* 추후 FaqListResponseDto 분리 검토 */
+    /** 카테고리별 게시판 목록조회 - 최신순, List */
     @Transactional
-    public List<PostResponseDto> findAllFaqBoardDesc() {
+    public List<PostResponseDto> findAllByCategoryDesc(String category) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<Post> postList = this.postRepository.findAllByCategory("FAQBoard", sort);
+        List<Post> postList = this.postRepository.findAllByCategory(category, sort);
         return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
-    //////////////////////////////////////////////////////QNABoard//////////////////////////////////////////////////////
-    /** QNABoard 목록 조회 - 작성순 */
+    /** 카테고리별 게시판 목록조회 - 작성순, Pageable */
     @Transactional
-    public List<PostResponseDto> findAllQnaBoardAsc() {
-        Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        List<Post> postList = this.postRepository.findAllByCategory("QNABoard", sort);
-        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
-    }
-
-    /** QNABoard 목록 조회 - 최신순 */
-    @Transactional
-    public List<PostResponseDto> findAllQnaBoardDesc() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<Post> postList = this.postRepository.findAllByCategory("QNABoard", sort);
-        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
-    }
-    //////////////////////////////////////////////////////FreeBoard/////////////////////////////////////////////////////
-    /** FreeBoard 목록 조회 - 작성순 */
-    @Transactional
-    public List<PostResponseDto> findAllFreeBoardAsc() {
-        Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        List<Post> postList = this.postRepository.findAllByCategory("FreeBoard", sort);
-        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
-    }
-
-    /** FreeBoard 목록 조회 - 최신순 */
-    @Transactional
-    public List<PostResponseDto> findAllFreeBoardDesc() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<Post> postList = this.postRepository.findAllByCategory("FreeBoard", sort);
-        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
-    }
-
-    /** FreeBoard 목록 조회 - 작성순, 페이징 적용 */
-    @Transactional
-    public Page<PostResponseDto> findAllFreeBoardBoardAsc(Pageable pageable) {
-//        Sort sort = Sort.by(Sort.Direction.ASC, "id");
-//        Pageable pageable = PageRequest.of(curPage, maxPage, sort);
-        Page<Post> postList = this.postRepository.findAllByCategory("FreeBoard", pageable);
+    public Page<PostResponseDto> findAllByCategoryAsc(String category, Pageable pageable) {
+        // Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        // Pageable pageable = PageRequest.of(curPage, maxPage, sort);
+        Page<Post> postList = this.postRepository.findAllByCategory(category, pageable);
         return postList.map(PostResponseDto::new);
     }
 
-    /** FreeBoard 목록 조회 - 최신순, 페이징 적용 */
+    /** 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
-    public Page<PostResponseDto> findAllFreeBoardDesc(Pageable pageable) {
-//        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-//        Pageable pageable = PageRequest.of(curPage, maxPage, sort);
-        Page<Post> postList = this.postRepository.findAllByCategory("FreeBoard", pageable);
+    public Page<PostResponseDto> findAllByCategoryDesc(String category, Pageable pageable) {
+        // Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        // Pageable pageable = PageRequest.of(curPage, maxPage, sort);
+        Page<Post> postList = this.postRepository.findAllByCategory(category, pageable);
         return postList.map(PostResponseDto::new);
     }
 
-    ////////////////////////////////////////////////////////Post////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** 제목으로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByTitle(String category, String title, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndTitleContaining(category, title, pageable);
+        return postList.map(PostResponseDto::new);
+    }
 
-    /* 게시글 조회 */
+    /** 내용으로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByContent(String category, String content, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndContentContaining(category, content, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    /** 작성자로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByAuthor(String category, String author, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndAuthorContaining(category, author, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** 제목 + 내용으로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByTitleOrContent(String category, String title, String content, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndTitleContainingOrContentContaining(category, title, content, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    /** 제목 + 작성자로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByTitleOrAuthor(String category, String title, String author, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndTitleContainingOrAuthorContaining(category, title, author, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    /** 내용 + 작성자로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
+    @Transactional
+    public Page<PostResponseDto> findAllByContentOrAuthor(String category, String content, String author, Pageable pageable) {
+        Page<Post> postList = this.postRepository.findByCategoryAndContentContainingOrAuthorContaining(category, content, author, pageable);
+        return postList.map(PostResponseDto::new);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** 게시글 조회 */
     @Transactional
     public PostResponseDto findById(final Long id) {
         Post entity = this.postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id)
-        );
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id));
         entity.increaseHits();
         return new PostResponseDto(entity);
     }
 
-
-    /* 게시글 저장 */
+    /** 게시글 저장 */
     @Transactional
     public Long save(final PostSaveRequestDto requestDto) {
-        Long postId = this.postRepository.save(requestDto.toEntity()).getId();
-        Post entity = this.postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + postId)
-        );
-
-        return postId;
+        return this.postRepository.save(requestDto.toEntity()).getId();
     }
 
+    /** 게시글 수정 */
     @Transactional
     public Long update(final Long id, final PostUpdateRequestDto requestDto) {
         Post entity = this.postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id)
-        );
-
-        // entity.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getSecretYn());
-        // return id;
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id));
         return entity.update(requestDto);
-
     }
 
+    /** 게시글 삭제 */
     @Transactional
     public Long delete(final Long id) {
         Post entity = this.postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id)
-        );
-
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id));
         this.postRepository.delete(entity);
         return id;
     }

@@ -1,4 +1,4 @@
-import './Facilities.css'
+import '../../styles/Facilities.css'
 import { Row, Col } from "react-bootstrap";
 import React from "react";
 import {Link} from "react-router-dom";

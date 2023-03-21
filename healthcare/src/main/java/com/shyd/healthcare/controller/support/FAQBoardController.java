@@ -18,7 +18,7 @@ public class FAQBoardController {
 
     @GetMapping("/faqboard")
     public List<PostResponseDto> faqBoard() {
-        return this.postService.findAllFaqBoardAsc();
+        return this.postService.findAllByCategoryDesc("FAQBoard");
     }
 
     @GetMapping("/faqboard/form")

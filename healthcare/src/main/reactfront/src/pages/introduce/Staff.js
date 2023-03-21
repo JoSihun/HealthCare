@@ -1,4 +1,4 @@
-import './Staff.css'
+import '../../styles/Staff.css'
 import { Row, Col } from "react-bootstrap";
 import React from "react";
 import {Link} from "react-router-dom";

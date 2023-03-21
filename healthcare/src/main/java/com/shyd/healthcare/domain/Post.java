@@ -28,8 +28,10 @@ public class Post extends BaseTime {
     private Boolean secretYn;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Attachment> attachmentList;
+    private List<Comment> commentList;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Attachment> attachmentList;
 
     @Builder
     public Post(String title, String content, String author,
@@ -47,20 +49,11 @@ public class Post extends BaseTime {
         this.hits++;
     }
 
-    /* 추후 어떤 것으로 사용할 것인지 선택 필요 */
     public Long update(PostUpdateRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.secretYn = requestDto.getSecretYn();
         return this.id;
-    }
-
-    public void update(String title, String content, Boolean secretYn) {
-        // 추후 매개변수 Category category 추가
-        this.title = title;
-        this.content = content;
-        this.secretYn = secretYn;
-        // 추후 this.category = category 추가
     }
 
 }
