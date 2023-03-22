@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -57,6 +58,15 @@ public class ChatRoomService {
         return new ChatRoomResponseDto(entity);
     }
 
+    @Transactional
+    public Long create(String roomName) {
+        ChatRoomRequestDto requestDto = new ChatRoomRequestDto();
+        requestDto.setUuid(UUID.randomUUID().toString());
+        requestDto.setRoomName(roomName);
+        requestDto.setAnswerYn(false);
+        return this.chatRoomRepository.save(requestDto.toEntity()).getId();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** LiveChat Room 조회 */
     @Transactional
@@ -70,6 +80,14 @@ public class ChatRoomService {
     @Transactional
     public Long save(final ChatRoomRequestDto requestDto) {
         return this.chatRoomRepository.save(requestDto.toEntity()).getId();
+    }
+
+    /** LiveChat Room 수정 */
+    @Transactional
+    public Long update(final Long chatRoomId, ChatRoomRequestDto requestDto) {
+        ChatRoom entity = this.chatRoomRepository.findById(chatRoomId).orElseThrow(
+                () -> new IllegalArgumentException("해당 고객지원 LiveChat Room이 존재하지 않습니다. id = " + chatRoomId));
+        return entity.update(requestDto);
     }
 
     /** LiveChat Room 삭제 */

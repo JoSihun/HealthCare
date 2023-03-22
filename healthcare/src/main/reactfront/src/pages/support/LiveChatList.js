@@ -5,16 +5,14 @@ import { Link } from "react-router-dom";
 import SideBar from "../../components/support/SideBar";
 
 const ModalCheck = (props) => {
-    const { userId, chatRoom, setChatRooms } = props;
-    const { message, modalShow, setModalShow } = props;
+    const { chatRoom, message } = props;
+    const { modalShow, setModalShow } = props;
     const handleHide = () => setModalShow(false);
 
     const handleDelete = async (e) => {
-        const queryString = `userId=${userId}&roomId=${chatRoom.id}`;
-        await axios.delete(`/support/livechat/list?${queryString}`)
+        await axios.delete(`/api/livechat/room/${chatRoom.id}`)
         .then((response) => {
-            handleHide();
-            setChatRooms(response.data);
+            window.location.reload();
         }).catch((error) => {
             console.log(error);
         });
@@ -58,21 +56,19 @@ const ChatRoomItem = (props) => {
         <Card className="mb-3">
             <Link onClick={handleEnter} style={{ color:"black", textDecoration: "none" }}>
                 <Card.Body>
-                    <Card.Title>
-                        <div className="d-flex justify-content-between">
-                            <div><h5><strong>{chatRoom.roomName}님의 문의사항({chatRoom.uuid})</strong></h5></div>
-                            <div style={{ color: "gray"}}><small>{chatRoom.createdDate}</small></div>
-                        </div>
-                        <div className="d-flex justify-content-between">
+                    <Card.Title className="d-flex justify-content-between">
+                        <div>
+                            <div><h5><strong>{chatRoom.roomName}님의 문의사항</strong></h5></div>
+                            <div style={{ color: "gray" }}><h6><small>({chatRoom.uuid})</small></h6></div>
                             {chatRoom.answerYn
-                            ?
-                            <Badge pill bg="success">답변완료</Badge>
-                            :
-                            <Badge pill bg="primary">답변대기</Badge>
-                            }
-                            <div style={{ color: "gray"}}><small>{chatRoom.updatedDate}</small></div>
+                            ? <Badge pill bg="success">답변완료</Badge>
+                            : <Badge pill bg="primary">답변대기</Badge>}
                         </div>
-                    </Card.Title>            
+                        <div style={{ color: "gray" }}>
+                            <div className="d-flex justify-content-end"><h6><small>문의생성일자: {chatRoom.createdDate}</small></h6></div>
+                            <div className="d-flex justify-content-end"><h6><small>문의수정일자: {chatRoom.updatedDate}</small></h6></div>
+                        </div>
+                    </Card.Title>
                 </Card.Body>
             </Link>
             <Card.Body className="px-2 py-0">

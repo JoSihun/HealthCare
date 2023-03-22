@@ -3,6 +3,7 @@ package com.shyd.healthcare.controller.support;
 import com.shyd.healthcare.dto.livechat.ChatMessageRequestDto;
 import com.shyd.healthcare.dto.livechat.ChatMessageResponseDto;
 import com.shyd.healthcare.dto.livechat.ChatRoomRequestDto;
+import com.shyd.healthcare.dto.livechat.ChatRoomResponseDto;
 import com.shyd.healthcare.service.ChatMessageService;
 import com.shyd.healthcare.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,23 +22,25 @@ public class ChatMessageRestController {
     private final ChatMessageService chatMessageService;
     private final SimpMessageSendingOperations sendingOperations;
 
-    @MessageMapping("/chat")
-    public void receiveMessage(@Payload ChatMessageRequestDto requestDto) {
-        sendingOperations.convertAndSend("/sub/chat", requestDto);
-    }
+    /** WebSocket Controller 기본 양식 */
+//    @MessageMapping("/chat")
+//    public void receiveMessage(@Payload ChatMessageRequestDto requestDto) {
+//        sendingOperations.convertAndSend("/sub/chat", requestDto);
+//    }
 
-    @MessageMapping("/chat/temp")
-    public void receiveMessageTest(@Payload ChatMessageRequestDto requestDto) {
-        // Front 에서 Publish 할 때마다 실행됨, 잘 생각하고 save 할 것
-        // 최초실행시 roomId, roomName, answerYn 초기화 필요
+    @MessageMapping("/chat")                // subscribe, publish url
+    public void receiveMessage(@Payload ChatMessageRequestDto requestDto) {
         if (requestDto.getRoomUuid() == null) {
-            // Greeting 검색해서 최초 실행 시 room 생성 및 환영인사메세지 보내기 구현필요
-            ChatRoomRequestDto chatRoomRequestDto = new ChatRoomRequestDto();
-            ChatMessageRequestDto chatMessageRequestDto = new ChatMessageRequestDto();
-            Long chatRoomId = this.chatRoomService.save(chatRoomRequestDto);
-            this.chatMessageService.save(chatRoomId, chatMessageRequestDto);
+            Long chatRoomId = this.chatRoomService.create(requestDto.getSender());
+            ChatRoomResponseDto chatRoomResponseDto = this.chatRoomService.findById(chatRoomId);
+            requestDto.setRoomUuid(chatRoomResponseDto.getUuid());
         }
-        sendingOperations.convertAndSend("/sub/chat/" + requestDto.getRoomUuid(), requestDto);
+        Long chatRoomId = this.chatRoomService.findByUuid(requestDto.getRoomUuid()).getId();
+        Long chatMessageId = this.chatMessageService.save(chatRoomId, requestDto);
+        ChatMessageResponseDto chatMessageResponseDto = this.chatMessageService.findById(chatMessageId);
+
+        String subscribeChannel = "/sub/chat/" + chatMessageResponseDto.getSender();
+        sendingOperations.convertAndSend(subscribeChannel, chatMessageResponseDto);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

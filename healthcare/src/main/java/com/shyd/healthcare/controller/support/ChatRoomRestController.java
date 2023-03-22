@@ -13,10 +13,16 @@ import java.util.List;
 public class ChatRoomRestController {
     private final ChatRoomService chatRoomService;
 
-    /** LiveChat Room 목록조회 */
+    /** LiveChat Room 목록조회 - 고객용 */
     @GetMapping("/api/livechat/list/{userId}")
     public List<ChatRoomResponseDto> readChatRoomList(@PathVariable String userId) {
         return this.chatRoomService.findAllByUserIdDesc(userId);
+    }
+
+    /** LiveChat Room 목록조회 - 관리자용 */
+    @GetMapping("/api/livechat/list/admin")
+    public List<ChatRoomResponseDto> readAllChatRoomList() {
+        return this.chatRoomService.findALlDesc();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,6 +44,13 @@ public class ChatRoomRestController {
     @PostMapping("/api/livechat/room")
     public Long saveChatRoom(@RequestBody ChatRoomRequestDto requestDto) {
         return this.chatRoomService.save(requestDto);
+    }
+
+    /** LiveChat Room 수정 */
+    @PutMapping("/api/livechat/room/{id}")
+    public Long updateChatRoom(@PathVariable(value = "id") Long chatRoomId,
+                               @RequestBody ChatRoomRequestDto requestDto) {
+        return this.chatRoomService.update(chatRoomId, requestDto);
     }
 
     /** LiveChat Room 삭제 */

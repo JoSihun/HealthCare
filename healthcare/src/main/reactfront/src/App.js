@@ -27,9 +27,10 @@ import FreeBoardEdit from './pages/support/FreeBoardEdit';
 import FreeBoardSearch from './pages/support/FreeBoardSearch';
 
 // import LiveChat from "./pages/support/LiveChat";
-import LiveChatRoom from "./pages/support/LiveChatRoom";
 import LiveChatList from "./pages/support/LiveChatList";
-
+import LiveChatRoom from "./pages/support/LiveChatRoom";
+import LiveChatListAdmin from "./pages/support/LiveChatListAdmin";
+import LiveChatRoomAdmin from "./pages/support/LiveChatRoomAdmin";
 
 function App() {
   return (
@@ -58,8 +59,10 @@ function App() {
                   <Route path="/support/freeboard/post/:id" element={<FreeBoardPost />}></Route>
 
                   <Route path="/support/livechat" element={<LiveChatList />}></Route>
-                  <Route path="/support/livechat/room" element={<LiveChatRoom />}></Route>
                   <Route path="/support/livechat/list" element={<LiveChatList />}></Route>
+                  <Route path="/support/livechat/room" element={<LiveChatRoom />}></Route>
+                  <Route path="/support/livechat/list/admin" element={<LiveChatListAdmin />}></Route>
+                  <Route path="/support/livechat/room/admin" element={<LiveChatRoomAdmin />}></Route>
 
                   <Route path="/my-page" element={<MyPage />}></Route>
                   

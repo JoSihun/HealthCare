@@ -1,5 +1,6 @@
 package com.shyd.healthcare.domain;
 
+import com.shyd.healthcare.dto.livechat.ChatRoomRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,5 +31,12 @@ public class ChatRoom extends BaseTime {
         this.uuid = uuid;
         this.roomName = roomName;
         this.answerYn = answerYn;
+    }
+
+    public Long update(ChatRoomRequestDto requestDto) {
+        this.uuid = requestDto.getUuid();
+        this.roomName = requestDto.getRoomName();
+        this.answerYn = requestDto.getAnswerYn();
+        return this.id;
     }
 }
