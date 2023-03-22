@@ -11,14 +11,14 @@ const ChatForm = (props) => {
     const { activeForm } = props;
     const [chatData, setChatData] = useState({
         roomUuid: props.roomUuid,
-        sender: props.userId,
+        sender: props.adminId,
         message: "",
     });
 
     useEffect(() => {
         setChatData({
             roomUuid: props.roomUuid,
-            sender: props.userId,
+            sender: props.adminId,
             message: "",
         })
     }, [props]);
@@ -108,12 +108,13 @@ const ChatContent = (props) => {
     )
 }
 
-export default function LiveChatRoom() {
+export default function LiveChatRoomAdmin() {
+    const [userId, setUserId] = useState("");
     const [chatRoom, setChatRoom] = useState({});
     const [chatMessages, setChatMessages] = useState([]);
 
     const [searchParams, ] = useSearchParams();
-    const [roomUuid, setRoomUuid] = useState(searchParams.get("id"));
+    const [roomUuid, setRoomUuid] = useState(searchParams.get("uuid"));
 
     useEffect(() => {
         const axiosGetChatRoom = async () => {
@@ -121,6 +122,7 @@ export default function LiveChatRoom() {
             await axios.get(`/api/livechat/room?${queryString}`)
             .then((response) => {
                 setChatRoom(response.data);
+                setUserId(response.data.roomName);
             }).catch((error) => {
                 console.log(error);
             });
@@ -143,9 +145,10 @@ export default function LiveChatRoom() {
     }, [roomUuid]);
 
     const client = useRef({});
-    const userId = "TestUserName";
+    const adminId = "Admin";
     const [activeForm, setActiveForm] = useState(false);
 
+    // SubScribe Channel 결정에 대한 대책이 필요함
     useEffect(() => {
         const connect = () => {
             client.current = new StompJS.Client({
@@ -180,7 +183,7 @@ export default function LiveChatRoom() {
 
         connect();
         return () => disconnect();
-    }, []);
+    }, [userId]);
 
     const publish = (chatData) => {
         if (!client.current.connected) return () => console.log("WebSocket NOT Connected!!!");
@@ -226,7 +229,7 @@ export default function LiveChatRoom() {
                                 </Card.Body>
                                 <hr/>
                                 <Card.Body>
-                                    <ChatForm userId={userId} roomUuid={roomUuid} publish={publish} activeForm={activeForm} />
+                                    <ChatForm adminId={adminId} roomUuid={roomUuid} publish={publish} activeForm={activeForm} />
                                 </Card.Body>
                             </Card>
                         </Card.Body>

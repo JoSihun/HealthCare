@@ -21,7 +21,7 @@ const ModalCheck = (props) => {
             });
         }
 
-        if (message.includes("답변완료")) {
+        if (message.includes("답변상태")) {
             newChatRoom.answerYn = !newChatRoom.answerYn;
             await axios.put(`/api/livechat/room/${chatRoom.id}`, newChatRoom)
             .then((response) => {
@@ -42,7 +42,7 @@ const ModalCheck = (props) => {
                 <div>(uuid={chatRoom.uuid})</div>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="danger" onClick={handleHide} style={{ minWidth: "100px" }}>
+                <Button variant="secondary" onClick={handleHide} style={{ minWidth: "100px" }}>
                     취소
                 </Button>
                 <Button variant="dark" onClick={handleEvent} style={{ minWidth: "100px" }}>
@@ -66,7 +66,7 @@ const ChatRoomItem = (props) => {
 
     const handleChangeStatus = async (e) => {
         e.preventDefault();
-        setModalMessage("해당 문의사항을 답변완료 처리하시겠습니까?");
+        setModalMessage("해당 문의사항의 답변상태를 변경하시겠습니까?");
         setModalShow(true);
     }
 
