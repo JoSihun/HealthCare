@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
 import bg_black from "../../assets/images/bg_black.jpg";
@@ -7,8 +7,8 @@ import * as SockJS from "sockjs-client";
 import * as StompJS from "@stomp/stompjs";
 import { useSearchParams } from "react-router-dom";
 
-const ChatForm = (props) => {
-    const { activeForm } = props;
+const ChatMessageForm = (props) => {
+    const { activeChatForm } = props;
     const [chatData, setChatData] = useState({
         roomUuid: props.roomUuid,
         sender: props.adminId,
@@ -21,7 +21,7 @@ const ChatForm = (props) => {
             sender: props.adminId,
             message: "",
         })
-    }, [props]);
+    }, [props.roomUuid, props.adminId]);
 
     const handleChange = async (e) => {
         e.preventDefault();
@@ -35,26 +35,26 @@ const ChatForm = (props) => {
         props.publish(chatData);
         setChatData({...chatData,
             message: "",
-        });    
+        });
     }
 
     return (
         <form onSubmit={handleSubmit}>
             <div className="form-group mb-3">
                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용 입력</label>
-                <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={chatData.message} required disabled={!activeForm}></textarea>
+                <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={chatData.message} required disabled={!activeChatForm}></textarea>
             </div>
             <div className="form-group d-flex justify-content-end">
-                <Button type="submit" variant="dark" style={{ minWidth: "100px" }} disabled={!activeForm}>
-                    {activeForm ? "전송" : "연결중"}
-                    {!activeForm && <Spinner className="ms-2" animation="border" size="sm" variant="secondary" />}
+                <Button type="submit" variant="dark" style={{ minWidth: "100px" }} disabled={!activeChatForm}>
+                    {activeChatForm ? "전송" : "연결중"}
+                    {!activeChatForm && <Spinner className="ms-2" animation="border" size="sm" variant="secondary" />}
                 </Button>
             </div>
         </form>
     );
 }
 
-const AdminChat = (props) => {
+const AdminMessageItem = (props) => {
     return (
         <div className="mb-2">
             <div className="d-flex justify-content-start">
@@ -73,7 +73,7 @@ const AdminChat = (props) => {
     )
 }
 
-const UserChat = (props) => {
+const UserMessageItem = (props) => {
     return (
         <div className="mb-2">
             <div className="d-flex justify-content-end">
@@ -92,16 +92,14 @@ const UserChat = (props) => {
     );
 }
 
-const ChatContent = (props) => {
+const ChatMessageList = (props) => {
     return (
         <>
         {props.chatMessages.map((chatMessage, index) => (
             <div key={index}>
-                {/* Sender 조건문 정상동작 확인필요 */}
-                {chatMessage["sender"] === "Admin"
-                ? <AdminChat chatMessage={chatMessage} />
-                : <UserChat chatMessage={chatMessage} />
-                }
+                {chatMessage["sender"] === props.adminId
+                ? <AdminMessageItem chatMessage={chatMessage} />
+                : <UserMessageItem chatMessage={chatMessage} />}
             </div>
         ))}
         </>
@@ -110,10 +108,11 @@ const ChatContent = (props) => {
 
 export default function LiveChatRoomAdmin() {
     const [userId, setUserId] = useState("");
+    const [adminId, ] = useState("Admin");
+
     const [chatRoom, setChatRoom] = useState({});
     const [chatMessages, setChatMessages] = useState([]);
-
-    const [searchParams, ] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [roomUuid, setRoomUuid] = useState(searchParams.get("uuid"));
 
     useEffect(() => {
@@ -144,59 +143,66 @@ export default function LiveChatRoomAdmin() {
         }
     }, [roomUuid]);
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     const client = useRef({});
-    const adminId = "Admin";
-    const [activeForm, setActiveForm] = useState(false);
+    const [activeChatForm, setActiveChatForm] = useState(false);
+    const [subscribeChannel, setSubscribeChannel] = useState(roomUuid);
 
-    // SubScribe Channel 결정에 대한 대책이 필요함
+    // Send Message
+    const publish = useCallback((chatData) => {
+        if (!client.current.connected) return;
+        client.current.publish({
+            destination: `/pub/chat`,
+            body: JSON.stringify(chatData),
+        });
+    }, []);
+
+    // Receive Message
+    const subscribe = useCallback(() => {
+        client.current.subscribe(`/sub/chat/${subscribeChannel}`, (response) => {
+            if (subscribeChannel !== JSON.parse(response.body).roomUuid) {
+                setRoomUuid(JSON.parse(response.body).roomUuid);
+                setSubscribeChannel(JSON.parse(response.body).roomUuid);
+                searchParams.set("uuid", JSON.parse(response.body).roomUuid);
+                setSearchParams(searchParams);
+            }
+            setChatMessages(_chatMessages => [..._chatMessages, JSON.parse(response.body)]);
+        })
+    }, [searchParams, setSearchParams, subscribeChannel]);
+
+    // WebSocket Connect
+    const connect = useCallback(() => {
+        client.current = new StompJS.Client({
+            reconnectDelay: 5000,
+            heartbeatIncoming: 4000,
+            heartbeatOutgoing: 4000,
+            onConnect: (frame) => {
+                subscribe();
+                console.log(frame);         // 디버깅 코드 추후 삭제
+                setActiveChatForm(true);
+            },
+            onStompError: (frame) => {
+                console.log(frame);
+            },
+            // WebSocket Endpoint
+            // brokerURL: `/support/livechat`,
+            webSocketFactory: () => new SockJS(`/support/livechat`),
+        });
+        client.current.activate();
+    }, [subscribe]);
+
+    // WebSocket Disconnect
+    const disconnect = useCallback(() => {
+        client.current.deactivate();
+    }, []);
+
     useEffect(() => {
-        const connect = () => {
-            client.current = new StompJS.Client({
-                // brokerURL: `/support/livechat`,
-                webSocketFactory: () => new SockJS(`/support/livechat`),    // endpoint
-                reconnectDelay: 5000,
-                heartbeatIncoming: 4000,
-                heartbeatOutgoing: 4000,
-                onConnect: (frame) => {
-                    console.log(frame);
-                    setActiveForm(true);
-                    subscribe();
-                },
-                onStompError: (frame) => {
-                    console.log(frame);
-                },
-            });
-            client.current.activate();
-        }
-
-        const disconnect = () => {
-            client.current.deactivate();
-        }
-
-        const subscribe = () => {
-            client.current.subscribe(`/sub/chat/${roomUuid}`, (response) => {
-                const responseBody = JSON.parse(response.body);
-                setChatMessages(_chatMessages => [..._chatMessages, JSON.parse(response.body)]);
-                setRoomUuid(responseBody.roomUuid);
-            });
-        }
-
         connect();
         return () => disconnect();
-    }, [roomUuid]);
-
-    const publish = (chatData) => {
-        if (!client.current.connected) return () => console.log("WebSocket NOT Connected!!!");
-        client.current.publish({
-            destination: `/pub/chat`,           // pub/MessageMapping URL
-            body: JSON.stringify(chatData),
-        });        
-    }
+    }, [connect, disconnect]);
 
     const scrollRef = useRef(null);
-    useEffect(() => {
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    });
+    useEffect(() => { scrollRef.current.scrollTop = scrollRef.current.scrollHeight; });
 
     return (
         <Container fluid>
@@ -208,7 +214,10 @@ export default function LiveChatRoomAdmin() {
                 <Col className="col-md-9 mx-2 my-4">
                     <Card>
                         <Card.Body>
-                            <Card.Title><h2><strong>LiveChat Support</strong></h2></Card.Title>
+                            <Card.Title>
+                                <h2><strong>LiveChat Support</strong></h2>
+                                <h5><strong><small>관리자ID: {adminId}</small></strong></h5>
+                            </Card.Title>
                             <hr/>
                             <Card.Title className="d-flex justify-content-between">
                                 <div>
@@ -224,12 +233,12 @@ export default function LiveChatRoomAdmin() {
                             </Card.Title>
                             
                             <Card>
-                                <Card.Body ref={scrollRef} style={{ minHeight: "25vh", maxHeight: "75vh", overflow: "auto"}}>
-                                    <ChatContent chatMessages={chatMessages} />
+                                <Card.Body ref={scrollRef} style={{ minHeight: "25vh", maxHeight: "50vh", overflow: "auto"}}>
+                                    <ChatMessageList adminId={adminId} chatMessages={chatMessages} />
                                 </Card.Body>
                                 <hr/>
                                 <Card.Body>
-                                    <ChatForm adminId={adminId} roomUuid={roomUuid} publish={publish} activeForm={activeForm} />
+                                    <ChatMessageForm adminId={adminId} roomUuid={roomUuid} publish={publish} activeChatForm={activeChatForm} />
                                 </Card.Body>
                             </Card>
                         </Card.Body>

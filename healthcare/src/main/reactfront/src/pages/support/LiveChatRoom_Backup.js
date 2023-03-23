@@ -111,9 +111,8 @@ const ChatContent = (props) => {
 export default function LiveChatRoom() {
     const [chatRoom, setChatRoom] = useState({});
     const [chatMessages, setChatMessages] = useState([]);
-
-    const [searchParams, ] = useSearchParams();
-    const [roomUuid, setRoomUuid] = useState(searchParams.get("id"));
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [roomUuid, setRoomUuid] = useState(searchParams.get("uuid"));
 
     useEffect(() => {
         const axiosGetChatRoom = async () => {
@@ -145,15 +144,25 @@ export default function LiveChatRoom() {
     const client = useRef({});
     const userId = "TestUserName";
     const [activeForm, setActiveForm] = useState(false);
-    const [subscribeChannel, setSubscribeChannel] = useState(userId);
+    const [subscribeChannel, setSubscribeChannel] = useState(roomUuid ? roomUuid : userId);
 
     const subscribe = useCallback(() => {
         client.current.subscribe(`/sub/chat/${subscribeChannel}`, (response) => {
+            searchParams.set("uuid", JSON.parse(response.body).roomUuid);
+            setSearchParams(searchParams);
             setRoomUuid(JSON.parse(response.body).roomUuid);
             setSubscribeChannel(JSON.parse(response.body).roomUuid);
             setChatMessages(_chatMessages => [..._chatMessages, JSON.parse(response.body)]);
         });
-    }, [subscribeChannel]);
+    }, [searchParams, setSearchParams, subscribeChannel]);
+
+    const publish = useCallback((chatData) => {
+        // '/pub/{MessageMapping}'
+        client.current.publish({
+            destination: `/pub/chat`,           
+            body: JSON.stringify(chatData),
+        });      
+    }, []);
     
     const connect = useCallback(() => {
         client.current = new StompJS.Client({
@@ -177,51 +186,10 @@ export default function LiveChatRoom() {
         client.current.deactivate();
     }, []);
 
-
-
     useEffect(() => {
-        // const connect = () => {
-        //     client.current = new StompJS.Client({
-        //         // brokerURL: `/support/livechat`,
-        //         webSocketFactory: () => new SockJS(`/support/livechat`),    // endpoint
-        //         reconnectDelay: 5000,
-        //         heartbeatIncoming: 4000,
-        //         heartbeatOutgoing: 4000,
-        //         onConnect: (frame) => {
-        //             console.log(frame);
-        //             setActiveForm(true);
-        //             subscribe();
-        //         },
-        //         onStompError: (frame) => {
-        //             console.log(frame);
-        //         },
-        //     });
-        //     client.current.activate();
-        // }
-
-        // const disconnect = () => {
-        //     client.current.deactivate();
-        // }
-
-        // const subscribe = () => {
-        //     client.current.subscribe(`/sub/chat/${userId}`, (response) => {
-        //         const responseBody = JSON.parse(response.body);
-        //         setChatMessages(_chatMessages => [..._chatMessages, JSON.parse(response.body)]);
-        //         setRoomUuid(responseBody.roomUuid);
-        //     });
-        // }
-
         connect();
         return () => disconnect();
     }, [connect, disconnect]);
-
-    const publish = (chatData) => {
-        if (!client.current.connected) return () => console.log("WebSocket NOT Connected!!!");
-        client.current.publish({
-            destination: `/pub/chat`,           // pub/MessageMapping URL
-            body: JSON.stringify(chatData),
-        });        
-    }
 
     const scrollRef = useRef(null);
     useEffect(() => {
@@ -254,7 +222,7 @@ export default function LiveChatRoom() {
                             </Card.Title>
                             
                             <Card>
-                                <Card.Body ref={scrollRef} style={{ minHeight: "25vh", maxHeight: "75vh", overflow: "auto"}}>
+                                <Card.Body ref={scrollRef} style={{ minHeight: "25vh", maxHeight: "50vh", overflow: "auto"}}>
                                     <ChatContent chatMessages={chatMessages} />
                                 </Card.Body>
                                 <hr/>

@@ -48,20 +48,17 @@ public class ChatMessageRestController {
             String subscribeChannel = "/sub/chat/" + chatMessageResponseDto.getRoomUuid();
             sendingOperations.convertAndSend(subscribeChannel, chatMessageResponseDto);
         }
+    }
 
-//        if (requestDto.getRoomUuid() == null) {
-//            Long chatRoomId = this.chatRoomService.create(requestDto.getSender());
-//            ChatRoomResponseDto chatRoomResponseDto = this.chatRoomService.findById(chatRoomId);
-//            requestDto.setRoomUuid(chatRoomResponseDto.getUuid());
-//        }
-//        Long chatRoomId = this.chatRoomService.findByUuid(requestDto.getRoomUuid()).getId();
-//        Long chatMessageId = this.chatMessageService.save(chatRoomId, requestDto);
-//        ChatRoomResponseDto chatRoomResponseDto = this.chatRoomService.findById(chatRoomId);
-//        ChatMessageResponseDto chatMessageResponseDto = this.chatMessageService.findById(chatMessageId);
-//
-//        // Front 를 고려하여 좀 더 적합한 Subscribe Channel 선택필요
-//        String subscribeChannel = "/sub/chat/" + chatRoomResponseDto.getRoomName();
-//        sendingOperations.convertAndSend(subscribeChannel, chatMessageResponseDto);
+    @MessageMapping("/chat/create")
+    public void receiveNewMessage(@Payload ChatMessageRequestDto requestDto) {
+        Long chatRoomId = this.chatRoomService.findByUuid(requestDto.getRoomUuid()).getId();
+        Long chatMessageId = this.chatMessageService.save(chatRoomId, requestDto);
+        ChatRoomResponseDto chatRoomResponseDto = this.chatRoomService.findById(chatRoomId);
+        ChatMessageResponseDto chatMessageResponseDto = this.chatMessageService.findById(chatMessageId);
+
+        String subscribeChannel = "/sub/chat/" + chatRoomResponseDto.getUuid();
+        sendingOperations.convertAndSend(subscribeChannel, chatMessageResponseDto);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

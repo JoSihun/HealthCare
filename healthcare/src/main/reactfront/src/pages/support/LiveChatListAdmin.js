@@ -7,9 +7,10 @@ import SideBar from "../../components/support/SideBar";
 const ModalCheck = (props) => {
     const { chatRoom, message } = props;
     const { modalShow, setModalShow } = props;
-    const [newChatRoom, ] = useState(chatRoom);
-    const handleHide = () => setModalShow(false);
 
+    const handleHide = async (e) => {
+        setModalShow(false);
+    }
 
     const handleEvent = async (e) => {
         if (message.includes("삭제")) {
@@ -22,8 +23,8 @@ const ModalCheck = (props) => {
         }
 
         if (message.includes("답변상태")) {
-            newChatRoom.answerYn = !newChatRoom.answerYn;
-            await axios.put(`/api/livechat/room/${chatRoom.id}`, newChatRoom)
+            chatRoom.answerYn = !chatRoom.answerYn
+            await axios.put(`/api/livechat/room/${chatRoom.id}`, chatRoom)
             .then((response) => {
                 window.location.reload();
             }).catch((error) => {
@@ -64,7 +65,7 @@ const ChatRoomItem = (props) => {
         window.location.href = `/support/livechat/room/admin?${queryString}`;
     }
 
-    const handleChangeStatus = async (e) => {
+    const handleStatus = async (e) => {
         e.preventDefault();
         setModalMessage("해당 문의사항의 답변상태를 변경하시겠습니까?");
         setModalShow(true);
@@ -72,7 +73,7 @@ const ChatRoomItem = (props) => {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-        setModalMessage("해당 문의사항을 삭제하시겠습니까?");
+        setModalMessage("해당 문의사항을 정말 삭제하시겠습니까?");
         setModalShow(true);
     }
 
@@ -95,11 +96,11 @@ const ChatRoomItem = (props) => {
                     </Card.Title>            
                 </Card.Body>
             </Link>
+
             <Card.Body className="px-2 py-0">
                 <Card.Title>
                     <div className="d-flex justify-content-end">
-                        {/* 답변완료 put처리 필요 */}
-                        <Link onClick={handleChangeStatus}><Badge className="me-1" bg="light" text="dark">상태변경</Badge></Link>
+                        <Link onClick={handleStatus}><Badge className="me-1" bg="light" text="dark">상태변경</Badge></Link>
                         <Link onClick={handleEnter}><Badge className="mx-1" bg="dark">답변하기</Badge></Link>
                         <Link onClick={handleDelete}><Badge className="ms-1" bg="danger">삭제</Badge></Link>
                     </div>
@@ -137,6 +138,7 @@ export default function LiveChatList() {
             });
         }
 
+        // 관리자 유효성 검사
         if (userId === "Admin") {
             axiosGetChatRooms();
         }
@@ -151,12 +153,15 @@ export default function LiveChatList() {
 
                 <Col className="col-md-9 mx-2 my-4">
                     <Card style={{ minHeight: "50vh", maxHeight: "75vh" }}>
-                        <Card.Body style={{ overflow: "auto" }}>
+                        <Card.Body>
                             <Card.Title>
                                 <h2><strong>LiveChat Support({chatRooms.length})</strong></h2>
                                 <h5><strong><small>관리자ID: {userId}</small></strong></h5>
                             </Card.Title>
-                            <hr/>
+                            <hr className="mb-0" />
+                        </Card.Body>
+
+                        <Card.Body style={{ overflow: "auto" }}>
                             <ChatRoomList chatRooms={chatRooms} />
                         </Card.Body>
                     </Card>
