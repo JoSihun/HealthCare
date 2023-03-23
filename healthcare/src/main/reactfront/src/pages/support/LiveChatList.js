@@ -43,7 +43,7 @@ const ChatRoomItem = (props) => {
 
     const handleEnter = async (e) => {
         e.preventDefault();
-        const queryString = `id=${chatRoom.uuid}`;
+        const queryString = `uuid=${chatRoom.uuid}`;
         window.location.href = `/support/livechat/room?${queryString}`;
     }
 

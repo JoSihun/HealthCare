@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
 import bg_black from "../../assets/images/bg_black.jpg";
@@ -11,14 +11,14 @@ const ChatForm = (props) => {
     const { activeForm } = props;
     const [chatData, setChatData] = useState({
         roomUuid: props.roomUuid,
-        sender: props.adminId,
+        sender: props.userId,
         message: "",
     });
 
     useEffect(() => {
         setChatData({
             roomUuid: props.roomUuid,
-            sender: props.adminId,
+            sender: props.userId,
             message: "",
         })
     }, [props]);
@@ -108,13 +108,12 @@ const ChatContent = (props) => {
     )
 }
 
-export default function LiveChatRoomAdmin() {
-    const [userId, setUserId] = useState("");
+export default function LiveChatRoom() {
     const [chatRoom, setChatRoom] = useState({});
     const [chatMessages, setChatMessages] = useState([]);
 
     const [searchParams, ] = useSearchParams();
-    const [roomUuid, setRoomUuid] = useState(searchParams.get("uuid"));
+    const [roomUuid, setRoomUuid] = useState(searchParams.get("id"));
 
     useEffect(() => {
         const axiosGetChatRoom = async () => {
@@ -122,7 +121,6 @@ export default function LiveChatRoomAdmin() {
             await axios.get(`/api/livechat/room?${queryString}`)
             .then((response) => {
                 setChatRoom(response.data);
-                setUserId(response.data.roomName);
             }).catch((error) => {
                 console.log(error);
             });
@@ -145,45 +143,77 @@ export default function LiveChatRoomAdmin() {
     }, [roomUuid]);
 
     const client = useRef({});
-    const adminId = "Admin";
+    const userId = "TestUserName";
     const [activeForm, setActiveForm] = useState(false);
+    const [subscribeChannel, setSubscribeChannel] = useState(userId);
 
-    // SubScribe Channel 결정에 대한 대책이 필요함
+    const subscribe = useCallback(() => {
+        client.current.subscribe(`/sub/chat/${subscribeChannel}`, (response) => {
+            setRoomUuid(JSON.parse(response.body).roomUuid);
+            setSubscribeChannel(JSON.parse(response.body).roomUuid);
+            setChatMessages(_chatMessages => [..._chatMessages, JSON.parse(response.body)]);
+        });
+    }, [subscribeChannel]);
+    
+    const connect = useCallback(() => {
+        client.current = new StompJS.Client({
+            // brokerURL: `/support/livechat`,
+            onConnect: (frame) => {
+                subscribe();
+                setActiveForm(true);
+                console.log(frame);
+            },
+            onStompError: (frame) => {
+                console.log(frame);
+            },
+            // WebSocket Endpoint
+            webSocketFactory: () => new SockJS(`/support/livechat`),    
+        });
+        client.current.activate();
+    }, [subscribe]);
+
+    const disconnect = useCallback(() => {
+        setActiveForm(false);
+        client.current.deactivate();
+    }, []);
+
+
+
     useEffect(() => {
-        const connect = () => {
-            client.current = new StompJS.Client({
-                // brokerURL: `/support/livechat`,
-                webSocketFactory: () => new SockJS(`/support/livechat`),    // endpoint
-                reconnectDelay: 5000,
-                heartbeatIncoming: 4000,
-                heartbeatOutgoing: 4000,
-                onConnect: (frame) => {
-                    console.log(frame);
-                    setActiveForm(true);
-                    subscribe();
-                },
-                onStompError: (frame) => {
-                    console.log(frame);
-                },
-            });
-            client.current.activate();
-        }
+        // const connect = () => {
+        //     client.current = new StompJS.Client({
+        //         // brokerURL: `/support/livechat`,
+        //         webSocketFactory: () => new SockJS(`/support/livechat`),    // endpoint
+        //         reconnectDelay: 5000,
+        //         heartbeatIncoming: 4000,
+        //         heartbeatOutgoing: 4000,
+        //         onConnect: (frame) => {
+        //             console.log(frame);
+        //             setActiveForm(true);
+        //             subscribe();
+        //         },
+        //         onStompError: (frame) => {
+        //             console.log(frame);
+        //         },
+        //     });
+        //     client.current.activate();
+        // }
 
-        const disconnect = () => {
-            client.current.deactivate();
-        }
+        // const disconnect = () => {
+        //     client.current.deactivate();
+        // }
 
-        const subscribe = () => {
-            client.current.subscribe(`/sub/chat/${roomUuid}`, (response) => {
-                const responseBody = JSON.parse(response.body);
-                setChatMessages(_chatMessages => [..._chatMessages, JSON.parse(response.body)]);
-                setRoomUuid(responseBody.roomUuid);
-            });
-        }
+        // const subscribe = () => {
+        //     client.current.subscribe(`/sub/chat/${userId}`, (response) => {
+        //         const responseBody = JSON.parse(response.body);
+        //         setChatMessages(_chatMessages => [..._chatMessages, JSON.parse(response.body)]);
+        //         setRoomUuid(responseBody.roomUuid);
+        //     });
+        // }
 
         connect();
         return () => disconnect();
-    }, [roomUuid]);
+    }, [connect, disconnect]);
 
     const publish = (chatData) => {
         if (!client.current.connected) return () => console.log("WebSocket NOT Connected!!!");
@@ -229,7 +259,7 @@ export default function LiveChatRoomAdmin() {
                                 </Card.Body>
                                 <hr/>
                                 <Card.Body>
-                                    <ChatForm adminId={adminId} roomUuid={roomUuid} publish={publish} activeForm={activeForm} />
+                                    <ChatForm userId={userId} roomUuid={roomUuid} publish={publish} activeForm={activeForm} />
                                 </Card.Body>
                             </Card>
                         </Card.Body>
