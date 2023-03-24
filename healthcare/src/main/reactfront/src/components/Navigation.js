@@ -24,7 +24,7 @@ function Navigation() {
                             <Nav.Link href="/home">Home</Nav.Link>
 
                             <NavDropdown title="Introduce" id="collasible-nav-dropdown">
-                                <NavDropdown.Item href="/introduce/facilities">Facilities</NavDropdown.Item>
+                                <NavDropdown.Item href="/introduce/facility">facility</NavDropdown.Item>
                                 <NavDropdown.Item href="/introduce/staff">Staff</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="Support" id="collasible-nav-dropdown">

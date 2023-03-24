@@ -24,8 +24,8 @@ export default function SideBar() {
                     <hr/>
                     <Nav variant="pills" activeKey={handleActiveKey()} className="flex-column">
                         <Nav.Link eventKey="1" href="/introduce/facility" className="sidebar-item">Facility</Nav.Link>
-                        <Nav.Link eventKey="2" href="/support/staff" className="sidebar-item">Staff</Nav.Link>
-                        <Nav.Link eventKey="3" href="/support/direction" className="sidebar-item">Direction</Nav.Link>
+                        <Nav.Link eventKey="2" href="/introduce/staff" className="sidebar-item">Staff</Nav.Link>
+                        <Nav.Link eventKey="3" href="/introduce/direction" className="sidebar-item">Direction</Nav.Link>
                     </Nav>
                 </Card.Body>
             </Card>

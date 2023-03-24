@@ -34,7 +34,7 @@ export default function Facility() {
                         <Card.Body>
                             <Card.Title><h2><strong>Facility</strong></h2></Card.Title>
                             <hr/>
-
+                            
                             {Facility.map((facility, index) => (
                                 <div>
                                     <div>{facility.sectorName}</div>
