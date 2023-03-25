@@ -1,8 +1,14 @@
-.Facilities {
+.Facility {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     flex: 1;
+}
+
+.button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
 
 .sidebar {
