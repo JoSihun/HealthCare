@@ -64,26 +64,24 @@
 
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
 ## 2. 2 SpringBoot Architecture  
+`MVC 패턴`에 따른 `SpringBoot` `package` 구조
+```
+├── config
+├── domain
+├── dto
+├── repository
+├── service
+├── controller
 ```
 
-### 2. 2. 1 Config
+### **2. 2. 1 Config**
+```
 ├── config
 │   └── WebSocketConfig.java
 ```
 
-### 2. 2. 2 Domain
+### **2. 2. 2 Domain**
 ```
 ├── domain
 │   ├── Attachment.java
@@ -95,7 +93,7 @@
 │   └── Post.java
 ```
 
-### 2. 2. 3 DTO
+### **2. 2. 3 DTO**
 ```
 ├── dto
 │   ├── attachment
@@ -121,7 +119,7 @@
 │       └── PostUpdateRequestDto.java
 ```
 
-### 2. 2. 4 Repository
+### **2. 2. 4 Repository**
 ```
 ├── repository
 │   ├── AttachmentRepository.java
@@ -132,7 +130,7 @@
 │   └── PostRepository.java
 ```
 
-### 2. 2. 5 Service
+### **2. 2. 5 Service**
 ```
 ├── service
 │   ├── AttachmentService.java
@@ -143,7 +141,7 @@
 │   └── PostService.java
 ```
 
-### 2. 2. 6 Controller
+### **2. 2. 6 Controller**
 ```
 ├── controller
 │   ├── introduce
@@ -170,13 +168,12 @@
 │   │   ├── CommentRestController.java
 │   │   └── PostRestController.java
 ```
-현재까지 상기의 기능들에 대해서 RESTful 하게 API를 구현하였다.  
+현재까지 상기의 기능들에 대해서 `RESTful` 하게 `API`를 구현
 
 </br>
 
 **`PostRestController.java`**
 ```java
-// PostRestController.java
 @RequiredArgsConstructor
 @RestController
 public class PostRestController {
@@ -205,15 +202,223 @@ public class PostRestController {
     }
 }
 ```
-- `RESTful API` 중 하나인 `PostRestController.java`
-  
+- `@PathVariable`을 통해 특정 게시물의 `id`값 읽기
+- `@RequestBody`를 통해 Client로부터 `JSON` 형태의 데이터 읽기
+- `@RequestPart`를 통해서 첨부파일 데이터를 처리
+
+</br>
+
+`AttachmentRestController.java`
+```java
+@RequiredArgsConstructor
+@RestController
+public class AttachmentRestController {
+    private final AttachmentService attachmentService;
+
+    @GetMapping("/api/attachment/{postId}")
+    public List<AttachmentResponseDto> readAttachment(@PathVariable Long postId) {
+        return this.attachmentService.findAllByPostId(postId);
+    }
+
+    @GetMapping("/api/attachment/download/{attachmentId}")
+    public ResponseEntity<Resource> downloadAttachment(@PathVariable Long attachmentId) throws MalformedURLException {
+        return this.attachmentService.download(attachmentId);
+    }
+}
+```
+- `postId`를 통해 특정 게시물에 첨부된 모든 파일 응답
+- `attachmentId`를 통해 특정 첨부파일 다운로드 기능 제공
+
+</br>
+
+`CommentRestController.java`
+```java
+@RequiredArgsConstructor
+@RestController
+public class CommentRestController {
+    private final CommentService commentService;
+
+    @GetMapping("/api/comment")
+    public List<CommentResponseDto> readComment(@RequestParam(value = "post") Long postId) {
+        return this.commentService.findAllByPostId(postId);
+    }
+
+    @PostMapping("/api/comment")
+    public List<CommentResponseDto> saveComment(@RequestParam(value = "post") Long postId,
+                                                @RequestBody CommentSaveRequestDto requestDto) {
+        this.commentService.save(postId, requestDto);
+        return this.commentService.findAllByPostId(postId);
+    }
+
+    @PutMapping("/api/comment")
+    public List<CommentResponseDto> updateComment(@RequestParam(value = "post") Long postId,
+                                                  @RequestParam(value = "comment") Long commentId,
+                                                  @RequestBody CommentUpdateRequestDto requestDto) {
+        this.commentService.update(commentId, requestDto);
+        return this.commentService.findAllByPostId(postId);
+    }
+
+    @DeleteMapping("/api/comment")
+    public List<CommentResponseDto> deleteComment(@RequestParam(value = "post") Long postId,
+                                                  @RequestParam(value = "comment") Long commentId) {
+        this.commentService.delete(commentId);
+        return this.commentService.findAllByPostId(postId);
+    }
+}
+```
+- `@RequestBody`로 댓글 데이터 `JSON`형태로 전달받아 처리
+- `@RequestParam`으로 데이터 접근에 필요한 값 전달받아 처리
+
+</br>
+
+`ChatRoomRestController.java`
+```java
+@RequiredArgsConstructor
+@RestController
+public class ChatRoomRestController {
+    private final ChatRoomService chatRoomService;
+
+    /** LiveChat Room 목록조회 - 고객용 */
+    @GetMapping("/api/livechat/list/{userId}")
+    public List<ChatRoomResponseDto> readChatRoomList(@PathVariable String userId) {
+        return this.chatRoomService.findAllByUserIdDesc(userId);
+    }
+
+    /** LiveChat Room 목록조회 - 관리자용 */
+    @GetMapping("/api/livechat/list/admin")
+    public List<ChatRoomResponseDto> readAllChatRoomList() {
+        return this.chatRoomService.findALlDesc();
+    }
+
+    /** LiveChat Room 조회 - Uuid 검색 */
+    @GetMapping("/api/livechat/room")
+    public ChatRoomResponseDto readChatRoom(@RequestParam(value = "uuid") String uuid) {
+        return this.chatRoomService.findByUuid(uuid);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /** LiveChat Room 조회 - id 검색 */
+    @GetMapping("/api/livechat/room/{id}")
+    public ChatRoomResponseDto readChatRoom(@PathVariable Long id) {
+        return this.chatRoomService.findById(id);
+    }
+
+    /** LiveChat Room 생성 */
+    @PostMapping("/api/livechat/room")
+    public Long saveChatRoom(@RequestBody ChatRoomRequestDto requestDto) {
+        return this.chatRoomService.save(requestDto);
+    }
+
+    /** LiveChat Room 수정 */
+    @PutMapping("/api/livechat/room/{id}")
+    public Long updateChatRoom(@PathVariable(value = "id") Long chatRoomId,
+                               @RequestBody ChatRoomRequestDto requestDto) {
+        return this.chatRoomService.update(chatRoomId, requestDto);
+    }
+
+    /** LiveChat Room 삭제 */
+    @DeleteMapping("/api/livechat/room/{id}")
+    public void deleteChatRoom(@PathVariable Long id) {
+        this.chatRoomService.delete(id);
+    }
+}
+```
+- 기본적인 `CRUD` API 기능 제공
+- 요청하는 Client에 따라 Response하는 채팅방 목록이 다름
+- 단순 `Id`값 변경을 통해 다른 사람의 채팅방으로 넘어가지 않도록 `UUID` 처리
+
+</br>
+
+`ChatMessageRestController.java`
+```java
+@RequiredArgsConstructor
+@RestController
+public class ChatMessageRestController {
+    private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
+    private final SimpMessageSendingOperations sendingOperations;
+
+    @MessageMapping("/chat")                // subscribe, publish url
+    public void receiveMessage(@Payload ChatMessageRequestDto requestDto) {
+        if (requestDto.getRoomUuid() == null) {
+            Long chatRoomId = this.chatRoomService.create(requestDto.getSender());
+            ChatRoomResponseDto chatRoomResponseDto = this.chatRoomService.findById(chatRoomId);
+
+            requestDto.setRoomUuid(chatRoomResponseDto.getUuid());
+            Long chatMessageId = this.chatMessageService.save(chatRoomId, requestDto);
+            ChatMessageResponseDto chatMessageResponseDto = this.chatMessageService.findById(chatMessageId);
+
+            String subscribeChannel = "/sub/chat/" + chatMessageResponseDto.getSender();
+            sendingOperations.convertAndSend(subscribeChannel, chatMessageResponseDto);
+        } else {
+            Long chatRoomId = this.chatRoomService.findByUuid(requestDto.getRoomUuid()).getId();
+            Long chatMessageId = this.chatMessageService.save(chatRoomId, requestDto);
+            ChatMessageResponseDto chatMessageResponseDto = this.chatMessageService.findById(chatMessageId);
+
+            String subscribeChannel = "/sub/chat/" + chatMessageResponseDto.getRoomUuid();
+            sendingOperations.convertAndSend(subscribeChannel, chatMessageResponseDto);
+        }
+    }
+
+    @MessageMapping("/chat/create")
+    public void receiveNewMessage(@Payload ChatMessageRequestDto requestDto) {
+        Long chatRoomId = this.chatRoomService.findByUuid(requestDto.getRoomUuid()).getId();
+        Long chatMessageId = this.chatMessageService.save(chatRoomId, requestDto);
+        ChatRoomResponseDto chatRoomResponseDto = this.chatRoomService.findById(chatRoomId);
+        ChatMessageResponseDto chatMessageResponseDto = this.chatMessageService.findById(chatMessageId);
+
+        String subscribeChannel = "/sub/chat/" + chatRoomResponseDto.getUuid();
+        sendingOperations.convertAndSend(subscribeChannel, chatMessageResponseDto);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** 특정 채팅방 LiveChat Message 목록조회 - Id 검색 */
+    @GetMapping("/api/livechat/message/{id}")
+    public List<ChatMessageResponseDto> readChatMessageList(@PathVariable Long id) {
+        return this.chatMessageService.findAllByChatRoomIdAsc(id);
+    }
+
+    /** 특정 채팅방 LiveChat Message 목록조회 - Uuid 검색 */
+    @GetMapping("/api/livechat/message")
+    public List<ChatMessageResponseDto> readChatMessageList(@RequestParam(value = "uuid") String chatRoomUuid) {
+        // 아마도 최초 연결 지점, 여기까지 수정했음
+        return this.chatMessageService.findAllByChatRoomUuidAsc(chatRoomUuid);
+    }
+}
+```
+- 상담직원보호를 위해 LiveChat 채팅 로그 기록(Database)
+- `WebSocket`, `STOMP` 를 활용한 고객지원 LiveChat 기능에 관련된 `Controller`
+- Client가 첫 메세지를 전송할 때 `ChatRoom`이 생성되고, 이후 `ChatMessage`가 기록된다.
+- 고객지원 LiveChat 상담 중 연결이 끊기더라도, 상담중인 채팅로그를 불어와 이어서 상담할 수 있다.
+
+</br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ***  
 # 3. Database  
 - MySQL, JPA 활용  
   
 ## 3. 1 Table  
 ## 3. 2 ERD  
-  
+
+<center><img width="75%" src="https://user-images.githubusercontent.com/59362257/227994226-e63e69de-5711-4a31-aadd-a61b36866794.png"></center>
+
 ***  
 # 4. DNS(Domain Name System)  
 - 서버부재로 현재 미완  
