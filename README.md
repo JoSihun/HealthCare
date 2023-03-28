@@ -6,7 +6,8 @@
 - 헬스장 사용자 건강관리(인바디, 운동 루틴 추천, 식단 추천 등) 서비스 제공  
 - WebSocket 기반 고객지원 LiveChat 서비스 제공  
 - 인바디 체성분(BMI) 기반 운동 루틴 추천 및 식단 관리 서비스 제공  
-- 공공데이터포털 한국건강증진개발원_보건소 모바일 헬스케어_체성분(BMI) 데이터 활용  
+- 공공데이터포털 '농촌진흥청_추천식단정보' 데이터 활용
+- 공공데이터포털 '한국건강증진개발원_보건소 모바일 헬스케어_체성분(BMI)' 데이터 활용  
   
 ***  
 # 1. Envrionment  
@@ -22,7 +23,7 @@
 # 2. Architecture  
 - 본 프로젝트에서는 `MVC Model 2`를 채택하여 사용
 
-<center><img width="100%" src="https://user-images.githubusercontent.com/59362257/227884259-52bd6389-6534-49fd-bda6-a52b317ddde5.png"></center>
+<p align="center"><img width="100%" src="https://user-images.githubusercontent.com/59362257/227884259-52bd6389-6534-49fd-bda6-a52b317ddde5.png"></p>
   
 ## 2. 1 MVC Design Pattern  
 **MDN(Mozila Developer Network) Web Docs의 MVC 정의**  
@@ -41,7 +42,7 @@
 - 중복 코딩의 문제점 제거 
 
 ### 2. 1. 1 MVC Model 1
-<center><img width="100%" src="https://user-images.githubusercontent.com/59362257/227861870-406ca57d-c305-49b9-a6fb-136155b85b59.png"></center>
+<p align="center"><img width="100%" src="https://user-images.githubusercontent.com/59362257/227861870-406ca57d-c305-49b9-a6fb-136155b85b59.png"></p>
 
 <div style="border: 1px solid white; padding-top: 1.5vh; margin-bottom: 1vh">
 
@@ -53,7 +54,7 @@
 </div>
 
 ### 2. 1. 2 MVC Model 2
-<center><img width="100%" src="https://user-images.githubusercontent.com/59362257/227862180-9ba06407-e59d-4e93-bdcf-fc14a7afed8b.png"></center>
+<p aling="center"><img width="100%" src="https://user-images.githubusercontent.com/59362257/227862180-9ba06407-e59d-4e93-bdcf-fc14a7afed8b.png"></p>
 
 <div style="border: 1px solid white; padding-top: 1.5vh; margin-bottom: 1vh">
 
@@ -412,22 +413,31 @@ public class ChatMessageRestController {
 
 ***  
 # 3. Database  
-- MySQL, JPA 활용  
+- `MySQL`
+- `JPA Repository` 활용  
   
 ## 3. 1 Table  
+- `Post`: 게시글 데이터
+- `Comment`: 댓글 데이터
+- `Attachment`: 첨부파일 데이터
+- `Facility`: 헬스장 소개 데이터
+- `ChatRoom`: 고객지원 LiveChat 채팅방 데이터
+- `ChatMessage`: 고객지원 LiveChat 채팅방별 채팅내역 데이터
+
 ## 3. 2 ERD  
 
-<center><img width="75%" src="https://user-images.githubusercontent.com/59362257/227994226-e63e69de-5711-4a31-aadd-a61b36866794.png"></center>
+<p align="center">
+  <img width="75%" src="https://user-images.githubusercontent.com/59362257/227994226-e63e69de-5711-4a31-aadd-a61b36866794.png">
+</p>
 
 ***  
 # 4. DNS(Domain Name System)  
 - 서버부재로 현재 미완  
   
 ## 4. 1 DNS Architecture  
-<center class="half">  
-    <img width="50%" src="https://user-images.githubusercontent.com/59362257/227839526-ed892d25-aced-4980-88e5-548bd89600a7.png">
-    <img width="48%" src="https://user-images.githubusercontent.com/59362257/227864462-7719d618-1f75-438d-b8a5-65a8a1f0c3af.png">
-</center>  
+<p align="center">
+  <img width="50%" src="https://user-images.githubusercontent.com/59362257/227839526-ed892d25-aced-4980-88e5-548bd89600a7.png"> <img width="48%" src="https://user-images.githubusercontent.com/59362257/227864462-7719d618-1f75-438d-b8a5-65a8a1f0c3af.png">
+</p>  
 
 - 클라이언트는 DNS로부터 전달받은 IP주소로 `REQUEST` 요청을 보내고 `RESPONSE` 응답을 받는다.  
 - DNS(Domain Name System)는 사람이 읽을 수 있는 도메인을, 기계가 읽을 수 있는 IP주소로 변환한다.  
@@ -442,7 +452,45 @@ public class ChatMessageRestController {
   
 ## 5. 1 결과  
 - 개발 진행중
+
+### 5. 1. 1 FAQ
+<p align="center"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228136980-6df9a436-2026-4fad-996d-fc3ac0ba55fb.png"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228136786-ceb8abce-346b-4964-8ded-a500c6ee4acb.png"></p>
+<p align="center">FAQ 게시판<br>목록 및 수정화면(왼쪽), 작성화면(오른쪽)</p>
+
+### 5. 1. 2 Q&A
+<p align="center"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228156675-ad4459e9-687b-4cdb-b4a8-4b7e1dd05a55.png"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228156912-488928e6-81fa-4697-aa8e-04afd3b72ab5.png"></p>
+<p align="center">Q&A 게시판<br>목록화면(왼쪽), 게시글화면(오른쪽)</p>
+
+<p align="center"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228157140-926a6679-f7ec-432a-a5a7-b0177b35e180.png"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228157288-f4148bc4-3b8b-43f3-be4a-3d81d7d96b4a.png"></p>
+<p align="center">Q&A 게시판<br>작성화면(왼쪽), 수정화면(오른쪽)</p>
+
+### 5. 1. 3 자유게시판
+
+<p align="center"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228138342-6d83eae7-26e0-4af4-9aab-9f196ea37088.png"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228157487-d397f882-a596-4c9d-ae1d-721d31bd285e.png"></p>
+<p align="center">자유게시판<br>목록화면(왼쪽), 게시글화면(오른쪽)</p>
+
+<p align="center"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228137965-fcaa1352-6914-4069-bd55-1a2ff98a3c56.png"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228157764-43727254-50ce-40f7-8154-e545496bf839.png"></p>
+<p align="center">자유게시판<br>작성화면(왼쪽), 수정화면(오른쪽)</p>
+
+
+### 5. 1. 4 댓글화면
+
+
+
+
+
+### 5. 1. 5 WebSocket LiveChat
+
+<p align="center"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228139129-6c245d19-f4e1-43b5-bb89-4542aa5ddbc5.png"><img width="50%" src="https://user-images.githubusercontent.com/59362257/228139291-1b2291d8-41d0-4b66-af0f-859f5623313b.png"></p>
+<p align="center">채팅방 목록화면<br>고객화면(왼쪽), 관리자화면(오른쪽)</p>
+
+<p align="center"><img width="75%" src="https://user-images.githubusercontent.com/59362257/228158782-defc7bfd-65d8-4622-bbad-23556a3b3c0c.png">
+<p align="center">채팅방 화면<br>고객화면(왼쪽), 관리자화면(오른쪽)</p>
+
+
 ## 5. 2 개발후기  
-- 개발 진행중
+- 개발 진행중1
+- 개발 진행중2
+
 ## 5. 3 향후계획(개선사항)  
 - `React Native`, `Flutter` 등을 활용한 크로스플랫폼 모바일 서비스 업데이트
