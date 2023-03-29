@@ -88,12 +88,12 @@ const EditForm = (props) => {
             formData.append("files", files[i]);
         }
         
-        await axios.put(`/api/post/${id}`, formData, {
+        await axios.put(`/api/v2/post/${id}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
         }).then((response) => {
-            window.location.href = `/support/freeboard/post/${response.data}`;
+            window.location.href = `/support/qnaboard/post/${response.data}`;
         }).catch((error) => {
             console.log(error);
         });
@@ -116,7 +116,7 @@ const EditForm = (props) => {
             </div>
             <div className="form-group d-flex justify-content-end">
                 <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">수정</Button>
-                <Button href={`/support/freeboard/post/${id}`} className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
+                <Button href={`/support/qnaboard/post/${id}`} className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
             </div>
         </form>
     )
@@ -129,7 +129,7 @@ export default function QNABoardEdit() {
 
     useEffect(() => {
         const axiosGetPost = async () => {
-            await axios.get(`/support/freeboard/form/${id}`)
+            await axios.get(`/support/qnaboard/form/${id}`)
             .then((response) => {
                 setPost(response.data);
             }).catch((error) => {
