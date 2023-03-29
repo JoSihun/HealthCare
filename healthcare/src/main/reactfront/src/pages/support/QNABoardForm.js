@@ -56,8 +56,8 @@ const InputForm = () => {
         hits: 0,
         title: "",
         content: "",
-        author: "Admin",
-        category: "FreeBoard",
+        author: "TestUserName",
+        category: "QNABoard",
         secretYn: false,
     });
     
@@ -77,20 +77,20 @@ const InputForm = () => {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append("data", new Blob([JSON.stringify(values)], {
-            type: "application/json"
-        }));
-
-        for (var i = 0; i < files.length; i++) {
+        for (let i = 0; i < files.length; i++) {
             formData.append("files", files[i]);
         }
-        
-        await axios.post(`/api/post`, formData, {
+
+        formData.append("data", new Blob([JSON.stringify(values)], {
+            type: "application/json",
+        }));
+
+        await axios.post(`/api/v2/post`, formData, {
             headers: {
-                "Content-Type": "multipart/form-data"
-            }
+                "Content-Type": "multipart/form-data",
+            },
         }).then((response) => {
-            window.location.href = `/support/freeboard/post/${response.data}`;
+            window.location.href = `/support/qnaboard/post/${response.data}`;
         }).catch((error) => {
             console.log(error);
         });
@@ -113,7 +113,7 @@ const InputForm = () => {
             </div>
             <div className="form-group d-flex justify-content-end">
                 <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">등록</Button>
-                <Button href="/support/freeboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
+                <Button href="/support/qnaboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
             </div>
         </form>
     )
