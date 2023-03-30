@@ -15,10 +15,8 @@ public class Facility extends BaseTime {
     private Long id;
 
     private String sectorName;
-
     @Column(columnDefinition = "LONGTEXT")
     private String sectorInfo;
-
     private String sectorImg;
 
     @Builder
