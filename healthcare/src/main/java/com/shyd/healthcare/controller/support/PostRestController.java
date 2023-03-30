@@ -17,20 +17,20 @@ public class PostRestController {
     private final PostService postService;
     private final AttachmentService attachmentService;
 
-    /** POST REQUEST - header: "application/x-www-form-urlencoded" */
+    /** POST REQUEST - header: "default" */
     @PostMapping("/api/v1/post")
     public Long savePost(@RequestBody PostSaveRequestDto requestDto) {
         return this.postService.save(requestDto);
     }
 
-    /** PUT REQUEST - header: "application/x-www-form-urlencoded" */
+    /** PUT REQUEST - header: "default" */
     @PutMapping("/api/v1/post/{id}")
     public Long updatePost(@PathVariable(value = "id") Long id,
                            @RequestBody PostUpdateRequestDto requestDto) {
         return this.postService.update(id, requestDto);
     }
 
-    /** DELETE REQUEST - header: "application/x-www-form-urlencoded" */
+    /** DELETE REQUEST - header: "default" */
     @DeleteMapping("/api/v1/post/{id}")
     public void deletePost(@PathVariable(value = "id") Long id) {
         this.postService.delete(id);
