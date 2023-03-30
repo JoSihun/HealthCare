@@ -18,10 +18,10 @@ function Direction() {
                         <Card.Title><h2><strong>Direction</strong></h2></Card.Title>
                         <hr/>
                         <Map
-                            center={{ lat: 33.5563, lng: 126.79581 }}
+                            center={{ lat: 37.4565, lng: 126.9500 }}
                             style={{ width: "100%", height: "500px" }}
                         >
-                            <MapMarker position={{ lat: 33.55635, lng: 126.795841 }}>
+                            <MapMarker position={{ lat: 37.4565, lng: 126.9500 }}>
                                 <div style={{color:"#000"}}>HealthCare</div>
                             </MapMarker>
                         </Map>
