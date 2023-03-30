@@ -9,6 +9,7 @@ import NotFound from "./components/NotFound";
 
 import Staff from "./pages/introduce/Staff";
 import Facility from "./pages/introduce/Facility";
+import Direction from "./pages/introduce/Direction";
 
 import Login from "./pages/users/Login";
 import MyPage from "./pages/users/MyPage";
@@ -44,6 +45,7 @@ function App() {
 
                   <Route path="/introduce/facility" element={<Facility />}></Route>
                   <Route path="/introduce/staff" element={<Staff />}></Route>
+                  <Route path="/introduce/direction" element={<Direction />}></Route>
 
                   <Route path="/support/faqboard" element={<FAQBoard />}></Route>
                   <Route path="/support/qnaboard" element={<QNABoard />}></Route>
