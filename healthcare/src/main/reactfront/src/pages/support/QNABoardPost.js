@@ -89,7 +89,7 @@ export default function QNABoardPost() {
 
     useEffect(() => {
         const axiosGetPost = async () => {
-            await axios.get(`/support/freeboard/post/${id}`)
+            await axios.get(`/support/qnaboard/post/${id}`)
             .then((response) => {
                 setPost(response.data);
             }).catch((error) => {
@@ -115,7 +115,7 @@ export default function QNABoardPost() {
 
         await axios.delete(`/api/post/${id}`)
         .then((response) => {
-            window.location.href = `/support/freeboard`;
+            window.location.href = `/support/qnaboard`;
         }).catch((error) => {
             console.log(error);
         });

@@ -27,7 +27,7 @@ const FAQAddForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.post(`/api/post`, values)
+        await axios.post(`/api/v1/post`, values)
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
@@ -76,7 +76,7 @@ const FAQEditForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.put(`/api/post/${props.faq.id}`, values)
+        await axios.put(`/api/v1/post/${props.faq.id}`, values)
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
@@ -113,7 +113,7 @@ const FAQBoardList = (props) => {
 
     const handleDelete = async (params, e) => {
         e.preventDefault();
-        await axios.delete(`/api/post/${params}`)
+        await axios.delete(`/api/v1/post/${params}`)
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
