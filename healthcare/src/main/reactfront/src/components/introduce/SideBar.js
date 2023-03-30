@@ -20,7 +20,7 @@ export default function SideBar() {
         <div className="SideBar">
             <Card>
                 <Card.Body>
-                    <Card.Title style={{ fontSize: "35px", fontWeight: "bold", fontStyle: "italic" }}>introduce</Card.Title>
+                    <Card.Title style={{ fontSize: "35px", fontWeight: "bold", fontStyle: "italic" }}>Introduce</Card.Title>
                     <hr/>
                     <Nav variant="pills" activeKey={handleActiveKey()} className="flex-column">
                         <Nav.Link eventKey="1" href="/introduce/facility" className="sidebar-item">Facility</Nav.Link>
