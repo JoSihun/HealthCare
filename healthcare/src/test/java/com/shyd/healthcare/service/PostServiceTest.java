@@ -28,10 +28,10 @@ class PostServiceTest {
             String title = "TestTitle" + (i + 1);
             String content = "TestContent" + (i + 1);
             String author = "TestUserName" + (i + 1);
-            Boolean secretYn = ((i + 1) % 2 == 1) ? true : false;
-            Boolean answerYn = ((i + 1) % 2 == 1) ? true : false;
+            Boolean secretYn = (i + 1) % 2 == 1;
+            Boolean answerYn = (i + 1) % 2 == 1;
             PostSaveRequestDto requestDto = new PostSaveRequestDto(title, content, author,
-                    Category.FREE_BOARD, hits, secretYn, answerYn);
+                    Category.FREE_BOARD.name(), hits, secretYn, answerYn);
             this.postService.save(requestDto);
         }
     }
