@@ -1,6 +1,8 @@
 package com.shyd.healthcare.service;
 
-import com.shyd.healthcare.dto.post.PostSaveRequestDto;
+import com.shyd.healthcare.domain.support.board.Category;
+import com.shyd.healthcare.dto.support.post.PostSaveRequestDto;
+import com.shyd.healthcare.service.support.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +23,15 @@ class PostServiceTest {
     @Test
     @DisplayName("대용량 데이터 삽입 테스트")
     void saveHugeData() {
-        Boolean secretYn = false;
-        String category = "QNABoard";
         for (int i = 0; i < 300; i++) {
             Integer hits = i + 1;
             String title = "TestTitle" + (i + 1);
             String content = "TestContent" + (i + 1);
             String author = "TestUserName" + (i + 1);
-            PostSaveRequestDto requestDto = new PostSaveRequestDto(title, content, author, hits, category, secretYn);
+            Boolean secretYn = ((i + 1) % 2 == 1) ? true : false;
+            Boolean answerYn = ((i + 1) % 2 == 1) ? true : false;
+            PostSaveRequestDto requestDto = new PostSaveRequestDto(title, content, author,
+                    Category.FREE_BOARD, hits, secretYn, answerYn);
             this.postService.save(requestDto);
         }
     }
