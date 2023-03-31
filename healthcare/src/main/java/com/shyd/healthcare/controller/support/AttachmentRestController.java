@@ -1,7 +1,7 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.attachment.AttachmentResponseDto;
-import com.shyd.healthcare.service.AttachmentService;
+import com.shyd.healthcare.dto.support.attachment.AttachmentResponseDto;
+import com.shyd.healthcare.service.support.AttachmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +28,20 @@ public class AttachmentRestController {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @PostMapping("/api/v2/attachment/{postId}")
-    public Long saveAttachment(@PathVariable(value = "postId") Long postId,
-                               @RequestPart(value = "files", required = false)List<MultipartFile> files) throws IOException {
-        return this.attachmentService.save(postId, files);
+    @PostMapping("/api/attachment/{postId}")
+    public void saveAttachment(@PathVariable(value = "postId") Long postId,
+                               @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
+        this.attachmentService.save(postId, files);
     }
 
-    @PutMapping("/api/v2/attachment/{postId}")
-    public Long updateAttachment(@PathVariable(value = "postId") Long postId,
+    @PutMapping("/api/attachment/{postId}")
+    public void updateAttachment(@PathVariable(value = "postId") Long postId,
                                  @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        return this.attachmentService.update(postId, files);
+        this.attachmentService.update(postId, files);
     }
 
-    @DeleteMapping("/api/v2/attachment/{attachmentId}")
-    public void deleteAttachment(@PathVariable(value = "attachmentId") Long attachmentId) {
-        this.attachmentService.delete(attachmentId);
+    @DeleteMapping("/api/attachment/{postId}")
+    public void deleteAttachment(@PathVariable(value = "postId") Long postId) {
+        this.attachmentService.deleteAllByPostId(postId);
     }
-
 }
