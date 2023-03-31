@@ -1,24 +1,24 @@
-package com.shyd.healthcare.dto.comment;
+package com.shyd.healthcare.dto.support.livechat;
 
-import com.shyd.healthcare.domain.Comment;
+import com.shyd.healthcare.domain.support.livechat.ChatRoom;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
 
 @Getter
-public class CommentResponseDto {
+public class ChatRoomResponseDto {
     private Long id;
-    private String author;
-    private String content;
-    private Boolean secretYn;
+    private String uuid;
+    private String roomName;
+    private Boolean answerYn;
     private String createdDate;
     private String updatedDate;
 
-    public CommentResponseDto(Comment entity) {
+    public ChatRoomResponseDto(ChatRoom entity) {
         this.id = entity.getId();
-        this.author = entity.getAuthor();
-        this.content = entity.getContent();
-        this.secretYn = entity.getSecretYn();
+        this.uuid = entity.getUuid();
+        this.roomName = entity.getRoomName();
+        this.answerYn = entity.getAnswerYn();
         this.createdDate = entity.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
         this.updatedDate = entity.getUpdatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
     }

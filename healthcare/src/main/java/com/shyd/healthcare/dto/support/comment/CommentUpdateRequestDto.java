@@ -1,6 +1,6 @@
-package com.shyd.healthcare.dto.comment;
+package com.shyd.healthcare.dto.support.comment;
 
-import com.shyd.healthcare.domain.Comment;
+import com.shyd.healthcare.domain.support.board.Comment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

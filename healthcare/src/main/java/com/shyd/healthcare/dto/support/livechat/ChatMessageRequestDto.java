@@ -1,7 +1,7 @@
-package com.shyd.healthcare.dto.livechat;
+package com.shyd.healthcare.dto.support.livechat;
 
-import com.shyd.healthcare.domain.ChatMessage;
-import com.shyd.healthcare.domain.ChatRoom;
+import com.shyd.healthcare.domain.support.livechat.ChatMessage;
+import com.shyd.healthcare.domain.support.livechat.ChatRoom;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
