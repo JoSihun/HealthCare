@@ -1,12 +1,12 @@
-package com.shyd.healthcare.service;
+package com.shyd.healthcare.service.support;
 
-import com.shyd.healthcare.domain.Comment;
-import com.shyd.healthcare.domain.Post;
-import com.shyd.healthcare.dto.comment.CommentResponseDto;
-import com.shyd.healthcare.dto.comment.CommentSaveRequestDto;
-import com.shyd.healthcare.dto.comment.CommentUpdateRequestDto;
-import com.shyd.healthcare.repository.CommentRepository;
-import com.shyd.healthcare.repository.PostRepository;
+import com.shyd.healthcare.domain.support.board.Comment;
+import com.shyd.healthcare.domain.support.board.Post;
+import com.shyd.healthcare.dto.support.comment.CommentResponseDto;
+import com.shyd.healthcare.dto.support.comment.CommentSaveRequestDto;
+import com.shyd.healthcare.dto.support.comment.CommentUpdateRequestDto;
+import com.shyd.healthcare.repository.support.CommentRepository;
+import com.shyd.healthcare.repository.support.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,21 +20,20 @@ public class CommentService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-    /** 게시글 댓글 읽기 */
+    /** 댓글 조회 */
     @Transactional
     public List<CommentResponseDto> findAllByPostId(final Long postId) {
         Post postEntity = this.postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. postId = " + postId));
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. post_id = " + postId));
         List<Comment> commentList = postEntity.getCommentList();
         return commentList.stream().map(CommentResponseDto::new).collect(Collectors.toList());
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /** 댓글 저장 */
+    /** 댓글 생성 */
     @Transactional
     public Long save(final Long postId, final CommentSaveRequestDto requestDto) {
         Post postEntity = this.postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. postId = " + postId));
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. post_id = " + postId));
         requestDto.setPost(postEntity);
         return this.commentRepository.save(requestDto.toEntity()).getId();
     }
@@ -43,17 +42,15 @@ public class CommentService {
     @Transactional
     public Long update(final Long commentId, final CommentUpdateRequestDto requestDto) {
         Comment commentEntity = this.commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. commentId = " + commentId));
-        commentEntity.update(requestDto);
-        return commentId;
+                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. comment_id = " + commentId));
+        return commentEntity.update(requestDto);
     }
 
     /** 댓글 삭제 */
     @Transactional
-    public Long delete(final Long commentId) {
+    public void delete(final Long commentId) {
         Comment commentEntity = this.commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. commentId = " + commentId));
+                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. comment_id = " + commentId));
         this.commentRepository.delete(commentEntity);
-        return commentId;
     }
 }

@@ -1,9 +1,9 @@
-package com.shyd.healthcare.service;
+package com.shyd.healthcare.service.support;
 
-import com.shyd.healthcare.domain.ChatRoom;
-import com.shyd.healthcare.dto.livechat.ChatRoomRequestDto;
-import com.shyd.healthcare.dto.livechat.ChatRoomResponseDto;
-import com.shyd.healthcare.repository.ChatRoomRepository;
+import com.shyd.healthcare.domain.support.livechat.ChatRoom;
+import com.shyd.healthcare.dto.support.livechat.ChatRoomRequestDto;
+import com.shyd.healthcare.dto.support.livechat.ChatRoomResponseDto;
+import com.shyd.healthcare.repository.support.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
