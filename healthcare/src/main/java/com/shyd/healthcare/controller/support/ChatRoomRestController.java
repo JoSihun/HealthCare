@@ -1,8 +1,8 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.livechat.ChatRoomRequestDto;
-import com.shyd.healthcare.dto.livechat.ChatRoomResponseDto;
-import com.shyd.healthcare.service.ChatRoomService;
+import com.shyd.healthcare.dto.support.livechat.ChatRoomRequestDto;
+import com.shyd.healthcare.dto.support.livechat.ChatRoomResponseDto;
+import com.shyd.healthcare.service.support.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,11 +1,10 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.livechat.ChatMessageRequestDto;
-import com.shyd.healthcare.dto.livechat.ChatMessageResponseDto;
-import com.shyd.healthcare.dto.livechat.ChatRoomRequestDto;
-import com.shyd.healthcare.dto.livechat.ChatRoomResponseDto;
-import com.shyd.healthcare.service.ChatMessageService;
-import com.shyd.healthcare.service.ChatRoomService;
+import com.shyd.healthcare.dto.support.livechat.ChatMessageRequestDto;
+import com.shyd.healthcare.dto.support.livechat.ChatMessageResponseDto;
+import com.shyd.healthcare.dto.support.livechat.ChatRoomResponseDto;
+import com.shyd.healthcare.service.support.ChatMessageService;
+import com.shyd.healthcare.service.support.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -13,7 +12,6 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
