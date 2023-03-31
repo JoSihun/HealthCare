@@ -1,7 +1,7 @@
-package com.shyd.healthcare.repository;
+package com.shyd.healthcare.repository.support;
 
-import com.shyd.healthcare.domain.ChatMessage;
-import com.shyd.healthcare.domain.ChatRoom;
+import com.shyd.healthcare.domain.support.livechat.ChatMessage;
+import com.shyd.healthcare.domain.support.livechat.ChatRoom;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
