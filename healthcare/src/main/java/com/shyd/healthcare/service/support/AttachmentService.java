@@ -79,6 +79,16 @@ public class AttachmentService {
         }
     }
 
+    /** 실제 첨부파일 삭제 */
+    private void deleteFiles(List<Attachment> attachmentList) {
+        for (Attachment attachmentEntity : attachmentList) {
+            File file = new File(attachmentEntity.getFilePath());
+            if (file.exists() && file.delete()) {
+                System.out.println("[DELETE] File Removed Success " + attachmentEntity.getFilePath());
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 첨부파일 조회 */
     @Transactional
@@ -107,6 +117,7 @@ public class AttachmentService {
         Post postEntity = this.postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. post_id = " + postId));
         List<Attachment> attachmentList = postEntity.getAttachmentList();
+        this.deleteFiles(attachmentList);
         this.attachmentRepository.deleteAll(attachmentList);
 
         // 2nd Process: Save All New Files
@@ -122,12 +133,7 @@ public class AttachmentService {
         Post postEntity = this.postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. post_id = " + postId));
         List<Attachment> attachmentList = postEntity.getAttachmentList();
-        for (Attachment attachmentEntity : attachmentList) {
-            File file = new File(attachmentEntity.getFilePath());
-            if (file.exists() && file.delete()) {
-                System.out.println("[DELETE] File Removed Success " + attachmentEntity.getFilePath());
-            }
-        }
+        this.deleteFiles(attachmentList);
         this.attachmentRepository.deleteAll(attachmentList);
     }
 }
