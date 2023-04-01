@@ -122,7 +122,7 @@ export default function QNABoardSearch() {
             const queryString2 = `page=${page - 1}&size=${size}`;
             const queryString = `${queryString1}&${queryString2}`;
 
-            await axios.get(`/support/qnaboard/search/?${queryString}`)
+            await axios.get(`/api/v1/post/qna-board/search?${queryString}`)
             .then((response) => {
                 setPages(response.data);
                 setPosts(response.data.content);

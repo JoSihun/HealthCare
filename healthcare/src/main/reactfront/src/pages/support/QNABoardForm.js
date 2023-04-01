@@ -56,9 +56,10 @@ const InputForm = () => {
         hits: 0,
         title: "",
         content: "",
-        author: "TestUserName",
-        category: "QNABoard",
+        author: "TempAuthor",
+        category: "QNA_BOARD",
         secretYn: false,
+        answerYn: false,
     });
     
     const handleChange = async (e) => {
@@ -76,19 +77,45 @@ const InputForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const formData = new FormData();
-        for (let i = 0; i < files.length; i++) {
-            formData.append("files", files[i]);
-        }
+        // 방법 1: Attachment, Post 각각 저장, 정상작동함
+        // let postId = null;
+        // await axios.post(`/api/v1/post`, values)
+        // .then((response) => {
+        //     postId = response.data;
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
 
+        // const formData = new FormData();
+        // for (var i = 0; i < files.length; i++) {
+        //     formData.append("files", files[i]);
+        // }
+
+        // await axios.post(`/api/attachment/${postId}`, formData, {
+        //     headers: {
+        //         "Content-Type": "multipart/form-data",
+        //     },
+        // }).then((response) => {
+        //     window.location.href = `/support/qnaboard/post/${postId}`;
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
+
+        // 방법 2: Post 저장을 통해 Attachment도 저장
+        // 변수가 더 깔끔하여 채택
+        const formData = new FormData();
         formData.append("data", new Blob([JSON.stringify(values)], {
-            type: "application/json",
+            type: "application/json"
         }));
 
+        for (var i = 0; i < files.length; i++) {
+            formData.append("files", files[i]);
+        }
+        
         await axios.post(`/api/v2/post`, formData, {
             headers: {
-                "Content-Type": "multipart/form-data",
-            },
+                "Content-Type": "multipart/form-data"
+            }
         }).then((response) => {
             window.location.href = `/support/qnaboard/post/${response.data}`;
         }).catch((error) => {

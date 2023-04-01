@@ -56,8 +56,8 @@ const InputForm = () => {
         hits: 0,
         title: "",
         content: "",
-        author: "Admin",
-        category: "FreeBoard",
+        author: "TempAuthor",
+        category: "FREE_BOARD",
         secretYn: false,
     });
     
@@ -76,6 +76,32 @@ const InputForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // 방법 1: Attachment, Post 각각 저장, 정상작동함
+        // let postId = null;
+        // await axios.post(`/api/v1/post`, values)
+        // .then((response) => {
+        //     postId = response.data;
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
+
+        // const formData = new FormData();
+        // for (var i = 0; i < files.length; i++) {
+        //     formData.append("files", files[i]);
+        // }
+
+        // await axios.post(`/api/attachment/${postId}`, formData, {
+        //     headers: {
+        //         "Content-Type": "multipart/form-data",
+        //     },
+        // }).then((response) => {
+        //     window.location.href = `/support/freeboard/post/${postId}`;
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
+
+        // 방법 2: Post 저장을 통해 Attachment도 저장
+        // 변수가 더 깔끔하여 채택
         const formData = new FormData();
         formData.append("data", new Blob([JSON.stringify(values)], {
             type: "application/json"
@@ -85,7 +111,7 @@ const InputForm = () => {
             formData.append("files", files[i]);
         }
         
-        await axios.post(`/api/post`, formData, {
+        await axios.post(`/api/v2/post`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }

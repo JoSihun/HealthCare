@@ -113,8 +113,9 @@ export default function FreeBoard() {
     const size = searchParams.get("size") ? searchParams.get("size") : 20;
 
     useEffect(() => {
-        const axiosGetPages = async () => {
-            await axios.get(`/support/freeboard/?page=${page - 1}&size=${size}`)
+        const axiosGetPagesAndPosts = async () => {
+            const queryString = `page=${page - 1}&size=${size}`;
+            await axios.get(`/api/v1/post/free-board?${queryString}`)
             .then((response) => {
                 setPages(response.data);
                 setPosts(response.data.content);
@@ -123,7 +124,7 @@ export default function FreeBoard() {
             });
         }
 
-        axiosGetPages();
+        axiosGetPagesAndPosts();
     }, [page, size]);
 
     return (

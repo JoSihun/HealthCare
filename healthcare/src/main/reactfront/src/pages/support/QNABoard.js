@@ -113,7 +113,8 @@ export default function QNABoard() {
 
     useEffect(() => {
         const axiosGetPages = async () => {
-            await axios.get(`/support/qnaboard/?page=${page - 1}&size=${size}`)
+            const queryString = `page=${page - 1}&size=${size}`;
+            await axios.get(`/api/v1/post/qna-board?${queryString}`)
             .then((response) => {
                 setPages(response.data);
                 setPosts(response.data.content);

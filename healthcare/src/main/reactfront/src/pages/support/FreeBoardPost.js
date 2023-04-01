@@ -89,7 +89,7 @@ export default function FreeBoardPost() {
 
     useEffect(() => {
         const axiosGetPost = async () => {
-            await axios.get(`/support/freeboard/post/${id}`)
+            await axios.get(`/api/v1/post/${id}`)
             .then((response) => {
                 setPost(response.data);
             }).catch((error) => {
@@ -112,13 +112,30 @@ export default function FreeBoardPost() {
 
     const handleDelete = async (e) => {
         e.preventDefault();
+        
+        // 방법 1: Attachment, Post 각각 삭제
+        await axios.delete(`/api/attachment/${id}`)
+        .then((response) => {
 
-        await axios.delete(`/api/post/${id}`)
+        }).catch((error) => {
+            console.log(error);
+        });
+
+        await axios.delete(`/api/v1/post/${id}`)
         .then((response) => {
             window.location.href = `/support/freeboard`;
         }).catch((error) => {
             console.log(error);
         });
+
+        // 방법 2: Post 삭제를 통해 Attachment도 삭제
+        // ERROR Removing a detached instance 발생, @Transaction에 관한 문제로 추측
+        // await axios.delete(`/api/v2/post/${id}`)
+        // .then((response) => {
+        //     window.location.href = `/support/freeboard`;
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
     }
 
     return (

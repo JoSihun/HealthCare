@@ -79,6 +79,31 @@ const EditForm = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // 방법 1: Attachment, Post 각각 저장, 정상작동함
+        // await axios.put(`/api/v1/post/${id}`, values)
+        // .then((response) => {
+
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
+
+        // const formData = new FormData();
+        // for (var i = 0; i < files.length; i++) {
+        //     formData.append("files", files[i]);
+        // }
+
+        // await axios.put(`/api/attachment/${id}`, formData, {
+        //     headers: {
+        //         "Content-Type": "multipart/form-data",
+        //     },
+        // }).then((response) => {
+        //     window.location.href = `/support/freeboard/post/${id}`;
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
+
+        // 방법 2: Post 저장을 통해 Attachment도 저장
+        // 변수가 더 깔끔하여 채택
         const formData = new FormData();
         formData.append("data", new Blob([JSON.stringify(values)], {
             type: "application/json"
@@ -88,7 +113,7 @@ const EditForm = (props) => {
             formData.append("files", files[i]);
         }
         
-        await axios.put(`/api/post/${id}`, formData, {
+        await axios.put(`/api/v2/post/${id}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -129,7 +154,7 @@ export default function FreeBoardEdit() {
 
     useEffect(() => {
         const axiosGetPost = async () => {
-            await axios.get(`/support/freeboard/form/${id}`)
+            await axios.get(`/api/v1/post/${id}`)
             .then((response) => {
                 setPost(response.data);
             }).catch((error) => {

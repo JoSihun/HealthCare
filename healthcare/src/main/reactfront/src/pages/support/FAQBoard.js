@@ -154,9 +154,9 @@ export default function FAQBoard() {
 
     useEffect(() => {
         const axiosGetFaqs = async () => {
-            await axios.get(`/support/faqboard`)
+            await axios.get(`/api/v1/post/faq-board`)
             .then((response) => {
-                setPosts(response.data);
+                setPosts(response.data.content);
             }).catch((error) => {
                 console.log(error);
             });

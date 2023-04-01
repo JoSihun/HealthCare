@@ -123,7 +123,7 @@ export default function FreeBoardSearch() {
             const queryString2 = `page=${page - 1}&size=${size}`;
             const queryString = `${queryString1}&${queryString2}`;
             
-            await axios.get(`/support/freeboard/search/?${queryString}`)
+            await axios.get(`/api/v1/post/free-board/search?${queryString}`)
             .then((response) => {
                 setPages(response.data);
                 setPosts(response.data.content);
