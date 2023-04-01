@@ -17,30 +17,67 @@ class PostServiceTest {
     private PostService postService;
 
     @Test
-    void save() {
+    @DisplayName("save() 테스트")
+    void saveTest() {
+        PostSaveRequestDto requestDto1 = new PostSaveRequestDto(
+                "TestTitle1", "TestContent1", "TestAuthor1", Category.FAQ_BOARD.name(), 1, true, true);;
+        PostSaveRequestDto requestDto2 = new PostSaveRequestDto(
+                "TestTitle2", "TestContent2", "TestAuthor2", Category.FAQ_BOARD.name(), 2, true, false);;
+        PostSaveRequestDto requestDto3 = new PostSaveRequestDto(
+                "TestTitle3", "TestContent3", "TestAuthor3", Category.FAQ_BOARD.name(), 3, false, true);;
+        PostSaveRequestDto requestDto4 = new PostSaveRequestDto(
+                "TestTitle4", "TestContent4", "TestAuthor4", Category.FAQ_BOARD.name(), 4, false, false);;
+        this.postService.save(requestDto1);
+        this.postService.save(requestDto2);
+        this.postService.save(requestDto3);
+        this.postService.save(requestDto4);
     }
 
     @Test
-    @DisplayName("대용량 데이터 삽입 테스트")
-    void saveHugeData() {
-        for (int i = 0; i < 300; i++) {
+    @DisplayName("FAQ_BOARD 테스트 데이터 삽입")
+    void saveTestDataFAQBoard() {
+        for (int i = 0; i < 10; i++) {
             Integer hits = i + 1;
-            String title = "TestTitle" + (i + 1);
-            String content = "TestContent" + (i + 1);
+            String title = "FAQTestTitle" + (i + 1);
+            String content = "FAQTestContent" + (i + 1);
             String author = "TestUserName" + (i + 1);
-            Boolean secretYn = (i + 1) % 2 == 1;
-            Boolean answerYn = (i + 1) % 2 == 1;
+            Boolean secretYn = (i + 1) % 2 == 1;                        // true, false, true, false
+            Boolean answerYn = (i + 1) % 4 == 1 || (i + 1) % 4 == 2;    // true, true, false, false
             PostSaveRequestDto requestDto = new PostSaveRequestDto(title, content, author,
-                    Category.FREE_BOARD.name(), hits, secretYn, answerYn);
+                    Category.FAQ_BOARD.name(), hits, secretYn, answerYn);
             this.postService.save(requestDto);
         }
     }
 
     @Test
-    void update() {
+    @DisplayName("QNA_BOARD 테스트 데이터 삽입")
+    void saveTestDataQNABoard() {
+        for (int i = 0; i < 300; i++) {
+            Integer hits = i + 1;
+            String title = "Q&ATestTitle" + (i + 1);
+            String content = "Q&ATestContent" + (i + 1);
+            String author = "TestUserName" + (i + 1);
+            Boolean secretYn = (i + 1) % 2 == 1;                        // true, false, true, false
+            Boolean answerYn = (i + 1) % 4 == 1 || (i + 1) % 4 == 2;    // true, true, false, false
+            PostSaveRequestDto requestDto = new PostSaveRequestDto(title, content, author,
+                    Category.QNA_BOARD.name(), hits, secretYn, answerYn);
+            this.postService.save(requestDto);
+        }
     }
 
     @Test
-    void delete() {
+    @DisplayName("FREE_BOARD 테스트 데이터 삽입")
+    void saveTestDataFreeBoard() {
+        for (int i = 0; i < 300; i++) {
+            Integer hits = i + 1;
+            String title = "FreeBoardTestTitle" + (i + 1);
+            String content = "FreeBoardTestContent" + (i + 1);
+            String author = "TestUserName" + (i + 1);
+            Boolean secretYn = (i + 1) % 2 == 1;                        // true, false, true, false
+            Boolean answerYn = (i + 1) % 4 == 1 || (i + 1) % 4 == 2;    // true, true, false, false
+            PostSaveRequestDto requestDto = new PostSaveRequestDto(title, content, author,
+                    Category.FREE_BOARD.name(), hits, secretYn, answerYn);
+            this.postService.save(requestDto);
+        }
     }
 }
