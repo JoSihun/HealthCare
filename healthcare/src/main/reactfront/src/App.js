@@ -31,6 +31,8 @@ import LiveChatList from "./pages/support/LiveChatList";
 import LiveChatRoom from "./pages/support/LiveChatRoom";
 import LiveChatListAdmin from "./pages/support/LiveChatListAdmin";
 import LiveChatRoomAdmin from "./pages/support/LiveChatRoomAdmin";
+import SignIn from './pages/users/SignIn';
+import SignUp from './pages/users/SignUp';
 
 function App() {
   return (
@@ -64,10 +66,11 @@ function App() {
                   <Route path="/support/livechat/list/admin" element={<LiveChatListAdmin />}></Route>
                   <Route path="/support/livechat/room/admin" element={<LiveChatRoomAdmin />}></Route>
 
-                  <Route path="/my-page" element={<MyPage />}></Route>
                   
-                  {/* 수정중입니다 */}
                   <Route path="/login" element={<Login />}></Route>
+                  <Route path="/signup" element={<SignUp />}></Route>
+                  <Route path="/signin" element={<SignIn />}></Route>
+                  <Route path="/my-page" element={<MyPage />}></Route>
 
                   <Route path="*" element={<NotFound />}></Route>
               </Routes>

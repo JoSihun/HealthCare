@@ -33,8 +33,12 @@ function Navigation() {
                                 <NavDropdown.Item href="/support/freeboard">자유게시판</NavDropdown.Item>
                                 <NavDropdown.Item href="/support/livechat">LiveChat</NavDropdown.Item>
                             </NavDropdown>
-                            <Nav.Link href="/my-page">MyPage</Nav.Link>
-                            <Nav.Link href="/login">Login</Nav.Link>
+                            <NavDropdown title="Users" id="collasible-nav-dropdown">
+                                <NavDropdown.Item href="/login">Login</NavDropdown.Item>
+                                <NavDropdown.Item href="/signup">SignUp</NavDropdown.Item>
+                                <NavDropdown.Item href="/signin">SignIn</NavDropdown.Item>
+                                <NavDropdown.Item href="/my-page">MyPage</NavDropdown.Item>
+                            </NavDropdown>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
