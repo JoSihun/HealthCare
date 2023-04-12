@@ -1,6 +1,7 @@
 package com.shyd.healthcare.controller.user;
 
 import com.shyd.healthcare.dto.user.UserRequestDto;
+import com.shyd.healthcare.dto.user.UserResponseDto;
 import com.shyd.healthcare.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,10 @@ public class UserRestController {
     /** 로그인 API */
     @PostMapping("/api/v1/user/signin")
     public ResponseEntity<?> signin(@RequestBody UserRequestDto requestDto) {
-        String token = this.userService.signin(requestDto);
-        return ResponseEntity.ok().body(token);
+        UserResponseDto responseDto = this.userService.signin(requestDto);
+        return ResponseEntity.ok().body(responseDto);
+//        String token = this.userService.signin(requestDto);
+//        return ResponseEntity.ok().body(token);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
