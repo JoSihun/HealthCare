@@ -31,13 +31,16 @@ public class UserService {
 
     /** 로그인 */
     @Transactional
-    public String signin(UserRequestDto requestDto) {
+    public UserResponseDto signin(UserRequestDto requestDto) {
         User entity = this.userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
                 () -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다. username = " + requestDto.getUsername()));
         if (!passwordEncoder.matches(requestDto.getPassword(), entity.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다. username = " + requestDto.getUsername());
         }
-        return this.jwtTokenProvider.generateTokenByUsername(new UsernamePasswordAuthenticationToken(entity, null));
+        String token = this.jwtTokenProvider.generateTokenByUsername(new UsernamePasswordAuthenticationToken(entity, null));
+        UserResponseDto responseDto = new UserResponseDto(entity);
+        responseDto.setAccessToken(token);
+        return responseDto;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
