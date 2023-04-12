@@ -1,8 +1,6 @@
 package com.shyd.healthcare.config;
 
-import com.shyd.healthcare.domain.user.CustomUserDetails;
 import com.shyd.healthcare.service.user.CustomUserDetailsService;
-import com.shyd.healthcare.service.user.UserService;
 import com.shyd.healthcare.utils.jwt.JwtTokenFilter;
 import com.shyd.healthcare.utils.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +27,9 @@ public class WebSecurityConfig {
         return httpSecurity.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/v1/user/**").permitAll()
+                .antMatchers("/api/v1/auth/signup").permitAll()
+                .antMatchers("/api/v1/auth/signin").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/v1/post").authenticated()
                 .antMatchers(HttpMethod.POST, "/api/v1/comment").authenticated()
                 .and()

@@ -2,13 +2,10 @@ package com.shyd.healthcare.dto.user;
 
 import com.shyd.healthcare.domain.user.Role;
 import com.shyd.healthcare.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequestDto {

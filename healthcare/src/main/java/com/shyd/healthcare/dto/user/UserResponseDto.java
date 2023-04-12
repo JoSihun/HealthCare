@@ -1,16 +1,19 @@
 package com.shyd.healthcare.dto.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.shyd.healthcare.domain.user.User;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponseDto {
     private Long userId;
     private String accessToken;
     private String tokenType = "Bearer";
+
+    @Builder
+    public UserResponseDto(User entity) {
+
+    }
 }
