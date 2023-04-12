@@ -1,6 +1,7 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { signUp } from "../../api/AuthAPI";
+import backgroundImage from "../..//assets/images/bg_signup.jpg";
 
 const SignUpForm = (props) => {
     const [visible, setVisible] = useState(false);
@@ -25,12 +26,13 @@ const SignUpForm = (props) => {
             return;
         }
 
-        axios.post(`/api/v1/user/signup`, formData)
-        .then((response) => {
+        try {
+            await signUp(formData);
             window.location.href = `/signin`;
-        }).catch((error) => {
+        } catch (error) {
             console.log(error);
-        });
+            console.error(error);
+        }
     }
 
     return (
@@ -78,10 +80,12 @@ export default function SignUp() {
     return (
         <Container fluid>
             <Row className="justify-content-center" style={{ minHeight: "100vh" }}>
-                <Col className="col-md-6 d-flex justify-content-center" style={{ background: "gray" }}>
-                    <h1>Some Images</h1>
+                <Col className="col-md-6 d-flex justify-content-center" style={{ background: "black" }}>
+                    <div className="align-self-center text-center" style={{ width: "100%", height: "100%" }}>
+                        <img src={backgroundImage} alt="background" width="75%" />
+                    </div>
                 </Col>
-                <Col className="col-md-6 d-flex justify-content-center" style={{ background: "skyblue" }}>
+                <Col className="col-md-6 d-flex justify-content-center" style={{ background: "lightgray" }}>
                     <Card className="align-self-center" style={{ minWidth: "50vh" }}>
                         <Card.Body>
                             <Card.Title><h2><strong>SignUp</strong></h2></Card.Title>
