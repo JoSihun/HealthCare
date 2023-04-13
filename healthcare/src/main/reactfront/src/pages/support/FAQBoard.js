@@ -1,7 +1,7 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
+import { createPostV1, deletePostV1, fetchPageV1, updatePostV1 } from "../../api/PostAPI";
 
 const FAQAddForm = (props) => {
     const [values, setValues] = useState({
@@ -9,7 +9,7 @@ const FAQAddForm = (props) => {
         content: "",
         author: "Admin",
         hits: 0,
-        category: "FAQBoard",
+        category: "FAQ_BOARD",
         secretYn: false,
     });
 
@@ -27,8 +27,8 @@ const FAQAddForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.post(`/api/v1/post`, values)
-        .then((response) => {
+        createPostV1(values)
+        .then(() => {
             window.location.reload();
         }).catch((error) => {
             console.log(error);
@@ -76,8 +76,8 @@ const FAQEditForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.put(`/api/v1/post/${props.faq.id}`, values)
-        .then((response) => {
+        updatePostV1(props.faq.id, values)
+        .then(() => {
             window.location.reload();
         }).catch((error) => {
             console.log(error);
@@ -113,12 +113,12 @@ const FAQBoardList = (props) => {
 
     const handleDelete = async (params, e) => {
         e.preventDefault();
-        await axios.delete(`/api/v1/post/${params}`)
-        .then((response) => {
+        deletePostV1(params)
+        .then(() => {
             window.location.reload();
         }).catch((error) => {
             console.log(error);
-        })
+        });
     }
 
     return (
@@ -153,16 +153,12 @@ export default function FAQBoard() {
     const [showAddForm, setShowAddForm] = useState(false);
 
     useEffect(() => {
-        const axiosGetFaqs = async () => {
-            await axios.get(`/api/v1/post/faq-board`)
-            .then((response) => {
-                setPosts(response.data.content);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
-        axiosGetFaqs();
+        fetchPageV1("faq-board")
+        .then((response) => {
+            setPosts(response.content);
+        }).catch((error) => {
+            console.log(error);
+        });
     }, []);
 
     return (

@@ -1,10 +1,10 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 import "../../styles/FreeBoard.css";
 import Paging from "../../components/support/Paging";
 import SideBar from "../../components/support/SideBar";
+import { fetchPageV1 } from "../../api/PostAPI";
 
 const SelectSize = (props) => {
     const handleSelect = async (e) => {
@@ -113,18 +113,14 @@ export default function FreeBoard() {
     const size = searchParams.get("size") ? searchParams.get("size") : 20;
 
     useEffect(() => {
-        const axiosGetPagesAndPosts = async () => {
-            const queryString = `page=${page - 1}&size=${size}`;
-            await axios.get(`/api/v1/post/free-board?${queryString}`)
-            .then((response) => {
-                setPages(response.data);
-                setPosts(response.data.content);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
-        axiosGetPagesAndPosts();
+        const queryString = `page=${page - 1}&size=${size}`;
+        fetchPageV1("free-board", queryString)
+        .then((response) => {
+            setPages(response);
+            setPosts(response.content);
+        }).catch((error) => {
+            console.log(error);
+        });
     }, [page, size]);
 
     return (

@@ -1,8 +1,9 @@
-import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
+import { fetchPostV1, updatePostV2 } from "../../api/PostAPI";
+import { fetchFilesV1 } from "../../api/AttachAPI";
 
 const FileList = (props) => {
     const [files, setFiles] = useState([]);
@@ -79,6 +80,14 @@ const EditForm = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // 방법 2 API 모듈화
+        updatePostV2(id, values, files)
+        .then((response) => {
+            window.location.href = `/support/freeboard/post/${response}`;
+        }).catch((error) => {
+            console.log(error);
+        });
+
         // 방법 1: Attachment, Post 각각 저장, 정상작동함
         // await axios.put(`/api/v1/post/${id}`, values)
         // .then((response) => {
@@ -104,24 +113,24 @@ const EditForm = (props) => {
 
         // 방법 2: Post 저장을 통해 Attachment도 저장
         // 변수가 더 깔끔하여 채택
-        const formData = new FormData();
-        formData.append("data", new Blob([JSON.stringify(values)], {
-            type: "application/json"
-        }));
+        // const formData = new FormData();
+        // formData.append("data", new Blob([JSON.stringify(values)], {
+        //     type: "application/json"
+        // }));
 
-        for (var i = 0; i < files.length; i++) {
-            formData.append("files", files[i]);
-        }
+        // for (var i = 0; i < files.length; i++) {
+        //     formData.append("files", files[i]);
+        // }
         
-        await axios.put(`/api/v2/post/${id}`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        }).then((response) => {
-            window.location.href = `/support/freeboard/post/${response.data}`;
-        }).catch((error) => {
-            console.log(error);
-        });
+        // await axios.put(`/api/v2/post/${id}`, formData, {
+        //     headers: {
+        //         "Content-Type": "multipart/form-data"
+        //     }
+        // }).then((response) => {
+        //     window.location.href = `/support/freeboard/post/${response.data}`;
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
     }
 
     return (
@@ -153,26 +162,19 @@ export default function FreeBoardEdit() {
     const [files, setFiles] = useState([]);
 
     useEffect(() => {
-        const axiosGetPost = async () => {
-            await axios.get(`/api/v1/post/${id}`)
-            .then((response) => {
-                setPost(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-        
-        const axiosGetFiles = async () => {
-            await axios.get(`/api/attachment/${id}`)
-            .then((response) => {
-                setFiles(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
+        fetchPostV1(id)
+        .then((response) => {
+            setPost(response);
+        }).catch((error) => {
+            console.log(error);
+        });
 
-        axiosGetPost();
-        axiosGetFiles();
+        fetchFilesV1(id)
+        .then((response) => {
+            setFiles(response);
+        }).catch((error) => {
+            console.log(error);
+        });
     }, [id]);
 
     return (
