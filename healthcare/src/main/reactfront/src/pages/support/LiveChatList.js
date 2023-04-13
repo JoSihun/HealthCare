@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Badge, Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import SideBar from "../../components/support/SideBar";
+import { deleteChatRoom, fetchChatRooms } from "../../api/LiveChatAPI";
 
 const ModalCheck = (props) => {
     const { chatRoom, message } = props;
@@ -13,8 +13,8 @@ const ModalCheck = (props) => {
     }
 
     const handleDelete = async (e) => {
-        await axios.delete(`/api/livechat/room/${chatRoom.id}`)
-        .then((response) => {
+        deleteChatRoom(chatRoom.id)
+        .then(() => {
             window.location.reload();
         }).catch((error) => {
             console.log(error);
@@ -108,16 +108,12 @@ export default function LiveChatList(props) {
     const [chatRooms, setChatRooms] = useState([]);
 
     useEffect(() => {
-        const axiosGetChatRooms = async () => {
-            await axios.get(`/api/livechat/list/${userId}`)
-            .then((response) => {
-                setChatRooms(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
-        axiosGetChatRooms();
+        fetchChatRooms(userId)
+        .then((response) => {
+            setChatRooms(response);
+        }).catch((error) => {
+            console.log(error);
+        });
     }, []);
 
     return (

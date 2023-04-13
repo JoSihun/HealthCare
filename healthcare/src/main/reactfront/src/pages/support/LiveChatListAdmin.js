@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Badge, Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import SideBar from "../../components/support/SideBar";
+import { deleteChatRoom, fetchAdminChatRooms, updateChatRoom } from "../../api/LiveChatAPI";
 
 const ModalCheck = (props) => {
     const { chatRoom, message } = props;
@@ -14,8 +14,8 @@ const ModalCheck = (props) => {
 
     const handleEvent = async (e) => {
         if (message.includes("삭제")) {
-            await axios.delete(`/api/livechat/room/${chatRoom.id}`)
-            .then((response) => {
+            deleteChatRoom(chatRoom.id)
+            .then(() => {
                 window.location.reload();
             }).catch((error) => {
                 console.log(error);
@@ -24,8 +24,8 @@ const ModalCheck = (props) => {
 
         if (message.includes("답변상태")) {
             chatRoom.answerYn = !chatRoom.answerYn
-            await axios.put(`/api/livechat/room/${chatRoom.id}`, chatRoom)
-            .then((response) => {
+            updateChatRoom(chatRoom.id, chatRoom)
+            .then(() => {
                 window.location.reload();
             }).catch((error) => {
                 console.log(error);
@@ -129,18 +129,14 @@ export default function LiveChatList() {
     const [chatRooms, setChatRooms] = useState([]);
 
     useEffect(() => {
-        const axiosGetChatRooms = async () => {
-            await axios.get(`/api/livechat/list/admin`)
+        // 관리자 유효성 검사, Front & Back 더블체크
+        if (userId === "Admin") {
+            fetchAdminChatRooms()
             .then((response) => {
-                setChatRooms(response.data);
+                setChatRooms(response);
             }).catch((error) => {
                 console.log(error);
             });
-        }
-
-        // 관리자 유효성 검사
-        if (userId === "Admin") {
-            axiosGetChatRooms();
         }
     }, []);
 
