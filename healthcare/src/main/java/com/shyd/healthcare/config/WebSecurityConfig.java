@@ -30,16 +30,18 @@ public class WebSecurityConfig {
                 // 회원가입 및 로그인 아무나 승인
                 .antMatchers("/api/v1/user/**").permitAll()
                 .antMatchers("/api/v1/auth/**").permitAll()
+                // 모든 요청에 대해 승인된 사용자 중 ADMIN 권한이 있는 사용자만 허용
+                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/v2/admin/**").hasRole("ADMIN")
+                // 모든 요청에 대해 승인된 사용자만 허용
+                .antMatchers("/api/v1/**").authenticated()
+                .antMatchers("/api/v2/**").authenticated()
                 // 모든 POST 요청은 승인된 사용자만 허용
-                .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
-                .antMatchers(HttpMethod.POST, "/api/v2/**").authenticated()
-                //.antMatchers(HttpMethod.POST, "/api/v1/post").authenticated()
-                //.antMatchers(HttpMethod.POST, "/api/v1/comment").authenticated()
+                //.antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
+                //.antMatchers(HttpMethod.POST, "/api/v2/**").authenticated()
                 // 모든 GET 요청은 승인된 사용자 중 USER 권한이 있는 사용자만 허용
                 //.antMatchers(HttpMethod.GET, "/api/v1/**").hasRole("USER")
                 //.antMatchers(HttpMethod.GET, "/api/v2/**").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/api/v1/**").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/api/v2/**").hasRole("USER")
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
