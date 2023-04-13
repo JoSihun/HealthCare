@@ -14,19 +14,19 @@ import java.util.List;
 public class CommentRestController {
     private final CommentService commentService;
 
-    @GetMapping("/api/comment")
+    @GetMapping("/api/v1/comment")
     public List<CommentResponseDto> readComment(@RequestParam(value = "post") Long postId) {
         return this.commentService.findAllByPostId(postId);
     }
 
-    @PostMapping("/api/comment")
+    @PostMapping("/api/v1/comment")
     public List<CommentResponseDto> saveComment(@RequestParam(value = "post") Long postId,
                                                 @RequestBody CommentSaveRequestDto requestDto) {
         this.commentService.save(postId, requestDto);
         return this.commentService.findAllByPostId(postId);
     }
 
-    @PutMapping("/api/comment")
+    @PutMapping("/api/v1/comment")
     public List<CommentResponseDto> updateComment(@RequestParam(value = "post") Long postId,
                                                   @RequestParam(value = "comment") Long commentId,
                                                   @RequestBody CommentUpdateRequestDto requestDto) {
@@ -34,7 +34,7 @@ public class CommentRestController {
         return this.commentService.findAllByPostId(postId);
     }
 
-    @DeleteMapping("/api/comment")
+    @DeleteMapping("/api/v1/comment")
     public List<CommentResponseDto> deleteComment(@RequestParam(value = "post") Long postId,
                                                   @RequestParam(value = "comment") Long commentId) {
         this.commentService.delete(commentId);

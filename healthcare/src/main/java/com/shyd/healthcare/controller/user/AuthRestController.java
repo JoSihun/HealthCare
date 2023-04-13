@@ -16,7 +16,7 @@ public class AuthRestController {
     private final UserService userService;
 
     /** 로그인 API */
-    @PostMapping("/api/v1/auth/login")
+    @PostMapping("/api/v1/auth/signin")
     public ResponseEntity<?> signin(@RequestBody UserRequestDto requestDto) {
         UserResponseDto responseDto = this.userService.signin(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);

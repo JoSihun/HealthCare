@@ -17,30 +17,30 @@ import java.util.List;
 public class AttachmentRestController {
     private final AttachmentService attachmentService;
 
-    @GetMapping("/api/attachment/{postId}")
+    @GetMapping("/api/v1/attachment/{postId}")
     public List<AttachmentResponseDto> readAttachment(@PathVariable Long postId) {
         return this.attachmentService.findAllByPostId(postId);
     }
 
-    @GetMapping("/api/attachment/download/{attachmentId}")
+    @GetMapping("/api/v1/attachment/download/{attachmentId}")
     public ResponseEntity<Resource> downloadAttachment(@PathVariable Long attachmentId) throws MalformedURLException {
         return this.attachmentService.download(attachmentId);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @PostMapping("/api/attachment/{postId}")
+    @PostMapping("/api/v1/attachment/{postId}")
     public void saveAttachment(@PathVariable(value = "postId") Long postId,
                                @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
         this.attachmentService.save(postId, files);
     }
 
-    @PutMapping("/api/attachment/{postId}")
+    @PutMapping("/api/v1/attachment/{postId}")
     public void updateAttachment(@PathVariable(value = "postId") Long postId,
                                  @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
         this.attachmentService.update(postId, files);
     }
 
-    @DeleteMapping("/api/attachment/{postId}")
+    @DeleteMapping("/api/v1/attachment/{postId}")
     public void deleteAttachment(@PathVariable(value = "postId") Long postId) {
         this.attachmentService.deleteAllByPostId(postId);
     }

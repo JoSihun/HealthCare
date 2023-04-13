@@ -61,13 +61,13 @@ public class ChatMessageRestController {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 특정 채팅방 LiveChat Message 목록조회 - Id 검색 */
-    @GetMapping("/api/livechat/message/{id}")
+    @GetMapping("/api/v1/livechat/message/{id}")
     public List<ChatMessageResponseDto> readChatMessageList(@PathVariable Long id) {
         return this.chatMessageService.findAllByChatRoomIdAsc(id);
     }
 
     /** 특정 채팅방 LiveChat Message 목록조회 - Uuid 검색 */
-    @GetMapping("/api/livechat/message")
+    @GetMapping("/api/v1/livechat/message")
     public List<ChatMessageResponseDto> readChatMessageList(@RequestParam(value = "uuid") String chatRoomUuid) {
         // 아마도 최초 연결 지점, 여기까지 수정했음
         return this.chatMessageService.findAllByChatRoomUuidAsc(chatRoomUuid);
