@@ -16,7 +16,6 @@ const SignUpForm = (props) => {
         setFormData({...formData,
             [e.target.id]: e.target.value
         });
-        console.log(formData);
     }
 
     const handleSubmit = async (e) => {
@@ -26,13 +25,12 @@ const SignUpForm = (props) => {
             return;
         }
 
-        try {
-            await signUp(formData);
+        signUp(formData)
+        .then(() => {
             window.location.href = `/signin`;
-        } catch (error) {
+        }).catch((error) => {
             console.log(error);
-            console.error(error);
-        }
+        });
     }
 
     return (

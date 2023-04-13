@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({
+export const AuthAPI = axios.create({
     // baseURL: 'http://localhost:8080',
     headers: {
         'Content-Type': 'application/json',
@@ -8,41 +8,22 @@ const API = axios.create({
     },
 });
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 // 로그인 API
-export const signin = async ({ email, username, password }) => {
+export const signIn = async ({ email, username, password }) => {
     const data = { email, username, password };
-    return await API.post(`/api/v1/auth/login`, data);
+    const response = await AuthAPI.post(`/api/v1/auth/signin`, data);
+    return response.data;
 }
 
 // 회원가입 API
 export const signUp = async ({ email, username, password }) => {
     const data = { email, username, password };
-    return await API.post(`/api/v1/auth/signup`, data);
+    const response = await AuthAPI.post(`/api/v1/auth/signup`, data);
+    return response.data;
 }
 
-// 어차피 페이지 스크립트에서 사용할 때 try/catch 문 사용해야함
-// export const login = async (email, username, password) => {
-//     const data = { email, username, password };
-//     return await API.post(`/api/v1/auth/login`, data)
-//     .then(response => response.data)
-//     .catch(error => {
-//         console.log(error);
-//         throw error;
-//     });
-// }
-
-// 어차피 페이지 스크립트에서 사용할 때 try/catch 문 사용해야함
-// export const signUp = async (email, username, password) => {
-//     const data = { email, username, password };
-//     return await API.post(`/api/v1/auth/signup`, data)
-//     .then(response => response.data)
-//     .catch(error => {
-//         console.log(error);
-//         throw error;
-//     });
-// }
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////
 // Basic Skeleton Codes1
 // export const fetchItems = async () => {
 //     const response = await API.get('/items');
@@ -63,6 +44,7 @@ export const signUp = async ({ email, username, password }) => {
 //     await API.delete(`/items/${id}`);
 // };
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 // Basic Skeleton Codes2
 // 어차피 페이지 스크립트에서 사용할 때 try/catch 문 사용해야함
 // export const fetchItems = async () => {
@@ -98,4 +80,37 @@ export const signUp = async ({ email, username, password }) => {
 //         console.error(error);
 //         throw error;
 //     });
+// };
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// Basic Skeleton Codes3
+// const BASE_API_URL = 'http://localhost:8080/api';
+
+// const request = async (method, url, data) => {
+//     const headers = {
+//         'Content-Type': 'application/json',
+//     };
+
+//     const token = localStorage.getItem('token');
+//     if (token) {
+//         headers.Authorization = `Bearer ${token}`;
+//     }
+
+//     const response = await axios({
+//         method: method,
+//         url: `${BASE_API_URL}${url}`,
+//         data: data,
+//         headers: headers
+//     });
+
+//     return response.data;
+// }
+
+// export const loginUser = async (username, password) => {
+//     const data = { username, password };
+//     return await request('post', 'v1/auth/login', data);
+// };
+
+// export const getProfile = async () => {
+//     return await request('get', '/users/profile');
 // };
