@@ -59,7 +59,7 @@ export default function Footer() {
                 <div>
                     <strong>
                         © 2023 Copyright:&nbsp;
-                        <Link to={`https://healthcare.com/`} style={{ color: "white", textDecoration: "none" }}>
+                        <Link to={`/`} style={{ color: "white", textDecoration: "none" }}>
                             HealthCare.com
                         </Link>
                     </strong>
