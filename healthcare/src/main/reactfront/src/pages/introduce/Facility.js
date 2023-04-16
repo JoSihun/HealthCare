@@ -161,7 +161,11 @@ export default function Facility() {
 
     useEffect(() => {
         const axiosGetFacilities = async () => {
-            await axios.get(`/api/v1/facility`)
+            await axios.get(`/api/v1/facility`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                },
+            })
             .then((response) => {
                 setFacilities(response.data);
             }).catch((error) => {
