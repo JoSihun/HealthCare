@@ -2,6 +2,11 @@ package com.shyd.healthcare.dto.facility;
 
 import com.shyd.healthcare.domain.Facility;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
 public class FacilityUpdateRequestDto {
     private String sectorName;
     private String sectorInfo;
