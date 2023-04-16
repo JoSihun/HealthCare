@@ -5,8 +5,24 @@ import Container from 'react-bootstrap/Container';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {NavDropdown} from "react-bootstrap";
+import { useEffect, useState } from 'react';
 
-function Navigation() {
+export default function Navigation() {
+    const [username, setUsername] = useState("");
+    const [loginStatus, setLoginStatus] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            setUsername(localStorage.getItem('username'));
+            setLoginStatus(true);
+        }
+    }, []);
+
+    const handleLogout = async () => {
+        localStorage.clear();
+    }
+
     return (
         <>
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
@@ -34,8 +50,19 @@ function Navigation() {
                                 <NavDropdown.Item href="/support/freeboard">자유게시판</NavDropdown.Item>
                                 <NavDropdown.Item href="/support/livechat">LiveChat</NavDropdown.Item>
                             </NavDropdown>
-                            <Nav.Link href="/my-page">MyPage</Nav.Link>
-                            <Nav.Link href="/login">Login</Nav.Link>
+
+                            {loginStatus
+                            ?
+                            <NavDropdown title={username + "님 환영합니다"} id="collasible-nav-dropdown">
+                                <NavDropdown.Item href="/my-page">MyPage</NavDropdown.Item>
+                                <NavDropdown.Item href="/" onClick={handleLogout}>로그아웃</NavDropdown.Item>
+                            </NavDropdown>
+                            :
+                            <>
+                                <Nav.Link href="/signup">SignUp</Nav.Link>
+                                <Nav.Link href="/signin">LogIn</Nav.Link>
+                            </>
+                            }
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
@@ -43,5 +70,3 @@ function Navigation() {
         </>
     );
 }
-
-export default Navigation;

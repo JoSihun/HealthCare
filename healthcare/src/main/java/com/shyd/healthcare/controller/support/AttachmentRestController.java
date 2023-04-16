@@ -1,7 +1,7 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.attachment.AttachmentResponseDto;
-import com.shyd.healthcare.service.AttachmentService;
+import com.shyd.healthcare.dto.support.attachment.AttachmentResponseDto;
+import com.shyd.healthcare.service.support.AttachmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -17,32 +17,31 @@ import java.util.List;
 public class AttachmentRestController {
     private final AttachmentService attachmentService;
 
-    @GetMapping("/api/attachment/{postId}")
+    @GetMapping("/api/v1/attachment/{postId}")
     public List<AttachmentResponseDto> readAttachment(@PathVariable Long postId) {
         return this.attachmentService.findAllByPostId(postId);
     }
 
-    @GetMapping("/api/attachment/download/{attachmentId}")
+    @GetMapping("/api/v1/attachment/download/{attachmentId}")
     public ResponseEntity<Resource> downloadAttachment(@PathVariable Long attachmentId) throws MalformedURLException {
         return this.attachmentService.download(attachmentId);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @PostMapping("/api/v2/attachment/{postId}")
-    public Long saveAttachment(@PathVariable(value = "postId") Long postId,
-                               @RequestPart(value = "files", required = false)List<MultipartFile> files) throws IOException {
-        return this.attachmentService.save(postId, files);
+    @PostMapping("/api/v1/attachment/{postId}")
+    public void saveAttachment(@PathVariable(value = "postId") Long postId,
+                               @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
+        this.attachmentService.save(postId, files);
     }
 
-    @PutMapping("/api/v2/attachment/{postId}")
-    public Long updateAttachment(@PathVariable(value = "postId") Long postId,
+    @PutMapping("/api/v1/attachment/{postId}")
+    public void updateAttachment(@PathVariable(value = "postId") Long postId,
                                  @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        return this.attachmentService.update(postId, files);
+        this.attachmentService.update(postId, files);
     }
 
-    @DeleteMapping("/api/v2/attachment/{attachmentId}")
-    public void deleteAttachment(@PathVariable(value = "attachmentId") Long attachmentId) {
-        this.attachmentService.delete(attachmentId);
+    @DeleteMapping("/api/v1/attachment/{postId}")
+    public void deleteAttachment(@PathVariable(value = "postId") Long postId) {
+        this.attachmentService.deleteAllByPostId(postId);
     }
-
 }

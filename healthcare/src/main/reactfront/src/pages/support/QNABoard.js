@@ -1,9 +1,9 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 import Paging from "../../components/support/Paging";
 import SideBar from "../../components/support/SideBar";
+import { fetchPageV1 } from "../../api/PostAPI";
 
 const SelectSize = (props) => {
     const handleSelect = async (e) => {
@@ -112,17 +112,14 @@ export default function QNABoard() {
     const size = searchParams.get("size") ? searchParams.get("size") : 20;
 
     useEffect(() => {
-        const axiosGetPages = async () => {
-            await axios.get(`/support/qnaboard/?page=${page - 1}&size=${size}`)
-            .then((response) => {
-                setPages(response.data);
-                setPosts(response.data.content);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
-        axiosGetPages();
+        const queryString = `page=${page - 1}&size=${size}`;
+        fetchPageV1("qna-board", queryString)
+        .then((response) => {
+            setPages(response);
+            setPosts(response.content);
+        }).catch((error) => {
+            console.log(error);
+        });
     }, [page, size]);
 
     return (

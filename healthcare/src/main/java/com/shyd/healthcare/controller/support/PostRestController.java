@@ -1,9 +1,9 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.post.PostSaveRequestDto;
-import com.shyd.healthcare.dto.post.PostUpdateRequestDto;
-import com.shyd.healthcare.service.AttachmentService;
-import com.shyd.healthcare.service.PostService;
+import com.shyd.healthcare.dto.support.post.PostSaveRequestDto;
+import com.shyd.healthcare.dto.support.post.PostUpdateRequestDto;
+import com.shyd.healthcare.service.support.AttachmentService;
+import com.shyd.healthcare.service.support.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,8 +56,8 @@ public class PostRestController {
 
     /** DELETE REQUEST - header: "multipart/form-data" */
     @DeleteMapping("/api/v2/post/{id}")
-    public Long postDelete(@PathVariable Long id) {
-        this.attachmentService.deleteAllFilesByPostId(id);
-        return this.postService.delete(id);
+    public void postDelete(@PathVariable Long id) {
+        this.attachmentService.deleteAllByPostId(id);
+        this.postService.delete(id);
     }
 }

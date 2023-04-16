@@ -1,40 +1,15 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
 import Comment from "../../components/support/Comment";
+import { deletePostV1, fetchPostV1 } from "../../api/PostAPI";
+import { deleteFilesV1, downloadFile, fetchFilesV1 } from "../../api/AttachAPI";
 
 const FileList = (props) => {
     const handleDownload = async (e) => {
         e.preventDefault();
-        await axios({
-            url: `/api/attachment/download/${e.target.id}`,
-            method: "GET",
-            responseType: "blob"
-        }).then((response) => {
-            const blob = new Blob([response.data]);
-            const fileObjectUrl = window.URL.createObjectURL(blob);
-
-            const link = document.createElement("a");
-            link.href = fileObjectUrl;
-            link.style.display = "none";
-
-            const extractDownloadFilename = (response) => {
-                const disposition = response.headers["content-disposition"];
-                const fileName = decodeURI(
-                    disposition
-                        .match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1]
-                        .replace(/['"]/g, "")
-                );
-                return fileName;
-            };
-            link.download = extractDownloadFilename(response);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(fileObjectUrl);
-        })
+        downloadFile(e.target.id);
     }
 
     const [modalShow, setModalShow] = useState(false);
@@ -88,37 +63,60 @@ export default function QNABoardPost() {
     const [files, setFiles] = useState([]);
 
     useEffect(() => {
-        const axiosGetPost = async () => {
-            await axios.get(`/support/qnaboard/post/${id}`)
-            .then((response) => {
-                setPost(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
+        fetchPostV1(id)
+        .then((response) => {
+            setPost(response);
+        }).catch((error) => {
+            console.log(error);
+        });
 
-        const axiosGetFiles = async () => {
-            await axios.get(`/api/attachment/${id}`)
-            .then((response) => {
-                setFiles(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
-        axiosGetPost();
-        axiosGetFiles();
+        fetchFilesV1(id)
+        .then((response) => {
+            setFiles(response);
+        }).catch((error) => {
+            console.log(error);
+        });
     }, [id]);
 
     const handleDelete = async (e) => {
         e.preventDefault();
 
-        await axios.delete(`/api/post/${id}`)
-        .then((response) => {
+        // 방법 1 API 모듈화
+        deleteFilesV1(id)
+        .catch((error) => {
+            console.log(error);
+        });
+
+        deletePostV1(id)
+        .then(() => {
             window.location.href = `/support/qnaboard`;
         }).catch((error) => {
             console.log(error);
         });
+
+        // 방법 1: Attachment, Post 각각 삭제
+        // await axios.delete(`/api/attachment/${id}`)
+        // .then((response) => {
+
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
+
+        // await axios.delete(`/api/v1/post/${id}`)
+        // .then((response) => {
+        //     window.location.href = `/support/qnaboard`;
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
+
+        // 방법 2: Post 삭제를 통해 Attachment도 삭제
+        // ERROR Removing a detached instance 발생, @Transaction에 관한 문제로 추측
+        // await axios.delete(`/api/v2/post/${id}`)
+        // .then((response) => {
+        //     window.location.href = `/support/qnaboard`;
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
     }
 
     return (

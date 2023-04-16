@@ -1,7 +1,7 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { createCommentV1, deleteCommentV1, fetchCommentsV1, updateCommentV1 } from "../../api/CommentAPI";
 
 const CommentForm = (props) => {
     const [values, setValues] = useState({
@@ -19,12 +19,12 @@ const CommentForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.post(`/api/comment?post=${props.postId}`, values)
+        createCommentV1(props.postId, values)
         .then((response) => {
             setValues({...values,
-                content: ""
+                content: "",
             });
-            props.setComments(response.data);
+            props.setComments(response);
         }).catch((error) => {
             console.log(error);
         });
@@ -70,9 +70,9 @@ const CommentItem = (props) => {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-        await axios.delete(`/api/comment?post=${props.postId}&comment=${props.comment.id}`)
+        deleteCommentV1(props.postId, props.comment.id)
         .then((response) => {
-            props.setComments(response.data);
+            props.setComments(response);
         }).catch((error) => {
             console.log(error);
         });
@@ -80,13 +80,13 @@ const CommentItem = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.put(`/api/comment?post=${props.postId}&comment=${props.comment.id}`, values)
+        updateCommentV1(props.postId, props.comment.id, values)
         .then((response) => {
             setShow(false);
-            props.setComments(response.data);
+            props.setComments(response);
         }).catch((error) => {
             console.log(error);
-        })
+        });
     }
 
     return (
@@ -141,16 +141,12 @@ export default function Comment(props) {
     const [comments, setComments] = useState([]);
 
     useEffect(() => {
-        const axiosGetComment = async () => {
-            await axios.get(`/api/comment?post=${props.postId}`)
-            .then((response) => {
-                setComments(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
-        axiosGetComment();
+        fetchCommentsV1(props.postId)
+        .then((response) => {
+            setComments(response);
+        }).catch((error) => {
+            console.log(error);
+        });
     }, [props])
 
     return (

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
@@ -6,6 +5,7 @@ import bg_black from "../../assets/images/bg_black.jpg";
 import * as SockJS from "sockjs-client";
 import * as StompJS from "@stomp/stompjs";
 import { useSearchParams } from "react-router-dom";
+import { fetchChatMessages, fetchChatRoom } from "../../api/LiveChatAPI";
 
 const ChatMessageForm = (props) => {
     const { activeChatForm } = props;
@@ -116,30 +116,21 @@ export default function LiveChatRoomAdmin() {
     const [roomUuid, setRoomUuid] = useState(searchParams.get("uuid"));
 
     useEffect(() => {
-        const axiosGetChatRoom = async () => {
-            const queryString = `uuid=${roomUuid}`;
-            await axios.get(`/api/livechat/room?${queryString}`)
-            .then((response) => {
-                setChatRoom(response.data);
-                setUserId(response.data.roomName);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-        
-        const axiosGetChatMessages = async () => {
-            const queryString = `uuid=${roomUuid}`;
-            await axios.get(`/api/livechat/message?${queryString}`)
-            .then((response) => {
-                setChatMessages(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
         if (roomUuid) {
-            axiosGetChatRoom();
-            axiosGetChatMessages();
+            fetchChatRoom(roomUuid)
+            .then((response) => {
+                setChatRoom(response);
+                setUserId(response.roomName);
+            }).catch((error) => {
+                console.log(error);
+            });
+    
+            fetchChatMessages(roomUuid)
+            .then((response) => {
+                setChatMessages(response);
+            }).catch((error) => {
+                console.log(error);
+            });
         }
     }, [roomUuid]);
 

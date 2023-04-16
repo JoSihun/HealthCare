@@ -1,6 +1,6 @@
 package com.shyd.healthcare.dto;
 
-import com.shyd.healthcare.domain.Post;
+import com.shyd.healthcare.domain.support.board.Post;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
