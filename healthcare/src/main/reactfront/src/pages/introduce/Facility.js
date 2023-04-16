@@ -2,7 +2,7 @@ import bg_black from '../../assets/images/bg_black.jpg'
 import '../../styles/Facility.css'
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Container } from "react-bootstrap";
+import { Button, Card, Row, Col, Container } from "react-bootstrap";
 import SideBar from "../../components/introduce/SideBar";
 //SideBar 참고: https://citylock77.tistory.com/130
 
