@@ -1,5 +1,6 @@
 package com.shyd.healthcare.domain;
 
+import com.shyd.healthcare.dto.facility.FacilityUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,12 @@ public class Facility extends BaseTime {
         this.sectorName = sectorName;
         this.sectorInfo = sectorInfo;
         this.sectorImg = sectorImg;
+    }
+
+    public Long update(FacilityUpdateRequestDto requestDto) {
+        this.sectorName = requestDto.getSectorName();
+        this.sectorInfo = requestDto.getSectorInfo();
+        this.sectorImg = requestDto.getSectorImg();
+        return this.id;
     }
 }
