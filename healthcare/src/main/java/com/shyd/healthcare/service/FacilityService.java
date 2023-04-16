@@ -1,12 +1,9 @@
 package com.shyd.healthcare.service;
 
 import com.shyd.healthcare.domain.Facility;
-import com.shyd.healthcare.domain.Post;
 import com.shyd.healthcare.dto.facility.FacilityResponseDto;
 import com.shyd.healthcare.dto.facility.FacilitySaveRequestDto;
 import com.shyd.healthcare.dto.facility.FacilityUpdateRequestDto;
-import com.shyd.healthcare.dto.post.PostSaveRequestDto;
-import com.shyd.healthcare.dto.post.PostUpdateRequestDto;
 import com.shyd.healthcare.repository.FacilityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
