@@ -23,9 +23,10 @@ const SingInForm = (props) => {
         signIn(formData)
         .then((response) => {
             localStorage.clear();
-            localStorage.setItem('email', response.email);
-            localStorage.setItem('username', response.username);
             localStorage.setItem('token', response.accessToken);
+            localStorage.setItem('username', response.username);
+            localStorage.setItem('useremail', response.email);
+            localStorage.setItem('usercontact', response.contact);
             window.location.href = `/`;
         }).catch((error) => {
             console.log(error);
