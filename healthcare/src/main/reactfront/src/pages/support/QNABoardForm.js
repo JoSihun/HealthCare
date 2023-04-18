@@ -53,10 +53,8 @@ const InputForm = () => {
     const fileRef = useRef(null);
     const [files, setFiles] = useState([]);
     const [values, setValues] = useState({
-        hits: 0,
         title: "",
         content: "",
-        author: "TempAuthor",
         category: "QNA_BOARD",
         secretYn: false,
         answerYn: false,
