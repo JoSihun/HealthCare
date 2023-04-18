@@ -20,9 +20,10 @@ public class CommentRestController {
     }
 
     @PostMapping("/api/v1/comment")
-    public List<CommentResponseDto> saveComment(@RequestParam(value = "post") Long postId,
+    public List<CommentResponseDto> saveComment(@RequestHeader("Authorization") String token,
+                                                @RequestParam(value = "post") Long postId,
                                                 @RequestBody CommentSaveRequestDto requestDto) {
-        this.commentService.save(postId, requestDto);
+        this.commentService.save(token, postId, requestDto);
         return this.commentService.findAllByPostId(postId);
     }
 
