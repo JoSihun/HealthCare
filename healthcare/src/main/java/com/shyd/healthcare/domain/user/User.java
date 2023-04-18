@@ -1,6 +1,7 @@
 package com.shyd.healthcare.domain.user;
 
 import com.shyd.healthcare.domain.BaseTime;
+import com.shyd.healthcare.domain.support.board.Comment;
 import com.shyd.healthcare.domain.support.board.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +30,8 @@ public class User extends BaseTime {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private List<Post> posts;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
     @Builder
     public User(String email, String contact, String username, String password, Role role) {
