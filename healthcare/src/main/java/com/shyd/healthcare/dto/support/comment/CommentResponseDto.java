@@ -16,9 +16,10 @@ public class CommentResponseDto {
 
     public CommentResponseDto(Comment entity) {
         this.id = entity.getId();
-        this.author = entity.getAuthor();
         this.content = entity.getContent();
         this.secretYn = entity.getSecretYn();
+
+        this.author = entity.getAuthor().getUsername();
         this.createdDate = entity.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
         this.updatedDate = entity.getUpdatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
     }
