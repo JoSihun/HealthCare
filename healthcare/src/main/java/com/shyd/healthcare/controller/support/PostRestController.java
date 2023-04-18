@@ -5,10 +5,13 @@ import com.shyd.healthcare.dto.support.post.PostUpdateRequestDto;
 import com.shyd.healthcare.service.support.AttachmentService;
 import com.shyd.healthcare.service.support.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.RequestEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,9 +22,16 @@ public class PostRestController {
 
     /** POST REQUEST - header: "default" */
     @PostMapping("/api/v1/post")
-    public Long savePost(@RequestBody PostSaveRequestDto requestDto) {
-        return this.postService.save(requestDto);
+    public Long savePost(@RequestHeader("Authorization") String token,
+                         @RequestBody PostSaveRequestDto requestDto) {
+        return this.postService.save(token, requestDto);
     }
+
+//    /** POST REQUEST - header: "default" */
+//    @PostMapping("/api/v1/post")
+//    public Long savePost(@RequestBody PostSaveRequestDto requestDto) {
+//        return this.postService.save(requestDto);
+//    }
 
     /** PUT REQUEST - header: "default" */
     @PutMapping("/api/v1/post/{id}")
@@ -39,9 +49,10 @@ public class PostRestController {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** POST REQUEST - header: "multipart/form-data" */
     @PostMapping("/api/v2/post")
-    public Long postSave(@RequestPart(value = "data") PostSaveRequestDto requestDto,
+    public Long postSave(@RequestHeader("Authorization") String token,
+                         @RequestPart(value = "data") PostSaveRequestDto requestDto,
                          @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        Long postId = this.postService.save(requestDto);
+        Long postId = this.postService.save(token, requestDto);
         return this.attachmentService.save(postId, files);
     }
 
