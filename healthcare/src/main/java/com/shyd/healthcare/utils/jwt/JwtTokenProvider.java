@@ -15,6 +15,45 @@ public class JwtTokenProvider {
     @Value("${jwt.expirationTime}")
     private Long jwtExpirationTime;
 
+    public String generateToken(Authentication authentication) {
+        User principal = (User) authentication.getPrincipal();
+        Date expiryDate = new Date(new Date().getTime() + jwtExpirationTime);
+        return Jwts.builder()
+                .setSubject(principal.getUsername())
+                .claim("userId", principal.getId())
+                .claim("userName", principal.getUsername())
+                .claim("userEmail", principal.getEmail())
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, jwtSecretKey)
+                .compact();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId", Long.class);
+    }
+
+    public String getUserNameFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userName", String.class);
+    }
+
+    public String getUserEmailFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userEmail", String.class);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public String generateTokenByUserId(Authentication authentication) {
         User userPrincipal = (User) authentication.getPrincipal();
         Date expiryDate = new Date(new Date().getTime() + jwtExpirationTime);
@@ -37,21 +76,22 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public Long getUserIdFromToken(String token) {
-        return Long.parseLong(Jwts.parser()
-                .setSigningKey(jwtSecretKey)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject());
-    }
-
-    public String getUsernameFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecretKey)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    public Long getUserIdFromToken(String token) {
+//        return Long.parseLong(Jwts.parser()
+//                .setSigningKey(jwtSecretKey)
+//                .parseClaimsJws(token)
+//                .getBody()
+//                .getSubject());
+//    }
+//
+//    public String getUsernameFromToken(String token) {
+//        return Jwts.parser()
+//                .setSigningKey(jwtSecretKey)
+//                .parseClaimsJws(token)
+//                .getBody()
+//                .getSubject();
+//    }
 
     public Boolean validateToken(String authToken) {
         try {
