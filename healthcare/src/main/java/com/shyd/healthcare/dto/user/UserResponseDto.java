@@ -10,6 +10,7 @@ public class UserResponseDto {
     private Long id;
     private String role;
     private String email;
+    private String contact;
     private String username;
     private String accessToken;
     private String tokenType = "Bearer";
@@ -18,6 +19,7 @@ public class UserResponseDto {
         this.id = entity.getId();
         this.role = entity.getRole().name();
         this.email = entity.getEmail();
+        this.contact = entity.getContact();
         this.username = entity.getUsername();
     }
 }

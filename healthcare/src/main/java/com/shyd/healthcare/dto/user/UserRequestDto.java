@@ -10,13 +10,15 @@ import lombok.*;
 public class UserRequestDto {
     private Role role;
     private String email;
+    private String contact;
     private String username;
     private String password;
 
     @Builder
-    public UserRequestDto(String email, String username, String password, Role role) {
+    public UserRequestDto(String email, String contact, String username, String password, Role role) {
         this.role = role;
         this.email = email;
+        this.contact = contact;
         this.username = username;
         this.password = password;
     }
@@ -25,6 +27,7 @@ public class UserRequestDto {
         return User.builder()
                 .role(this.role)
                 .email(this.email)
+                .contact(this.contact)
                 .username(this.username)
                 .password(this.password)
                 .build();
