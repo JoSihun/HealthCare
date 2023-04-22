@@ -1,6 +1,7 @@
 package com.shyd.healthcare.domain.support.board;
 
 import com.shyd.healthcare.domain.BaseTime;
+import com.shyd.healthcare.domain.user.User;
 import com.shyd.healthcare.dto.support.post.PostUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +20,6 @@ public class Post extends BaseTime {
 
     @Column(length = 500)
     private String title;
-    @Column(length = 50)
-    private String author;
     @Column(columnDefinition = "TEXT")
     private String content;
 
@@ -30,12 +29,15 @@ public class Post extends BaseTime {
     private Boolean secretYn;
     private Boolean answerYn;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User author;
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Attachment> attachmentList;
+
     @Builder
-    public Post(String title, String content, String author, String category,
+    public Post(String title, String content, User author, String category,
                 Integer hits, Boolean secretYn, Boolean answerYn) {
         this.hits = hits;
         this.title = title;

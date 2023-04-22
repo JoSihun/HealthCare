@@ -1,6 +1,7 @@
 package com.shyd.healthcare.domain.support.board;
 
 import com.shyd.healthcare.domain.BaseTime;
+import com.shyd.healthcare.domain.user.User;
 import com.shyd.healthcare.dto.support.comment.CommentUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,15 +16,16 @@ public class Comment extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String author;
     private String content;
     private Boolean secretYn;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User author;
 
     @Builder
-    public Comment(String content, String author, Boolean secretYn, Post post) {
+    public Comment(String content, User author, Boolean secretYn, Post post) {
         this.post = post;
         this.author = author;
         this.content = content;

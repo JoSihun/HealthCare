@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { signIn } from "../../api/AuthAPI";
+import { login } from "../../api/AuthAPI";
 import backgroundImage from "../..//assets/images/bg_signin.jpg";
 
 const SingInForm = (props) => {
@@ -20,14 +20,15 @@ const SingInForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        signIn(formData)
+        login(formData)
         .then((response) => {
             localStorage.clear();
-            localStorage.setItem('email', response.email);
-            localStorage.setItem('username', response.username);
-            localStorage.setItem('token', response.accessToken);
+            localStorage.setItem('tokenType', response.tokenType);
+            localStorage.setItem('accessToken', response.accessToken);
+            localStorage.setItem('refreshToken', response.refreshToken);
             window.location.href = `/`;
         }).catch((error) => {
+            setVisible(true);
             console.log(error);
         });
     }

@@ -6,18 +6,22 @@ import Container from 'react-bootstrap/Container';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {NavDropdown} from "react-bootstrap";
 import { useEffect, useState } from 'react';
+import { fetchUser } from '../api/UserAPI';
 
 export default function Navigation() {
-    const [username, setUsername] = useState("");
-    const [loginStatus, setLoginStatus] = useState(false);
+    const [user, setUser] = useState({});
+    const ACCESS_TOKEN = localStorage.getItem('accessToken');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            setUsername(localStorage.getItem('username'));
-            setLoginStatus(true);
+        if (ACCESS_TOKEN) {
+            fetchUser()
+            .then((response) => {
+                setUser(response);
+            }).catch((error) => {
+                console.log(error);
+            });
         }
-    }, []);
+    }, [ACCESS_TOKEN]);
 
     const handleLogout = async () => {
         localStorage.clear();
@@ -51,9 +55,9 @@ export default function Navigation() {
                                 <NavDropdown.Item href="/support/livechat">LiveChat</NavDropdown.Item>
                             </NavDropdown>
 
-                            {loginStatus
+                            {ACCESS_TOKEN
                             ?
-                            <NavDropdown title={username + "님 환영합니다"} id="collasible-nav-dropdown">
+                            <NavDropdown title={user.username + "님 환영합니다"} id="collasible-nav-dropdown">
                                 <NavDropdown.Item href="/my-page">MyPage</NavDropdown.Item>
                                 <NavDropdown.Item href="/" onClick={handleLogout}>로그아웃</NavDropdown.Item>
                             </NavDropdown>

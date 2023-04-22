@@ -23,12 +23,13 @@ public class PostResponseDto {
         this.hits = entity.getHits();
 
         this.title = entity.getTitle();
-        this.author = entity.getAuthor();
         this.content = entity.getContent();
         this.category = entity.getCategory();
 
         this.secretYn = entity.getSecretYn();
         this.answerYn = entity.getAnswerYn();
+
+        this.author = entity.getAuthor().getUsername();
         this.createdDate = entity.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
         this.updatedDate = entity.getUpdatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
     }

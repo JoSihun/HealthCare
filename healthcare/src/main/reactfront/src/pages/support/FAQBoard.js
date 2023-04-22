@@ -7,8 +7,6 @@ const FAQAddForm = (props) => {
     const [values, setValues] = useState({
         title: "",
         content: "",
-        author: "Admin",
-        hits: 0,
         category: "FAQ_BOARD",
         secretYn: false,
     });

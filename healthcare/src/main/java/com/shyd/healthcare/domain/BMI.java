@@ -1,14 +1,12 @@
 package com.shyd.healthcare.domain;
 
+import com.shyd.healthcare.domain.user.User;
 import com.shyd.healthcare.dto.bmi.BMIUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -32,11 +30,14 @@ public class BMI extends BaseTime {
     private Double musculoskeletalRate;     // 근골격율
 
     // ManyToOne User 추가 필요
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @Builder
     public BMI(Double weight, Double height, Double fatMass, Double fatRate,
-               Double musculoskeletalMass, Double musculoskeletalRate,
+               Double musculoskeletalMass, Double musculoskeletalRate, User user,
                Double bodyMassIndex, Double bodyWaterFraction, Integer basalMetabolicRate) {
+        this.user = user;
         this.weight = weight;
         this.height = height;
         this.fatMass = fatMass;

@@ -1,11 +1,13 @@
 package com.shyd.healthcare.service.support;
 
-import com.shyd.healthcare.domain.support.board.Category;
 import com.shyd.healthcare.domain.support.board.Post;
+import com.shyd.healthcare.domain.user.User;
 import com.shyd.healthcare.dto.support.post.PostResponseDto;
 import com.shyd.healthcare.dto.support.post.PostSaveRequestDto;
 import com.shyd.healthcare.dto.support.post.PostUpdateRequestDto;
 import com.shyd.healthcare.repository.support.PostRepository;
+import com.shyd.healthcare.repository.user.UserRepository;
+import com.shyd.healthcare.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +21,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class PostService {
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     /** 카테고리별 목록조회 - 작성순, List */
     @Transactional
@@ -111,7 +115,14 @@ public class PostService {
 
     /** 게시글 생성 */
     @Transactional
-    public Long save(final PostSaveRequestDto requestDto) {
+    public Long save(String token, final PostSaveRequestDto requestDto) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        Long userId = this.jwtTokenProvider.getUserIdFromToken(token);
+        User user = this.userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. user_id = " + userId));
+        requestDto.setAuthor(user);
         return this.postRepository.save(requestDto.toEntity()).getId();
     }
 

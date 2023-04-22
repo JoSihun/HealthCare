@@ -5,7 +5,6 @@ import { createCommentV1, deleteCommentV1, fetchCommentsV1, updateCommentV1 } fr
 
 const CommentForm = (props) => {
     const [values, setValues] = useState({
-        author: "Admin",
         content: "",
         secretYn: false,
     });
