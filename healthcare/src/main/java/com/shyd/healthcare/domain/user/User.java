@@ -3,6 +3,7 @@ package com.shyd.healthcare.domain.user;
 import com.shyd.healthcare.domain.BaseTime;
 import com.shyd.healthcare.domain.support.board.Comment;
 import com.shyd.healthcare.domain.support.board.Post;
+import com.shyd.healthcare.dto.user.UserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,9 +18,9 @@ public class User extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 50, nullable = false, unique = true)
+    @Column(length = 50)
     private String email;
-    @Column(length = 50, nullable = false, unique = true)
+    @Column(length = 50)
     private String contact;
     @Column(length = 50, nullable = false, unique = true)
     private String username;
@@ -28,6 +29,8 @@ public class User extends BaseTime {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Auth auth;
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private List<Post> posts;
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
@@ -39,6 +42,16 @@ public class User extends BaseTime {
         this.email = email;
         this.contact = contact;
         this.username = username;
+        this.password = password;
+    }
+
+    public void update(UserRequestDto requestDto) {
+        this.role = requestDto.getRole();
+        this.email = requestDto.getEmail();
+        this.contact = requestDto.getContact();
+    }
+
+    public void updatePassword(String password) {
         this.password = password;
     }
 }
