@@ -13,8 +13,9 @@ public class BMIRestController {
 
     /** POST REQUEST - header: "default" */
     @PostMapping("/api/v1/bmi")
-    public Long saveBMI(@RequestBody BMISaveRequestDto requestDto) {
-        return this.bmiService.save(requestDto);
+    public Long saveBMI(@RequestHeader("Authorization") String token,
+                        @RequestBody BMISaveRequestDto requestDto) {
+        return this.bmiService.save(token, requestDto);
     }
 
     /** PUT REQUEST - header: "default" */
