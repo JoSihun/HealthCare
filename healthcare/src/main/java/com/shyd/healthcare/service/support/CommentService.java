@@ -9,7 +9,7 @@ import com.shyd.healthcare.dto.support.comment.CommentUpdateRequestDto;
 import com.shyd.healthcare.repository.support.CommentRepository;
 import com.shyd.healthcare.repository.support.PostRepository;
 import com.shyd.healthcare.repository.user.UserRepository;
-import com.shyd.healthcare.utils.jwt.JwtTokenProvider;
+import com.shyd.healthcare.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

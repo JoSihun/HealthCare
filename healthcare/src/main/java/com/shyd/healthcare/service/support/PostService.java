@@ -1,6 +1,5 @@
 package com.shyd.healthcare.service.support;
 
-import com.shyd.healthcare.domain.support.board.Category;
 import com.shyd.healthcare.domain.support.board.Post;
 import com.shyd.healthcare.domain.user.User;
 import com.shyd.healthcare.dto.support.post.PostResponseDto;
@@ -8,7 +7,7 @@ import com.shyd.healthcare.dto.support.post.PostSaveRequestDto;
 import com.shyd.healthcare.dto.support.post.PostUpdateRequestDto;
 import com.shyd.healthcare.repository.support.PostRepository;
 import com.shyd.healthcare.repository.user.UserRepository;
-import com.shyd.healthcare.utils.jwt.JwtTokenProvider;
+import com.shyd.healthcare.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
