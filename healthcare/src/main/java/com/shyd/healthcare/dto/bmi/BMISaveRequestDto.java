@@ -1,13 +1,17 @@
 package com.shyd.healthcare.dto.bmi;
 
 import com.shyd.healthcare.domain.BMI;
+import com.shyd.healthcare.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class BMISaveRequestDto {
+    private User user;
     private Double weight;
     private Double height;
     private Double fatMass;
@@ -20,8 +24,9 @@ public class BMISaveRequestDto {
 
     @Builder
     public BMISaveRequestDto(Double weight, Double height, Double fatMass, Double fatRate,
-                             Double musculoskeletalMass, Double musculoskeletalRate,
+                             Double musculoskeletalMass, Double musculoskeletalRate, User user,
                              Double bodyMassIndex, Double bodyWaterFraction, Integer basalMetabolicRate) {
+        this.user = user;
         this.weight = weight;
         this.height = height;
         this.fatMass = fatMass;
@@ -35,6 +40,7 @@ public class BMISaveRequestDto {
 
     public BMI toEntity() {
         return BMI.builder()
+                .user(this.user)
                 .weight(this.weight)
                 .height(this.height)
                 .fatMass(this.fatMass)

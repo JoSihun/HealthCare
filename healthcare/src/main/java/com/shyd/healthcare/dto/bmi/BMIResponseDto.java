@@ -17,6 +17,7 @@ public class BMIResponseDto {
     private Integer basalMetabolicRate;
     private Double musculoskeletalMass;
     private Double musculoskeletalRate;
+    private String username;
     private String createdDate;
     private String updatedDate;
 
@@ -31,6 +32,8 @@ public class BMIResponseDto {
         this.basalMetabolicRate = entity.getBasalMetabolicRate();
         this.musculoskeletalMass = entity.getMusculoskeletalMass();
         this.musculoskeletalRate = entity.getMusculoskeletalRate();
+
+        this.username = entity.getUser().getUsername();
         this.createdDate = entity.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
         this.updatedDate = entity.getUpdatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
     }
