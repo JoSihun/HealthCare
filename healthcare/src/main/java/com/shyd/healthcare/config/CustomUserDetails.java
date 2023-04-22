@@ -1,5 +1,6 @@
-package com.shyd.healthcare.domain.user;
+package com.shyd.healthcare.config;
 
+import com.shyd.healthcare.domain.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,14 +15,23 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
-    @Override
-    public String getPassword() {
-        return user.getPassword();
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public Long getId() {
+        return user.getId();
+    }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
+
+    public String getContact() {
+        return user.getContact();
     }
 
     @Override
@@ -29,6 +39,12 @@ public class CustomUserDetails implements UserDetails {
         return user.getUsername();
     }
 
+    @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public boolean isAccountNonExpired() {
         return true;
