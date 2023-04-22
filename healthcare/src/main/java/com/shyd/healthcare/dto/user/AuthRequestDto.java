@@ -2,8 +2,8 @@ package com.shyd.healthcare.dto.user;
 
 import lombok.*;
 
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthRequestDto {

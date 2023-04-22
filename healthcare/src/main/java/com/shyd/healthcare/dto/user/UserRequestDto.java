@@ -7,21 +7,13 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserRequestDto {
-    private Role role;
+    private Role role = Role.ROLE_USER;
     private String email;
     private String contact;
     private String username;
     private String password;
-
-    @Builder
-    public UserRequestDto(String email, String contact, String username, String password, Role role) {
-        this.role = role;
-        this.email = email;
-        this.contact = contact;
-        this.username = username;
-        this.password = password;
-    }
 
     public User toEntity() {
         return User.builder()
