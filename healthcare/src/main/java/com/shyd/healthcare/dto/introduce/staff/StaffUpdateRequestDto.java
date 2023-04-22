@@ -1,6 +1,6 @@
-package com.shyd.healthcare.dto.staff;
+package com.shyd.healthcare.dto.introduce.staff;
 
-import com.shyd.healthcare.domain.Staff;
+import com.shyd.healthcare.domain.introduce.Staff;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

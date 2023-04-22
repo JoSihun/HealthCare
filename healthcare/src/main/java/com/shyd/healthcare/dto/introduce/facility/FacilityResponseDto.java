@@ -1,6 +1,6 @@
-package com.shyd.healthcare.dto.facility;
+package com.shyd.healthcare.dto.introduce.facility;
 
-import com.shyd.healthcare.domain.Facility;
+import com.shyd.healthcare.domain.introduce.Facility;
 import lombok.Getter;
 
 @Getter

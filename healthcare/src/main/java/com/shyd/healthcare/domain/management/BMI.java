@@ -1,7 +1,8 @@
-package com.shyd.healthcare.domain;
+package com.shyd.healthcare.domain.management;
 
+import com.shyd.healthcare.domain.BaseTime;
 import com.shyd.healthcare.domain.user.User;
-import com.shyd.healthcare.dto.bmi.BMIUpdateRequestDto;
+import com.shyd.healthcare.dto.management.bmi.BMIUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

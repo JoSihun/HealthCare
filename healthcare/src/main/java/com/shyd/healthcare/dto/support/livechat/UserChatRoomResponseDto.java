@@ -1,19 +1,18 @@
-package com.shyd.healthcare.dto.introduce.staff;
-import com.shyd.healthcare.domain.introduce.Staff;
+package com.shyd.healthcare.dto.support.livechat;
+
+import com.shyd.healthcare.domain.support.livechat.UserChatRoom;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
 
 @Getter
-public class StaffResponseDto {
+public class UserChatRoomResponseDto {
     private Long id;
-    private String roleName;
     private String createdDate;
     private String updatedDate;
 
-    public StaffResponseDto(Staff entity) {
+    public UserChatRoomResponseDto(UserChatRoom entity) {
         this.id = entity.getId();
-        this.roleName = entity.getRoleName();
         this.createdDate = entity.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
         this.updatedDate = entity.getUpdatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
     }

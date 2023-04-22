@@ -1,8 +1,8 @@
 package com.shyd.healthcare.controller.introduce;
 
-import com.shyd.healthcare.dto.facility.FacilityResponseDto;
-import com.shyd.healthcare.dto.facility.FacilitySaveRequestDto;
-import com.shyd.healthcare.service.FacilityService;
+import com.shyd.healthcare.dto.introduce.facility.FacilityResponseDto;
+import com.shyd.healthcare.dto.introduce.facility.FacilitySaveRequestDto;
+import com.shyd.healthcare.service.introduce.FacilityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

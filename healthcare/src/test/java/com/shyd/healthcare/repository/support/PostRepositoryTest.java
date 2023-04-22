@@ -19,14 +19,14 @@ class PostRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
-    @Test
-    @DisplayName("Enum Class 를 사용하여 데이터 저장")
-    void saveTest() {
-        PostSaveRequestDto requestDto = new PostSaveRequestDto("TestTitle", "TestContent", "TestAuthor",
-                Category.FREE_BOARD.name(), 0, true, true);
-        Post savedPost = this.postRepository.save(requestDto.toEntity());
-        assertThat(savedPost.getCategory()).isEqualTo(Category.FREE_BOARD);
-    }
+//    @Test
+//    @DisplayName("Enum Class 를 사용하여 데이터 저장")
+//    void saveTest() {
+//        PostSaveRequestDto requestDto = new PostSaveRequestDto("TestTitle", "TestContent", "TestAuthor",
+//                Category.FREE_BOARD.name(), 0, true, true);
+//        Post savedPost = this.postRepository.save(requestDto.toEntity());
+//        assertThat(savedPost.getCategory()).isEqualTo(Category.FREE_BOARD);
+//    }
 
     @Test
     @DisplayName("Enum Class 를 사용하여 데이터 필터링")

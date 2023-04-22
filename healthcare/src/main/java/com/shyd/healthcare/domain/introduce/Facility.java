@@ -1,6 +1,7 @@
-package com.shyd.healthcare.domain;
+package com.shyd.healthcare.domain.introduce;
 
-import com.shyd.healthcare.dto.facility.FacilityUpdateRequestDto;
+import com.shyd.healthcare.domain.BaseTime;
+import com.shyd.healthcare.dto.introduce.facility.FacilityUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

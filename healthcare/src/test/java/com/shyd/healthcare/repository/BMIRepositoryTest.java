@@ -1,15 +1,13 @@
 package com.shyd.healthcare.repository;
 
-import java.util.*;
 import java.io.*;
 
-import com.shyd.healthcare.domain.BMI;
+import com.shyd.healthcare.domain.management.BMI;
+import com.shyd.healthcare.repository.management.BMIRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BMIRepositoryTest {

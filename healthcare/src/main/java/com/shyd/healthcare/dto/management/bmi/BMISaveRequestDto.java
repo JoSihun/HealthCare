@@ -1,6 +1,6 @@
-package com.shyd.healthcare.dto.bmi;
+package com.shyd.healthcare.dto.management.bmi;
 
-import com.shyd.healthcare.domain.BMI;
+import com.shyd.healthcare.domain.management.BMI;
 import com.shyd.healthcare.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;

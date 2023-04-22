@@ -1,10 +1,10 @@
-package com.shyd.healthcare.service;
+package com.shyd.healthcare.service.introduce;
 
-import com.shyd.healthcare.domain.Facility;
-import com.shyd.healthcare.dto.facility.FacilityResponseDto;
-import com.shyd.healthcare.dto.facility.FacilitySaveRequestDto;
-import com.shyd.healthcare.dto.facility.FacilityUpdateRequestDto;
-import com.shyd.healthcare.repository.FacilityRepository;
+import com.shyd.healthcare.domain.introduce.Facility;
+import com.shyd.healthcare.dto.introduce.facility.FacilityResponseDto;
+import com.shyd.healthcare.dto.introduce.facility.FacilitySaveRequestDto;
+import com.shyd.healthcare.dto.introduce.facility.FacilityUpdateRequestDto;
+import com.shyd.healthcare.repository.introduce.FacilityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

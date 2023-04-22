@@ -1,11 +1,11 @@
-package com.shyd.healthcare.service;
+package com.shyd.healthcare.service.management;
 
-import com.shyd.healthcare.domain.BMI;
+import com.shyd.healthcare.domain.management.BMI;
 import com.shyd.healthcare.domain.user.User;
-import com.shyd.healthcare.dto.bmi.BMIResponseDto;
-import com.shyd.healthcare.dto.bmi.BMISaveRequestDto;
-import com.shyd.healthcare.dto.bmi.BMIUpdateRequestDto;
-import com.shyd.healthcare.repository.BMIRepository;
+import com.shyd.healthcare.dto.management.bmi.BMIResponseDto;
+import com.shyd.healthcare.dto.management.bmi.BMISaveRequestDto;
+import com.shyd.healthcare.dto.management.bmi.BMIUpdateRequestDto;
+import com.shyd.healthcare.repository.management.BMIRepository;
 import com.shyd.healthcare.repository.user.UserRepository;
 import com.shyd.healthcare.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
-package com.shyd.healthcare.controller;
+package com.shyd.healthcare.controller.management;
 
-import com.shyd.healthcare.dto.bmi.BMISaveRequestDto;
-import com.shyd.healthcare.dto.bmi.BMIUpdateRequestDto;
-import com.shyd.healthcare.service.BMIService;
+import com.shyd.healthcare.dto.management.bmi.BMISaveRequestDto;
+import com.shyd.healthcare.dto.management.bmi.BMIUpdateRequestDto;
+import com.shyd.healthcare.service.management.BMIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

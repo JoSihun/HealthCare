@@ -1,7 +1,7 @@
-package com.shyd.healthcare.controller;
+package com.shyd.healthcare.controller.management;
 
-import com.shyd.healthcare.dto.bmi.BMIResponseDto;
-import com.shyd.healthcare.service.BMIService;
+import com.shyd.healthcare.dto.management.bmi.BMIResponseDto;
+import com.shyd.healthcare.service.management.BMIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
