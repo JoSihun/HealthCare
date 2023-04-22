@@ -1,10 +1,13 @@
 import axios from "axios";
 
+const TOKEN_TYPE = localStorage.getItem("tokenType");
+let ACCESS_TOKEN = localStorage.getItem("accessToken");
+
 const PostAPI = axios.create({
     // baseURL: 'http://localhost:8080',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Authorization': `${TOKEN_TYPE} ${ACCESS_TOKEN}`,
     },
 });
 
@@ -12,7 +15,7 @@ export const PostAPIV1 = axios.create({
     // baseURL: 'http://localhost:8080',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Authorization': `${TOKEN_TYPE} ${ACCESS_TOKEN}`,
     },
 });
 
@@ -20,8 +23,29 @@ export const PostAPIV2 = axios.create({
     // baseURL: 'http://localhost:8080',
     headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Authorization': `${TOKEN_TYPE} ${ACCESS_TOKEN}`,
     },
+});
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// 토큰갱신함수
+const refreshAccessToken = async () => {
+    const response = await PostAPI.get(`/api/v1/auth/refresh`);
+    ACCESS_TOKEN = response.data;
+    localStorage.setItem('accessToken', ACCESS_TOKEN);
+    PostAPI.defaults.headers.common['Authorization'] = `${TOKEN_TYPE} ${ACCESS_TOKEN}`;
+}
+
+// 토큰갱신함수
+PostAPI.interceptors.response.use((response) => {
+    return response;
+}, async (error) => {
+    const originalRequest = error.config;
+    if (error.response.status === 403 && !originalRequest._retry) {
+        await refreshAccessToken();
+        return PostAPI(originalRequest);
+    }
+    return Promise.reject(error);
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////

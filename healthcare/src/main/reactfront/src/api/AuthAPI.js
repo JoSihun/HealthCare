@@ -1,25 +1,28 @@
 import axios from "axios";
 
-export const AuthAPI = axios.create({
+const TOKEN_TYPE = localStorage.getItem("tokenType");
+let ACCESS_TOKEN = localStorage.getItem("accessToken");
+
+export const AuthApi = axios.create({
     // baseURL: 'http://localhost:8080',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Authorization': `${TOKEN_TYPE} ${ACCESS_TOKEN}`,
     },
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // 로그인 API
-export const signIn = async ({ email, username, password }) => {
+export const login = async ({ email, username, password }) => {
     const data = { email, username, password };
-    const response = await AuthAPI.post(`/api/v1/auth/signin`, data);
+    const response = await AuthApi.post(`/api/v1/auth/login`, data);
     return response.data;
 }
 
 // 회원가입 API
 export const signUp = async ({ email, username, password }) => {
     const data = { email, username, password };
-    const response = await AuthAPI.post(`/api/v1/auth/signup`, data);
+    const response = await AuthApi.post(`/api/v1/auth/signup`, data);
     return response.data;
 }
 
