@@ -29,10 +29,10 @@ const CardItem = (props) => {
             <Card.Img variant="top" src={CardImage} />
             <Card.Body>
                 <Card.Title>Card Title</Card.Title>
-                <Card.Text>
+                <div>
                     Some quick example text to build on the card title and make up the bulk of the card's content.
                     <TestHomeAPI />
-                </Card.Text>
+                </div>
             </Card.Body>
         </Card>
     );
