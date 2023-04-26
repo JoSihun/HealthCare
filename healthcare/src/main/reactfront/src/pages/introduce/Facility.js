@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Row, Col, Container } from "react-bootstrap";
 import SideBar from "../../components/introduce/SideBar";
-//SideBar 참고: https://citylock77.tistory.com/130
+import { createFacilityV1, deleteFacilityV1, fetchFacilitiesV1, updateFacilityV1 } from '../../api/Introduce/FacilityAPI';
 
 const FacilityAddForm = (props) => {
     const [values, setValues] = useState({
@@ -27,12 +27,8 @@ const FacilityAddForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.post(`/api/v1/facility`, values, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-        })
-        .then((response) => {
+        createFacilityV1(values)
+        .then(() => {
             window.location.reload();
         }).catch((error) => {
             console.log(error);
@@ -80,8 +76,8 @@ const FacilityEditForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.put(`/api/v1/facility/${props.facility.id}`, values)
-        .then((response) => {
+        updateFacilityV1(values)
+        .then(() => {
             window.location.reload();
         }).catch((error) => {
             console.log(error);
@@ -118,7 +114,7 @@ const FacilityItem = (props) => {
 
     const handleDelete = async (params, e) => {
         e.preventDefault();
-        await axios.delete(`/api/v1/facility/${params}`)
+        deleteFacilityV1(params)
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
@@ -135,7 +131,6 @@ const FacilityItem = (props) => {
                     width="100%"
                     height="100%"
                     alt="profile"
-                    maxWidth="100px"
                     // style={{ maxWidth: "100", maxHeight: "100" }} https://www.youtube.com/watch?v=QvQsuAaUwxo 참고
                 />
             </div>
@@ -164,20 +159,12 @@ export default function Facility() {
     const [showAddForm, setShowAddForm] = useState(false);
 
     useEffect(() => {
-        const axiosGetFacilities = async () => {
-            await axios.get(`/api/v1/facility`, {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
-                },
-            })
-            .then((response) => {
-                setFacilities(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
-        axiosGetFacilities();
+        fetchFacilitiesV1()
+        .then((response) => {
+            setFacilities(response);
+        }).catch((error) => {
+            console.log(error);
+        });
     }, []);
 
     return (
@@ -193,7 +180,7 @@ export default function Facility() {
                             <Card.Title><h2><strong>Facility</strong></h2></Card.Title>
                             <hr/>
                             {facilities.map((facility, index) => (
-                                <FacilityItem facility={facility} />    
+                                <FacilityItem key={index} facility={facility} />    
                             ))}                          
                         </Card.Body>
                     </Card>
