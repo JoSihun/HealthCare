@@ -27,7 +27,11 @@ const FacilityAddForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.post(`/api/v1/facility`, values)
+        await axios.post(`/api/v1/facility`, values, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+        })
         .then((response) => {
             window.location.reload();
         }).catch((error) => {
@@ -163,7 +167,7 @@ export default function Facility() {
         const axiosGetFacilities = async () => {
             await axios.get(`/api/v1/facility`, {
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
                 },
             })
             .then((response) => {
