@@ -20,7 +20,7 @@ export const fetchFacilitiesV1 = async () => {
 
 /** 시설 삽입 V1 */
 export const createFacilityV1 = async (data) => {
-    const response = await FacilityAPI.post(data);
+    const response = await FacilityAPI.post(`/api/v1/facility`, data);
     return response.data;
 }
 

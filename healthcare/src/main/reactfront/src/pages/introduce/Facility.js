@@ -60,7 +60,8 @@ const FacilityAddForm = (props) => {
 }
 
 const FacilityEditForm = (props) => {
-    const [values, setValues] = useState(props.facility);
+    const { facility } = props;
+    const [values, setValues] = useState(facility);
 
     const handleChange = async (e) => {
         e.preventDefault();
@@ -76,7 +77,7 @@ const FacilityEditForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        updateFacilityV1(values)
+        updateFacilityV1(facility.id ,values)
         .then(() => {
             window.location.reload();
         }).catch((error) => {

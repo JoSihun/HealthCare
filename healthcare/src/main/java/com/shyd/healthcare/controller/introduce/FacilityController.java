@@ -15,6 +15,7 @@ import java.util.List;
 public class FacilityController {
     private final FacilityService facilitiyService;
 
+    /** Facility 오름차순 조회 */
     @GetMapping("/v1/facility")
     public List<FacilityResponseDto> facility() {
         return this.facilitiyService.findAllAsc();
