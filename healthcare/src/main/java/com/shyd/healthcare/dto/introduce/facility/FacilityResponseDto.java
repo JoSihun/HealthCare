@@ -12,7 +12,6 @@ public class FacilityResponseDto {
 
     public FacilityResponseDto(Facility entity) {
         this.id = entity.getId();
-
         this.sectorName = entity.getSectorName();
         this.sectorInfo = entity.getSectorInfo();
         this.sectorImg = entity.getSectorImg();
