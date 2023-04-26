@@ -40,7 +40,7 @@ function Staff() {
                                     </Card.Body>
                                 </Card>
                             </Col>
-                            <Col>
+                            <Col className="col-md-6">
                                 <Card>
                                     <Card.Body>
                                         <div>
@@ -84,7 +84,7 @@ function Staff() {
                                     </Card.Body>
                                 </Card>
                             </Col>
-                            <Col>
+                            <Col className="col-md-6">
                                 <Card>
                                     <Card.Body>
                                         <div>
@@ -104,6 +104,26 @@ function Staff() {
                                             </div>
                                         </div>
                                     </Card.Body>              
+                                </Card>
+                            </Col>
+                            <Col className="col-md-6">
+                                <Card className='w-100'>
+                                    <Card.Body>
+                                        <Col className="col-md-2">
+                                            <img
+                                                className="rounded"
+                                                src={user_pic}
+                                                width="100"
+                                                height="100"
+                                                alt="profile"
+                                            />
+                                        </Col>
+                                        <Col className="col-md-4">
+                                            <div>역할: Role</div>
+                                            <div>이름: Profile</div>
+                                            <div>연락처: 010-xxxx-xxxx</div>
+                                        </Col>
+                                    </Card.Body>
                                 </Card>
                             </Col>
                         </Row>                                           
