@@ -174,7 +174,6 @@ export default function Facility() {
                 <Col className="col-md-2 mx-2 my-4">
                     <SideBar />
                 </Col>
-
                 <Col className="col-md-9 mx-2 my-4">
                     <Card>
                         <Card.Body>
@@ -196,7 +195,7 @@ export default function Facility() {
                         <div className="mt-4">
                             <FacilityAddForm setShowAddForm={setShowAddForm} />
                         </div>
-                    }
+                }
             </Row>
         </Container>
     );
