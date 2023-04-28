@@ -1,6 +1,7 @@
 package com.shyd.healthcare.domain.user;
 
 import com.shyd.healthcare.domain.BaseTime;
+import com.shyd.healthcare.domain.introduce.Staff;
 import com.shyd.healthcare.domain.support.board.Comment;
 import com.shyd.healthcare.domain.support.board.Post;
 import com.shyd.healthcare.dto.user.UserRequestDto;
@@ -31,6 +32,9 @@ public class User extends BaseTime {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Auth auth;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private Staff staff;
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private List<Post> posts;
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
