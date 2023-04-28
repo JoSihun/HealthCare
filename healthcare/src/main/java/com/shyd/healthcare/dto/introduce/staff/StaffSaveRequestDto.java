@@ -9,25 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StaffSaveRequestDto {
     private String staffRole;
-    private String staffName;
-    private String staffPhone;
-    private String staffImg;
-
 
     @Builder
-    public StaffSaveRequestDto(String staffRole, String staffName, String staffPhone, String staffImg) {
+    public StaffSaveRequestDto(String staffRole) {
         this.staffRole = staffRole;
-        this.staffName = staffName;
-        this.staffPhone = staffPhone;
-        this.staffImg = staffImg;
     }
 
     public Staff toEntity() {
         return Staff.builder()
                 .staffRole(staffRole)
-                .staffName(staffName)
-                .staffPhone(staffPhone)
-                .staffImg(staffImg)
                 .build();
     }
 }

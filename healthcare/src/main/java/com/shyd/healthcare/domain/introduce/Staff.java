@@ -19,9 +19,6 @@ public class Staff extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String staffRole;
-    private String staffName;
-    private String staffPhone;
-    private String staffImg;
 
     /** relation with USER */
     @OneToOne(fetch = FetchType.LAZY)
@@ -30,18 +27,13 @@ public class Staff extends BaseTime {
     private User user;
 
     @Builder
-    public Staff(String staffRole, String staffName, String staffPhone, String staffImg) {
+    public Staff(User user, String staffRole) {
+        this.user = user;
         this.staffRole = staffRole;
-        this.staffName = staffName;
-        this.staffPhone = staffPhone;
-        this.staffImg = staffImg;
     }
 
     public Long update(StaffUpdateRequestDto requestDto) {
         this.staffRole = requestDto.getStaffRole();
-        this.staffName = requestDto.getStaffName();
-        this.staffPhone = requestDto.getStaffPhone();
-        this.staffImg = requestDto.getStaffImg();
         return this.id;
     }
 }

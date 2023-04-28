@@ -2,23 +2,15 @@ import user_pic from '../../assets/images/user_pic.jpg'
 import '../../styles/Staff.css'
 import React, { useEffect, useState } from "react";
 import { Button, Card, Row, Col, Container } from "react-bootstrap";
-import {Link} from "react-router-dom";
 import SideBar from "../../components/introduce/SideBar";
 import { fetchStaffV1, deleteStaffV1, createStaffV1 } from '../../api/Introduce/StaffAPI';
 
 const StaffAddForm = (props) => {
-    const [values, setValues] = useState({
-        staffRole: "",
-        staffName: "",
-        staffPhone: "",
-        secretYn: false,
-    });
+    const [value, setValue] = useState("");
 
-    const handleChange = async (e) => {
+    const handleValue = async (e) => {
         e.preventDefault();
-        setValues({...values,
-            [e.target.id]: e.target.value
-        });
+        setValue(e.target.value);
     }
 
     const handleCancel = async (e) => {
@@ -28,7 +20,7 @@ const StaffAddForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        createStaffV1(values)
+        createStaffV1(value)
         .then(() => {
             window.location.reload();
         }).catch((error) => {
@@ -41,8 +33,8 @@ const StaffAddForm = (props) => {
             <Card.Body>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group mb-3">
-                        <label htmlFor="title"><h5><strong>직원의 전화번호</strong></h5></label>
-                        <input type="text" className="form-control" id="sectorName" onChange={handleChange} value={ values.sectorName } />
+                        <label htmlFor="title"><h5><strong>ID</strong></h5></label>
+                        <input type="text" className="form-control" id="id" onChange={handleValue} value={ value } />
                     </div>
                     <div className="form-group d-flex justify-content-end">
                         <Button className="me-1" variant="dark" style={{ width: "100px" }}
@@ -85,8 +77,8 @@ const StaffItem = (props) => {
                         </Col>
                         <Col className="col-md-4">
                             <div>역할: {staff.staffRole}</div>
-                            <div>이름: {staff.staffName}</div>
-                            <div>연락처: {staff.staffPhone}</div>
+                            <div>이름: {staff.userName}</div>
+                            <div>연락처: {staff.contact}</div>
                         </Col>
                         <Button className="me-1" variant="danger" style={{ width: "100px" }}
                         onClick={(e) => { handleDelete(staff.id, e) }}>삭제</Button>

@@ -32,7 +32,6 @@ public class User extends BaseTime {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Auth auth;
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Staff staff;
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)

@@ -24,7 +24,7 @@ export const createStaffV1 = async (data) => {
     return response.data;
 }
 
-/** 직원 삭제 */
+/** 목록에서 특정직원 삭제 */
 export const deleteStaffV1 = async (id) => {
     const response = await StaffAPI.delete(`/api/v1/staff/${id}`);
     return response.data;
