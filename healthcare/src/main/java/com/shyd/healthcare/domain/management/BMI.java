@@ -30,7 +30,6 @@ public class BMI extends BaseTime {
     private Double musculoskeletalMass;     // 근골격량
     private Double musculoskeletalRate;     // 근골격율
 
-    // ManyToOne User 추가 필요
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
