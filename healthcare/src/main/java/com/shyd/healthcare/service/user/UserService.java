@@ -49,6 +49,13 @@ public class UserService {
         return users.stream().map(UserResponseDto::new).collect(Collectors.toList());
     }
 
+    /** User 검색조회 */
+    @Transactional
+    public List<UserResponseDto> findAllByUsername(String username) {
+        List<User> users = this.userRepository.findAllByUsernameContaining(username);
+        return users.stream().map(UserResponseDto::new).collect(Collectors.toList());
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** User 삽입 */
     @Transactional
