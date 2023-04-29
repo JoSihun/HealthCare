@@ -1,11 +1,13 @@
 package com.shyd.healthcare.controller.introduce;
 
+import com.shyd.healthcare.config.JwtTokenProvider;
+import com.shyd.healthcare.domain.user.User;
 import com.shyd.healthcare.dto.introduce.staff.StaffResponseDto;
+import com.shyd.healthcare.dto.introduce.staff.StaffSaveRequestDto;
+import com.shyd.healthcare.dto.user.UserResponseDto;
 import com.shyd.healthcare.service.introduce.StaffService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,11 +16,23 @@ import java.util.List;
 @RequestMapping("/api")
 public class StaffController {
     private final StaffService staffService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/v1/staff")
-    public List<StaffResponseDto> staff() {
+    public List<StaffResponseDto> staffList() {
         return this.staffService.findAllAsc();
     }
 
+    @PostMapping("/v1/staff/{userId}")
+    public Long createStaff(@PathVariable Long userId,
+                            @RequestBody StaffSaveRequestDto requestDto) {
+        return this.staffService.save(userId, requestDto);
+    }
+
+//    @PostMapping("/v1/staff")
+//    public Long createStaff(@RequestParam(value = "userId") Long userId,
+//                            @RequestBody StaffSaveRequestDto requestDto) {
+//        return this.staffService.save(userId, requestDto);
+//    }
 
 }
