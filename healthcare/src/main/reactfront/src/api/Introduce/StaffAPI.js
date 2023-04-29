@@ -1,4 +1,5 @@
 import axios from "axios";
+import Staff from "../../pages/introduce/Staff";
 
 const TOKEN_TYPE = localStorage.getItem("tokenType");
 let ACCESS_TOKEN = localStorage.getItem("accessToken");
@@ -19,8 +20,8 @@ export const fetchStaffV1 = async () => {
 }
 
 /** 직원 삽입 V1 */
-export const createStaffV1 = async (data) => {
-    const response = await StaffAPI.post(`/api/v1/staff`, data);
+export const createStaffV1 = async (userId, data) => {
+    const response = await StaffAPI.post(`/api/v1/staff?userId=${userId}`, data);
     return response.data;
 }
 
