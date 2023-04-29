@@ -47,6 +47,13 @@ export const fetchUsers = async () => {
     return response.data;
 }
 
+// 유저검색조회 API
+export const searchUsers = async (data) => {
+    const { username } = data;
+    const response = await UserApi.get(`/api/v1/user/search?username=${username}`);
+    return response.data;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // 유저생성 API
 export const createUser = async (data) => {
