@@ -2,12 +2,15 @@ package com.shyd.healthcare.service.introduce;
 
 import com.shyd.healthcare.domain.introduce.Facility;
 import com.shyd.healthcare.domain.introduce.Staff;
+import com.shyd.healthcare.domain.user.User;
 import com.shyd.healthcare.dto.introduce.facility.FacilitySaveRequestDto;
 import com.shyd.healthcare.dto.introduce.facility.FacilityUpdateRequestDto;
 import com.shyd.healthcare.dto.introduce.staff.StaffResponseDto;
 import com.shyd.healthcare.dto.introduce.staff.StaffSaveRequestDto;
 import com.shyd.healthcare.dto.introduce.staff.StaffUpdateRequestDto;
+import com.shyd.healthcare.dto.user.UserResponseDto;
 import com.shyd.healthcare.repository.introduce.StaffRepository;
+import com.shyd.healthcare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class StaffService {
+    private final UserRepository userRepository;
     private final StaffRepository staffRepository;
 
     /** 모든 자료 불러오기 오름차순 */
@@ -39,7 +43,10 @@ public class StaffService {
 
     /** Staff 저장 */
     @Transactional
-    public Long save(final StaffSaveRequestDto requestDto) {
+    public Long save(Long userId, StaffSaveRequestDto requestDto) {
+        User user = this.userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("해당 유저를 찾을 수  없습니다. user_id = " + userId));
+        requestDto.setUser(user);
         return this.staffRepository.save(requestDto.toEntity()).getId();
     }
 
