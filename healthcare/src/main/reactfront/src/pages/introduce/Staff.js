@@ -4,9 +4,79 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Row, Col, Container } from "react-bootstrap";
 import SideBar from "../../components/introduce/SideBar";
 import { fetchStaffV1, deleteStaffV1, createStaffV1 } from '../../api/Introduce/StaffAPI';
+import { searchUsers } from '../../api/UserAPI';
 
-const StaffAddForm = (props) => {
+const UserList = (props) => {
+    const { users } = props;
+
+    return (
+        <div>
+            {users.map((user, index) => (
+                <div key={index}>
+                    <p>
+                        {user.username}&nbsp;
+                        {user.email}&nbsp;
+                        {user.contact}
+                    </p>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+const SearchForm = (props) => {
+    const [users, setUsers] = useState([]);
+    const [value, setValue] = useState({
+        username: "",
+    });
+    
+    const handleChange = async (e) => {
+        e.preventDefault();
+        setValue({...value,
+            [e.target.id]: e.target.value,
+        });
+    }
+
+    const handleCancel = async (e) => {
+        e.preventDefault();
+        props.setShowAddForm(false);
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        searchUsers(value)
+        .then((response) => {
+            setUsers(response);
+        }).catch((error) => {
+            console.log(error);
+        });       
+    }
+    
+    return (
+        <Card border="dark">
+            <Card.Body>
+                {users && <UserList users={users} />}
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group mb-3">
+                        <label htmlFor="username"><h5><strong>USERNAME</strong></h5></label>
+                        <input type="text" className="form-control" id="username" onChange={handleChange} value={ value.username } />
+                    </div>
+                    <div className="form-group d-flex justify-content-end">
+                        <Button className="me-1" variant="primary" style={{ width: "100px" }}
+                        type="submit" >검색</Button>
+                        <Button className="ms-1" variant="danger" style={{ width: "100px" }}
+                        onClick={handleCancel} >취소</Button>
+                    </div>
+                </form>
+            </Card.Body>
+        </Card>        
+    );    
+    
+}
+
+const AddForm = (props) => {
     const [value, setValue] = useState("");
+
 
     const handleValue = async (e) => {
         e.preventDefault();
@@ -33,12 +103,12 @@ const StaffAddForm = (props) => {
             <Card.Body>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group mb-3">
-                        <label htmlFor="title"><h5><strong>ID</strong></h5></label>
-                        <input type="text" className="form-control" id="id" onChange={handleValue} value={ value } />
+                        <label htmlFor="title"><h5><strong>USERNAME</strong></h5></label>
+                        <input type="text" className="form-control" id="username" onChange={handleValue} value={ value } />
                     </div>
                     <div className="form-group d-flex justify-content-end">
-                        <Button className="me-1" variant="dark" style={{ width: "100px" }}
-                        type="submit" >추가</Button>
+                        <Button className="me-1" variant="primary" style={{ width: "100px" }}
+                        type="submit" >검색</Button>
                         <Button className="ms-1" variant="danger" style={{ width: "100px" }}
                         onClick={handleCancel} >취소</Button>
                     </div>
@@ -126,7 +196,7 @@ function Staff() {
                         </div>
                     :
                         <div className="mt-4">
-                            <StaffAddForm setShowAddForm={setShowAddForm} />
+                            <SearchForm setShowAddForm={setShowAddForm} />
                         </div>
                 }
             </Col>
