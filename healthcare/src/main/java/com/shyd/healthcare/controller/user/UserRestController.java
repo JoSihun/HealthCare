@@ -47,6 +47,12 @@ public class UserRestController {
         return this.userService.findAll();
     }
 
+    /** 회원정보 검색조회 API */
+    @GetMapping("/api/v1/user/search")
+    public List<UserResponseDto> findAllByUsername(@RequestParam(value = "username") String username) {
+        return this.userService.findAllByUsername(username);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 회원가입 API */
     @PostMapping("/api/v1/user")
