@@ -11,9 +11,6 @@ import Staff from "./pages/introduce/Staff";
 import Facility from "./pages/introduce/Facility";
 import Direction from "./pages/introduce/Direction";
 
-import Login from "./pages/users/Login";
-import MyPage from "./pages/users/MyPage";
-
 import FAQBoard from "./pages/support/FAQBoard";
 import QNABoard from "./pages/support/QNABoard";
 import QNABoardPost from './pages/support/QNABoardPost';
@@ -32,8 +29,10 @@ import LiveChatList from "./pages/support/LiveChatList";
 import LiveChatRoom from "./pages/support/LiveChatRoom";
 import LiveChatListAdmin from "./pages/support/LiveChatListAdmin";
 import LiveChatRoomAdmin from "./pages/support/LiveChatRoomAdmin";
+
 import SignIn from './pages/users/SignIn';
 import SignUp from './pages/users/SignUp';
+import MyPage from "./pages/users/MyPage";
 
 function App() {
   return (
@@ -67,9 +66,7 @@ function App() {
                   <Route path="/support/livechat/room" element={<LiveChatRoom />}></Route>
                   <Route path="/support/livechat/list/admin" element={<LiveChatListAdmin />}></Route>
                   <Route path="/support/livechat/room/admin" element={<LiveChatRoomAdmin />}></Route>
-
                   
-                  <Route path="/login" element={<Login />}></Route>
                   <Route path="/signup" element={<SignUp />}></Route>
                   <Route path="/signin" element={<SignIn />}></Route>
                   <Route path="/my-page" element={<MyPage />}></Route>
