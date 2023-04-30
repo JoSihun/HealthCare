@@ -29,6 +29,11 @@ public class StaffController {
         return this.staffService.save(userId, requestDto);
     }
 
+    @DeleteMapping("/v1/staff/{id}")
+    public Long deleteStaff(@PathVariable Long id) {
+        return this.staffService.delete(id);
+    }
+
 //    @PostMapping("/v1/staff")
 //    public Long createStaff(@RequestParam(value = "userId") Long userId,
 //                            @RequestBody StaffSaveRequestDto requestDto) {
