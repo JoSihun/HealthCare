@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
-export default function ChartComponent({ data }) {
-    data = data.slice(0, 10);
+export default function ChartComponent({ data, size }) {
+    data = data.slice(0, size);
     const chartRef = useRef(null);
 
     useEffect(() => {

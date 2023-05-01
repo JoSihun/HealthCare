@@ -12,9 +12,16 @@ export const BMIApi = axios.create({
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-/** 유저 BMI 목록조회 */
-export const fetchBMI = async () => {
-    const response = await BMIApi.get(`/api/v1/bmi`);
+/** 유저 BMI 목록조회 - List */
+export const fetchBMIList = async () => {
+    const response = await BMIApi.get(`/api/v1/bmi/list`);
+    return response.data;
+}
+
+/** 유저 BMI 목록조회 - Page */
+export const fetchBMIPage = async (pageNums, pageSize) => {
+    const queryString = `page=${pageNums - 1}&size=${pageSize}`;
+    const response = await BMIApi.get(`/api/v1/bmi/page?${queryString}`);
     return response.data;
 }
 

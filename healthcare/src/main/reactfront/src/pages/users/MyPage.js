@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
-import { Container, Card, Col, Row, Table} from "react-bootstrap";
+import { Container, Card, Col, Row, Table, Image, Button} from "react-bootstrap";
 import { fetchUser } from '../../api/UserAPI';
-import { fetchBMI } from '../../api/BMIApi';
+import { fetchBMIList } from '../../api/BMIApi';
 
 import bg_black from '../../assets/images/bg_black.jpg'
 import ChartComponent from '../../components/user/ChartComponent';
@@ -20,39 +20,65 @@ const UserComponent = (props) => {
     }, []);
 
     return (
-        <Card style={{ minHeight: "100%" }}>
-            <Card.Body>
-                <Row>
-                    <Col className="col-md-2">
-                        <img
-                            className="rounded-circle"
-                            src={bg_black}
-                            width="100"
-                            height="100"
-                            alt="profile"
-                        />
-                    </Col>
-                    <Col className="col-md-5">
-                        <div>이름: {user.username}</div>
-                        <div>email: {user.email}</div>
-                        <div>Contact: {user.contact}</div>
-                    </Col>
-                    <Col className="col-md-5">
-                        <div>생년월일: 2000.01.01</div>
-                        <div>신장/체중: 180cm / 75kg</div>
-                        <div><h3><b><u>프로필 인적사항 미확정</u></b></h3></div>
-                    </Col>
-                </Row>
-                <hr/>
-                <Card.Title>This is Card Title (Purpose & Goal or Something)</Card.Title>
-                <Card.Text>
-                    This is Card Text (Like Target BMI)<br/>
-                    This is Card Text (Like Target Weight)<br/>
-                    This is Card Text (Like Target Fat Mass)<br/>
-                    This is Card Text (Like Target Muscle Mass)<br/>
-                </Card.Text>
-            </Card.Body>
-        </Card>
+        <Container fluid className='h-100 m-0 p-0'>
+            <Row className='justify-content-center'>
+                <Col className='col-md-12'>
+                    <Card className='mb-3'>
+                        <Card.Body>
+                            <Card.Title><h2><strong>사용자 정보</strong></h2></Card.Title>
+                            <hr/>
+                            <div className='d-flex justify-content-start'>
+                                <div className='text-center mx-2'>
+                                    <div className='mb-2'>
+                                        <Image src={bg_black} width="150" height="150" roundedCircle />
+                                    </div>
+                                    <div className='mt-2'>
+                                        <Button variant='dark'>프로필 이미지 변경</Button>
+                                    </div>
+                                </div>
+
+                                <div className='text-end ms-4 me-1'>
+                                    <div><strong>이름:</strong></div>
+                                    <div><strong>email:</strong></div>
+                                    <div><strong>Contact:</strong></div>
+                                </div>
+                                
+                                <div className='text-start mx-1'>
+                                    <div>{user.username}</div>
+                                    <div>{user.email}</div>
+                                    <div>{user.contact}</div>
+                                </div>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+
+            <Row className='h-50 justify-content-center'>
+                <Col className='col-md-12'>
+                    <Card className='h-100 mb-3'>
+                        <Card.Body>
+                            <Card.Title><h4><strong>유저관련정보1</strong></h4></Card.Title>
+                            <hr/>
+                            <div className='d-flex justify-content-start'>
+                                <div className='text-end mx-1'>
+                                    <div><strong>성별/나이/신장:</strong></div>
+                                    <div><strong>ColumnName:</strong></div>
+                                    <div><strong>ColumnName:</strong></div>
+                                </div>
+
+                                <div className='text-start mx-1'>
+                                    <div>남 / 32세 / / 180cm</div>
+                                    <div>Value</div>
+                                    <div>Value</div>
+                                </div>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
+
     );
 }
 
@@ -60,7 +86,7 @@ const BMIComponent = (props) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetchBMI()
+        fetchBMIList()
         .then((response) => {
             setData(response);
         }).catch((error) => {
@@ -74,7 +100,7 @@ const BMIComponent = (props) => {
                 <Card.Title><h4><strong>Inbody BMI(체성분)</strong></h4></Card.Title>
                 <hr/>
     
-                <ChartComponent data={data} />
+                <ChartComponent data={data} size={10} />
                 <hr/>
 
                 <Table striped bordered hover size='sm'>
@@ -113,7 +139,7 @@ const BMIComponent = (props) => {
                 </Table>
 
                 <div className='d-flex justify-content-end me-3'>
-                    <Link to={`/`} style={{ color: "black", textDecoration: "underline" }}>더보기</Link>
+                    <Link to={`/my-page/bmi`} style={{ color: "black", textDecoration: "underline" }}>더보기</Link>
                 </div>
             </Card.Body>
         </Card>
