@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Entity
@@ -32,10 +33,7 @@ public class Food extends BaseTime {
     private Double transFattyAcids;     // 트랜스지방산
     private Integer buildYear;          // 구축년도
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Diet diet;
-
-    public void update(FoodRequestDto requestDto) {
+    public Long update(FoodRequestDto requestDto) {
         this.fats = requestDto.getFats();                               // 지방
         this.name = requestDto.getName();                               // 음식명
         this.weight = requestDto.getWeight();                           // 중량
@@ -48,5 +46,6 @@ public class Food extends BaseTime {
         this.transFattyAcids = requestDto.getTransFattyAcids();         // 트랜스지방산
         this.saturatedFattyAcids = requestDto.getTransFattyAcids();     // 포화지방산
         this.buildYear = requestDto.getBuildYear();                     // 구축년도
+        return this.id;
     }
 }
