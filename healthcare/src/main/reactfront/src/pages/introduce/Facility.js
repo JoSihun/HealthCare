@@ -1,6 +1,5 @@
 import bg_black from '../../assets/images/bg_black.jpg'
 import '../../styles/Facility.css'
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Row, Col, Container } from "react-bootstrap";
 import SideBar from "../../components/introduce/SideBar";
@@ -139,17 +138,17 @@ const FacilityItem = (props) => {
                 <div><h2>{facility.sectorName}</h2></div>
                 <hr/>
                 <div>{facility.sectorInfo}</div>
-                        {showEditForm
-                        ?
-                            <FacilityEditForm facility={facility} setShowEditForm={setShowEditForm} />
-                        :
-                            <div className="d-flex justify-content-end">
-                                <Button className="me-1" variant="primary" style={{ width: "100px" }}
-                                onClick={(e) => { setShowEditForm(!showEditForm) }}>수정</Button>
-                                <Button className="me-1" variant="danger" style={{ width: "100px" }}
-                                onClick={(e) => { handleDelete(facility.id, e) }}>삭제</Button>
-                            </div>
-                        }
+                    {showEditForm
+                    ?
+                        <FacilityEditForm facility={facility} setShowEditForm={setShowEditForm} />
+                    :
+                        <div className="d-flex justify-content-end">
+                            <Button className="me-1" variant="primary" style={{ width: "100px" }}
+                            onClick={(e) => { setShowEditForm(!showEditForm) }}>수정</Button>
+                            <Button className="me-1" variant="danger" style={{ width: "100px" }}
+                            onClick={(e) => { handleDelete(facility.id, e) }}>삭제</Button>
+                        </div>
+                    }
                 </div>
         </div>
     );
