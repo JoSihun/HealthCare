@@ -9,9 +9,13 @@ import com.shyd.healthcare.repository.management.BMIRepository;
 import com.shyd.healthcare.repository.user.UserRepository;
 import com.shyd.healthcare.config.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -28,6 +32,25 @@ public class BMIService {
         return new BMIResponseDto(entity);
     }
 
+    /** BMI 데이터 목록조회 - List */
+    @Transactional
+    public List<BMIResponseDto> findAllByUserId(Long id) {
+        User user = this.userRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. user_id = " + id));
+        return user.getBmis().stream().map(BMIResponseDto::new).collect(Collectors.toList());
+    }
+
+    /** BMI 데이터 목록조회 - Page */
+    @Transactional
+    public Page<BMIResponseDto> findAllByAccessToken(String accessToken, Pageable pageable) {
+        Long id = this.jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
+        User user = this.userRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. user_id = " + id));
+        Page<BMI> bmis = this.bmiRepository.findAllByUser(user, pageable);
+        return bmis.map(BMIResponseDto::new);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** BMI 데이터 생성 */
     @Transactional
     public Long save(String token, final BMISaveRequestDto requestDto) {

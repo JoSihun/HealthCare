@@ -2,6 +2,8 @@ package com.shyd.healthcare.domain.user;
 
 import com.shyd.healthcare.domain.BaseTime;
 import com.shyd.healthcare.domain.introduce.Staff;
+import com.shyd.healthcare.domain.management.BMI;
+import com.shyd.healthcare.domain.management.Diet;
 import com.shyd.healthcare.domain.support.board.Comment;
 import com.shyd.healthcare.domain.support.board.Post;
 import com.shyd.healthcare.dto.user.UserRequestDto;
@@ -38,6 +40,10 @@ public class User extends BaseTime {
     private List<Post> posts;
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<BMI> bmis;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Diet> diets;
 
     @Builder
     public User(String email, String contact, String username, String password, Role role) {
