@@ -1,7 +1,7 @@
 import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchBMIPage } from "../../api/BMIApi";
+import { fetchBMIPage } from "../../api/BMIAPI";
 import Paging from "../../components/support/Paging";
 import ChartComponent from "../../components/user/ChartComponent";
 
