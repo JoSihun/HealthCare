@@ -16,13 +16,19 @@ public class DietRestController {
     @PostMapping("/api/v1/diet")
     public Long createDiet(@RequestHeader("Authorization") String accessToken,
                            @RequestBody DietRequestDto requestDto) {
-        Long id = this.jwtTokenProvider.getUserIdFromToken(accessToken);
-        return this.dietService.create(id, requestDto);
+        return this.dietService.create(accessToken, requestDto);
+    }
+
+    /** 식단 수정 API */
+    @PutMapping("/api/v1/diet/{id}")
+    public Long updateDiet(@PathVariable Long id,
+                           @RequestBody DietRequestDto requestDto) {
+        return this.dietService.update(id, requestDto);
     }
 
     /** 식단 삭제 API */
-    @DeleteMapping("/api/v1/diet")
-    public void createDiet(@RequestParam Long id) {
+    @DeleteMapping("/api/v1/diet/{id}")
+    public void deleteDiet(@PathVariable Long id) {
         this.dietService.delete(id);
     }
 }
