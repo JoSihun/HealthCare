@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
 import { Container, Card, Col, Row, Table, Image, Button} from "react-bootstrap";
 import { fetchUser } from '../../api/UserAPI';
-import { fetchBMIList } from '../../api/BMIApi';
+import { fetchBMIList } from '../../api/BMIAPI';
 
 import bg_black from '../../assets/images/bg_black.jpg'
 import ChartComponent from '../../components/user/ChartComponent';
@@ -88,7 +88,7 @@ const BMIComponent = (props) => {
     useEffect(() => {
         fetchBMIList()
         .then((response) => {
-            setData(response);
+            setData(response);              
         }).catch((error) => {
             console.log(error);
         });
