@@ -24,11 +24,9 @@ public class FoodRequestDto {
     private Double saturatedFattyAcids;	// 포화지방산
     private Double transFattyAcids;     // 트랜스지방산
     private Integer buildYear;          // 구축년도
-    private Diet diet;
 
     public Food toEntity() {
         return Food.builder()
-                .diet(this.diet)
                 .fats(this.fats)                                // 지방
                 .name(this.name)                                // 음식명
                 .buildYear(this.buildYear)                      // 구축년도

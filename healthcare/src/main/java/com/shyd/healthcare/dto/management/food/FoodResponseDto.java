@@ -24,6 +24,7 @@ public class FoodResponseDto {
 
     @Builder
     public FoodResponseDto(Food entity) {
+        this.id = entity.getId();
         this.buildYear = entity.getBuildYear();                         // 구축년도
         this.fats = entity.getFats();                                   // 지방
         this.name = entity.getName();                                   // 음식명

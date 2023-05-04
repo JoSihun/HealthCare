@@ -1,12 +1,9 @@
 package com.shyd.healthcare.dto.management.diet;
 
 import com.shyd.healthcare.domain.management.Diet;
-import com.shyd.healthcare.domain.management.Food;
+import com.shyd.healthcare.domain.management.DietFood;
 import com.shyd.healthcare.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -15,11 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DietRequestDto {
-    private User user;
-
-    public Diet toEntity() {
-        return Diet.builder()
-                .user(this.user)
-                .build();
-    }
+    private String title;
+    private Double totalCalories;
+    private Double basalMetabolicRate;
+    private Double recommendedCaloriesIntake;
+    private List<Long> foodIds;
 }
