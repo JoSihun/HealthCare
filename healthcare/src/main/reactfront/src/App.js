@@ -33,6 +33,8 @@ import LiveChatRoomAdmin from "./pages/support/LiveChatRoomAdmin";
 import SignIn from './pages/users/SignIn';
 import SignUp from './pages/users/SignUp';
 import MyPage from "./pages/users/MyPage";
+import BMI from './pages/users/BMI';
+import Diet from './pages/users/Diet';
 
 function App() {
   return (
@@ -66,10 +68,15 @@ function App() {
                   <Route path="/support/livechat/room" element={<LiveChatRoom />}></Route>
                   <Route path="/support/livechat/list/admin" element={<LiveChatListAdmin />}></Route>
                   <Route path="/support/livechat/room/admin" element={<LiveChatRoomAdmin />}></Route>
-                  
+
+                  <Route path="/my-page" element={<MyPage />}></Route>
+                  <Route path="/my-page/bmi" element={<BMI />}></Route>
+                  <Route path="/my-page/diet" element={<Diet />}></Route>
+                  <Route path="/my-page/routine" element={<MyPage />}></Route>
+
                   <Route path="/signup" element={<SignUp />}></Route>
                   <Route path="/signin" element={<SignIn />}></Route>
-                  <Route path="/my-page" element={<MyPage />}></Route>
+
 
                   <Route path="*" element={<NotFound />}></Route>
               </Routes>
