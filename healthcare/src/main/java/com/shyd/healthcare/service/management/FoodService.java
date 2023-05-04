@@ -1,17 +1,18 @@
 package com.shyd.healthcare.service.management;
 
+import com.shyd.healthcare.config.JwtTokenProvider;
 import com.shyd.healthcare.domain.management.BMI;
 import com.shyd.healthcare.domain.management.Food;
 import com.shyd.healthcare.dto.management.food.FoodRequestDto;
 import com.shyd.healthcare.dto.management.food.FoodResponseDto;
 import com.shyd.healthcare.repository.management.BMIRepository;
 import com.shyd.healthcare.repository.management.FoodRepository;
+import com.shyd.healthcare.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,28 +45,30 @@ public class FoodService {
     # 보건복지부 01_pdf 참고
     https://www.mohw.go.kr/react/jb/sjb030301vw.jsp?PAR_MENU_ID=03&MENU_ID=032901&CONT_SEQ=362385
      */
+
     /** 메뉴 추천 알고리즘 */
     @Transactional
-    public List<FoodResponseDto> recommend(Integer basalMetabolicRate, Integer count) {
-        // SET THE RECOMMENDED DAILY INTAKE FOR CALORIES
-        Double minCaloIntake = Math.ceil(basalMetabolicRate * 1.55 - 200) / 3 / 3;
-        Double maxCaloIntake = Math.ceil(basalMetabolicRate * 1.55 + 200) / 3 / 3;
+    public List<FoodResponseDto> recommendByBmi(Long bmiId, Integer count) {
+        // GET BMI DATA TO DETERMINE CALORIES INTAKE CRITERIA
+        BMI bmi = this.bmiRepository.findById(bmiId).orElseThrow(
+                () -> new IllegalArgumentException("해당 BMI 데이터가 존재하지 않습니다. bmi_id = " + bmiId));
 
-        // FETCH AND FILTER THE LIST OF DIET OBJECTS BY CRITERIA
-        List<Food> foods = this.foodRepository.findAll();
-        List<Food> filteredFoods = foods.stream()
-                .filter(diet -> !diet.getName().contains("과자"))
-                .filter(diet -> minCaloIntake <= diet.getCalories() && diet.getCalories() <= maxCaloIntake)
+        // SET MIN-MAX CALORIES INTAKE CRITERIA FOR EACH MEAL IN A DAY
+        Double caloriesIntake = bmi.getBasalMetabolicRate().doubleValue() * 1.55;
+        Double minCaloriesIntake = (caloriesIntake - 200) / 3 / 3;
+        Double maxCaloriesIntake = (caloriesIntake + 200) / 3 / 3;
+
+        // GET FOOD LIST THAT MEET CALORIES INTAKE CRITERIA
+        // THEN, FILTER AND SORT BY DESCENDING ORDER OF CALORIES, SHUFFLE IF YOU WANT TO
+        Sort sort = Sort.by(Sort.Direction.DESC, "calories");
+        List<Food> foods = this.foodRepository.findAllByCaloriesBetween(minCaloriesIntake, maxCaloriesIntake, sort)
+                .stream().filter(food -> !food.getName().contains("과자"))
                 .collect(Collectors.toList());
+        // Collections.shuffle(foods);
 
-        // SORT AND SHUFFLE THE FILTERED LIST BY DESCENDING ORDER OF CALORIES
-        filteredFoods.sort(Comparator.comparing(Food::getCalories).reversed());
-        Collections.shuffle(filteredFoods);
-
-        // RETURN TOP COUNT DIETS RESPONSE DTO THAT MEET ALL CRITERIA
-        return filteredFoods.stream().limit(count).map(FoodResponseDto::new).collect(Collectors.toList());
+        // RETURN TOP {COUNT} FOODS RESPONSE DTO THAT MEET ALL CRITERIA
+        return foods.stream().limit(count).map(FoodResponseDto::new).collect(Collectors.toList());
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 메뉴 데이터 조회 */
@@ -95,15 +98,13 @@ public class FoodService {
     public Long update(Long id, FoodRequestDto requestDto) {
         Food food = this.foodRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 메뉴이 존재하지 않습니다. diet_id = " + id));
-        food.update(requestDto);
-        return food.getId();
+        return food.update(requestDto);
     }
 
     /** 메뉴 데이터 삭제 */
     @Transactional
     public void delete(Long id) {
-        Food food = this.foodRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 메뉴이 존재하지 않습니다. diet_id = " + id));
-        this.foodRepository.delete(food);
+        this.foodRepository.delete(this.foodRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 메뉴가 존재하지 않습니다. diet_id = " + id)));
     }
 }
