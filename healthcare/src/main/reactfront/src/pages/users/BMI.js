@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchBMIPage } from "../../api/BMIAPI";
 import Paging from "../../components/support/Paging";
 import ChartComponent from "../../components/user/ChartComponent";
+import { MyPageSideBar } from "../../components/SideBar";
 
 // 추후 필요하면 주석해제해서 사용
 // const CreateForm = (props) => {
@@ -182,10 +183,7 @@ export default function BMI() {
         <Container fluid>
             <Row className="justify-content-center my-3">
                 <Col className="col-md-2">
-                    <div className="h-100 border border-dark">
-                        <h2><strong>Temp Side Menu</strong></h2>
-                        <hr/>
-                    </div>
+                    <MyPageSideBar />
                 </Col>
                 <Col className="col-md-10">
                     <BMIComponent />
