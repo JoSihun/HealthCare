@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Nav } from "react-bootstrap";
+import { Card, Nav, Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 
@@ -29,11 +29,22 @@ const BaseSideBar = ({ title, items }) => {
                             eventKey={item.eventKey}
                             onSelect={handleSelect}
                             active={selectedKey === item.eventKey}
-                            className={selectedKey === item.eventKey ? "text-light bg-dark rounded" : "text-dark"}
+                            className={selectedKey === item.eventKey ? "text-light bg-dark rounded" : "text-dark p-1"}
                             >
-                                <h4>
-                                    <strong>{item.label}</strong>
-                                </h4>
+                                <div className="fs-4 fw-bold"
+                                onMouseEnter={(e) => { 
+                                    if (selectedKey !== item.eventKey) {
+                                        e.target.className = "fs-4 fw-bold text-light bg-dark rounded px-2";
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (selectedKey !== item.eventKey) {
+                                        e.target.className = "fs-4 fw-bold text-dark";
+                                    }
+                                }}
+                                >
+                                    {item.label}
+                                </div>
                             </Nav.Link>
                         </Nav.Item>
                     ))}
@@ -57,3 +68,14 @@ export const MyPageSideBar = (props) => {
 }
 
 
+export const SupportSideBar = (props) => {
+    const items = [
+        { eventKey: 1, href: '/support/faqboard', label: 'FAQ'},
+        { eventKey: 1, href: '/support/faqboard', label: 'FAQ'},
+        { eventKey: 2, href: '/support/qnaboard', label: 'Q&A'},
+        { eventKey: 3, href: '/support/freeboard', label: '자유게시판'},
+        { eventKey: 4, href: '/support/livechat', label: 'LiveChat'},
+    ];
+
+    return <BaseSideBar title="Support" items={items} />;
+}
