@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Container, Row } from "react-bootstrap";
-import SideBar from "../../components/support/SideBar";
 import { createPostV1, deletePostV1, fetchPageV1, updatePostV1 } from "../../api/PostAPI";
 import { SupportSideBar } from "../../components/SideBar";
 

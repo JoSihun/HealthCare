@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 import Paging from "../../components/support/Paging";
-import SideBar from "../../components/support/SideBar";
 import { fetchPageV1 } from "../../api/PostAPI";
 import { SupportSideBar } from "../../components/SideBar";
 

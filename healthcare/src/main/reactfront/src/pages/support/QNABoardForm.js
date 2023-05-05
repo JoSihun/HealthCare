@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import SideBar from "../../components/support/SideBar";
 import { createPostV2 } from "../../api/PostAPI";
 import { SupportSideBar } from "../../components/SideBar";
 

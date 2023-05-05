@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Badge, Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import SideBar from "../../components/support/SideBar";
 import { deleteChatRoom, fetchChatRooms } from "../../api/LiveChatAPI";
 import { SupportSideBar } from "../../components/SideBar";
 

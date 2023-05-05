@@ -3,7 +3,6 @@ import { Stomp } from "@stomp/stompjs";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
-import SideBar from "../../components/support/SideBar";
 import bg_black from "../../assets/images/bg_black.jpg";
 import { fetchChatMessages, fetchChatRoom } from "../../api/LiveChatAPI";
 import { SupportSideBar } from "../../components/SideBar";

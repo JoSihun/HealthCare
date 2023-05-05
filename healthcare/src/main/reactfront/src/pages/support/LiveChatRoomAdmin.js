@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
-import SideBar from "../../components/support/SideBar";
 import bg_black from "../../assets/images/bg_black.jpg";
 import * as SockJS from "sockjs-client";
 import * as StompJS from "@stomp/stompjs";

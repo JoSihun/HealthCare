@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
-import SideBar from "../../components/support/SideBar";
 import Comment from "../../components/support/Comment";
 import { deletePostV1, fetchPostV1 } from "../../api/PostAPI";
 import { deleteFilesV1, downloadFile, fetchFilesV1 } from "../../api/AttachAPI";
