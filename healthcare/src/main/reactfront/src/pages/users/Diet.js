@@ -4,6 +4,7 @@ import { createDiet, deleteDiet, fetchDiets, fetchRecommendFoods } from "../../a
 import { useSearchParams } from "react-router-dom";
 import { fetchBMI, fetchBMIList } from "../../api/BMIAPI";
 import Paging from "../../components/support/Paging";
+import { MyPageSideBar } from "../../components/SideBar";
 
 // const FoodList = (props) => {
 //     const { foods } = props;
@@ -552,10 +553,7 @@ export default function Diet() {
         <Container fluid>
             <Row className="justify-content-center my-3">
                 <Col className="col-md-2">
-                    <div className="h-100 border border-dark">
-                        <h2><strong>Temp Side Menu</strong></h2>
-                        <hr/>
-                    </div>
+                    <MyPageSideBar />
                 </Col>
                 <Col className="col-md-10">
                     <DietList editData={editData} setEditData={setEditData}
