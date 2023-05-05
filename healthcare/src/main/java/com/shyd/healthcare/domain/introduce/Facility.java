@@ -2,36 +2,33 @@ package com.shyd.healthcare.domain.introduce;
 
 import com.shyd.healthcare.domain.BaseTime;
 import com.shyd.healthcare.dto.introduce.facility.FacilityUpdateRequestDto;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @Getter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Facility extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sectorName;
+    private String name;
     @Column(columnDefinition = "LONGTEXT")
-    private String sectorInfo;
-    private String sectorImg;
+    private String info;
 
-    @Builder
-    public Facility(String sectorName, String sectorInfo, String sectorImg) {
-        this.sectorName = sectorName;
-        this.sectorInfo = sectorInfo;
-        this.sectorImg = sectorImg;
-    }
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Image image;
 
     public Long update(FacilityUpdateRequestDto requestDto) {
-        this.sectorName = requestDto.getSectorName();
-        this.sectorInfo = requestDto.getSectorInfo();
-        this.sectorImg = requestDto.getSectorImg();
+        this.name = requestDto.getName();
+        this.info = requestDto.getInfo();
         return this.id;
     }
 }

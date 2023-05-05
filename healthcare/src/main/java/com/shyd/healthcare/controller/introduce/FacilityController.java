@@ -4,6 +4,7 @@ import com.shyd.healthcare.dto.introduce.facility.FacilityResponseDto;
 import com.shyd.healthcare.dto.introduce.facility.FacilitySaveRequestDto;
 import com.shyd.healthcare.dto.introduce.facility.FacilityUpdateRequestDto;
 import com.shyd.healthcare.service.introduce.FacilityService;
+import com.shyd.healthcare.service.introduce.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class FacilityController {
+    private final ImageService imageService;
     private final FacilityService facilitiyService;
 
     /** Facility 오름차순 조회 */
@@ -23,8 +25,9 @@ public class FacilityController {
 
     /** Facility 삽입 API */
     @PostMapping("/v1/facility")
-    public Long saveFacility(@RequestBody FacilitySaveRequestDto requestDto) {
-        return this.facilitiyService.save(requestDto);
+    public Long saveFacility(@RequestParam(value = "imageId") Long imageId,
+                             @RequestBody FacilitySaveRequestDto requestDto) {
+        return this.facilitiyService.create(imageId, requestDto);
     }
 
     /** Facility 수정 API */
@@ -36,7 +39,7 @@ public class FacilityController {
 
     /** Facility 삭제 API */
     @DeleteMapping("/v1/facility/{id}")
-    public Long deleteFacility(@PathVariable Long id) {
-        return this.facilitiyService.delete(id);
+    public void deleteFacility(@PathVariable Long id) {
+        this.facilitiyService.delete(id);
     }
 }

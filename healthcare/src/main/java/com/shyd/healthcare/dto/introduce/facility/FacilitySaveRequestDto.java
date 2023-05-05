@@ -1,29 +1,24 @@
 package com.shyd.healthcare.dto.introduce.facility;
 
 import com.shyd.healthcare.domain.introduce.Facility;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.shyd.healthcare.domain.introduce.Image;
+import lombok.*;
 
 @Getter
+@Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class FacilitySaveRequestDto {
-    private String sectorName;
-    private String sectorInfo;
-    private String sectorImg;
-
-    @Builder
-    public FacilitySaveRequestDto(String sectorName, String sectorInfo, String sectorImg){
-        this.sectorName = sectorName;
-        this.sectorInfo = sectorInfo;
-        this.sectorImg = sectorImg;
-    }
+    private String name;
+    private String info;
+    private Image image;
 
     public Facility toEntity() {
         return Facility.builder()
-                .sectorName(sectorName)
-                .sectorInfo(sectorInfo)
-                .sectorImg(sectorImg)
+                .name(this.name)
+                .info(this.info)
+                .image(this.image)
                 .build();
     }
 }

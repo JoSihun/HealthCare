@@ -8,22 +8,19 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class FacilityUpdateRequestDto {
-    private String sectorName;
-    private String sectorInfo;
-    private String sectorImg;
+    private String name;
+    private String info;
 
     @Builder
-    public FacilityUpdateRequestDto(String sectorName, String sectorInfo, String sectorImg) {
-        this.sectorName = sectorName;
-        this.sectorInfo = sectorInfo;
-        this.sectorImg = sectorImg;
+    public FacilityUpdateRequestDto(String name, String info) {
+        this.name = name;
+        this.info = info;
     }
 
     public Facility toEntity() {
         return Facility.builder()
-                .sectorName(sectorName)
-                .sectorInfo(sectorInfo)
-                .sectorImg(sectorImg)
+                .name(name)
+                .info(info)
                 .build();
     }
 }

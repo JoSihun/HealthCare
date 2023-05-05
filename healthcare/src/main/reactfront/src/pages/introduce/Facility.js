@@ -1,62 +1,9 @@
-import bg_black from '../../assets/images/bg_black.jpg'
 import '../../styles/Facility.css'
+import axios from 'axios';
 import React, { useEffect, useState } from "react";
 import { Button, Card, Row, Col, Container } from "react-bootstrap";
 import SideBar from "../../components/introduce/SideBar";
 import { createFacilityV1, deleteFacilityV1, fetchFacilitiesV1, updateFacilityV1 } from '../../api/Introduce/FacilityAPI';
-
-const FacilityAddForm = (props) => {
-    const [values, setValues] = useState({
-        sectorName: "",
-        sectorInfo: "",
-        secretYn: false,
-    });
-
-    const handleChange = async (e) => {
-        e.preventDefault();
-        setValues({...values,
-            [e.target.id]: e.target.value
-        });
-    }
-
-    const handleCancel = async (e) => {
-        e.preventDefault();
-        props.setShowAddForm(false);
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        createFacilityV1(values)
-        .then(() => {
-            window.location.reload();
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-
-    return (
-        <Card border="dark">
-            <Card.Body>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group mb-3">
-                        <label htmlFor="title"><h5><strong>시설 이름</strong></h5></label>
-                        <input type="text" className="form-control" id="sectorName" onChange={handleChange} value={ values.sectorName } />
-                    </div>
-                    <div className="form-group mb-3">
-                        <label htmlFor="content"><h5><strong>시설 설명</strong></h5></label>
-                        <textarea className="form-control" id="sectorInfo" rows={3} onChange={handleChange} value={ values.sectorInfo } />
-                    </div>
-                    <div className="form-group d-flex justify-content-end">
-                        <Button className="me-1" variant="dark" style={{ width: "100px" }}
-                        type="submit" >추가</Button>
-                        <Button className="ms-1" variant="danger" style={{ width: "100px" }}
-                        onClick={handleCancel} >취소</Button>
-                    </div>
-                </form>
-            </Card.Body>
-        </Card>
-    );
-}
 
 const FacilityEditForm = (props) => {
     const { facility } = props;
@@ -90,17 +37,89 @@ const FacilityEditForm = (props) => {
                 <form onSubmit={handleSubmit}>
                     <div className="form-group mb-3">
                         <label htmlFor="title"><h5><strong>시설 이름</strong></h5></label>
-                        <input type="text" className="form-control" id="sectorName" onChange={handleChange} value={ values.sectorName } />
+                        <input type="text" className="form-control" id="name" onChange={handleChange} value={ values.name } />
                     </div>
                     <div className="form-group mb-3">
                         <label htmlFor="content"><h5><strong>시설 설명</strong></h5></label>
-                        <textarea className="form-control" id="sectorInfo" rows={3} onChange={handleChange} value={ values.sectorInfo } />
+                        <textarea className="form-control" id="Info" rows={3} onChange={handleChange} value={ values.info } />
                     </div>
                     <div className="form-group d-flex justify-content-end">
                         <Button className="me-1" variant="primary" style={{ width: "100px" }}
                         type="submit" >수정</Button>
                         <Button className="me-1" variant="danger" style={{ width: "100px" }}
                         onClick={handleCancel} >취소</Button>
+                    </div>
+                </form>
+            </Card.Body>
+        </Card>
+    );
+}
+
+const FacilityAddForm = (props) => {
+    const [file, setFile] = useState(null);
+    const [values, setValues] = useState({
+        name: "",
+        info: "",
+        secretYn: false,
+    });
+
+    const handleChange = async (e) => {
+        e.preventDefault();
+        setValues({...values,
+            [e.target.id]: e.target.value
+        });
+    }
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+    
+    const handleCancel = async (e) => {
+        e.preventDefault();
+        props.setShowAddForm(false);
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        let imageId;
+        const formData = new FormData();
+        formData.append("file", file);
+        await axios.post(`/api/image`, formData)
+        .then((response) => {
+            imageId = response.data;
+        }).catch((error) => {
+            console.log(error);
+        });
+        
+        await createFacilityV1(imageId, values)
+        .then((response) => {
+            window.location.reload();
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+    
+    return (
+        <Card border="dark">
+            <Card.Body>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group mb-3">
+                        <label htmlFor="title"><h5><strong>시설 이름</strong></h5></label>
+                        <input type="text" className="form-control" id="name" onChange={handleChange} value={ values.name } />
+                    </div>
+                    <div className="form-group mb-3">
+                        <label htmlFor="content"><h5><strong>시설 설명</strong></h5></label>
+                        <textarea className="form-control" id="info" rows={3} onChange={handleChange} value={ values.info } />
+                    </div>
+                    <div className="form-group mb-3">
+                        <input className="form-control" type="file" name="file" onChange={handleFileChange} />
+                        <div className="form-text"><small>이미지 사이즈는 510*340로 맞춰서 올려주세요!</small></div>
+                    </div>
+                    <div className="form-group d-flex justify-content-end">
+                        <Button className="me-1" variant="dark" style={{ width: "7%" }} type="submit" >추가</Button>
+                        <Button className="ms-1" variant="danger" style={{ width: "7%" }} onClick={handleCancel} >취소</Button>
                     </div>
                 </form>
             </Card.Body>
@@ -127,17 +146,17 @@ const FacilityItem = (props) => {
             <div className="me-2">
                 <img
                     className="rounded"
-                    src={bg_black}
+                    // src={`/api/image/${facility.id}`}
+                    src={`data:image/jpeg;base64,${facility.image.data.toString("base64")}`}
+                    alt="profile"
                     width="100%"
                     height="100%"
-                    alt="profile"
-                    // style={{ maxWidth: "100", maxHeight: "100" }} https://www.youtube.com/watch?v=QvQsuAaUwxo 참고
                 />
             </div>
             <div className="flex-fill ms-2">
-                <div><h2>{facility.sectorName}</h2></div>
+                <div><h2>{facility.name}</h2></div>
                 <hr/>
-                <div>{facility.sectorInfo}</div>
+                <div>{facility.info}</div>
                     {showEditForm
                     ?
                         <FacilityEditForm facility={facility} setShowEditForm={setShowEditForm} />
@@ -154,9 +173,8 @@ const FacilityItem = (props) => {
     );
 }
 
-export default function Facility() {
+const FacilityList = (props) => {
     const [facilities, setFacilities] = useState([]);
-    const [showAddForm, setShowAddForm] = useState(false);
 
     useEffect(() => {
         fetchFacilitiesV1()
@@ -168,33 +186,41 @@ export default function Facility() {
     }, []);
 
     return (
+        <Card>
+            <Card.Body>
+                <Card.Title><h2><strong>Facility</strong></h2></Card.Title>
+                <hr/>
+                {facilities.map((facility, index) => (
+                    <FacilityItem key={index} facility={facility} />    
+                ))}                          
+            </Card.Body>
+        </Card>
+    );
+}
+
+export default function Facility() {
+    const [showAddForm, setShowAddForm] = useState(false);
+
+    return (
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
                     <SideBar />
                 </Col>
                 <Col className="col-md-9 mx-2 my-4">
-                    <Card>
-                        <Card.Body>
-                            <Card.Title><h2><strong>Facility</strong></h2></Card.Title>
-                            <hr/>
-                            {facilities.map((facility, index) => (
-                                <FacilityItem key={index} facility={facility} />    
-                            ))}                          
-                        </Card.Body>
-                    </Card>
+                    <FacilityList />
+                    {!showAddForm
+                        ?
+                            <div className="d-flex justify-content-end mt-3">
+                                <Button className="me-1" variant="dark" style={{ width: "100px" }}
+                                onClick={() => { setShowAddForm(!showAddForm) }}>추가</Button>
+                            </div>
+                        :
+                            <div className="mt-4">
+                                <FacilityAddForm setShowAddForm={setShowAddForm} />
+                            </div>
+                    }
                 </Col>
-                {!showAddForm
-                    ?
-                        <div className="d-flex justify-content-end mt-3">
-                            <Button className="me-1" variant="dark" style={{ width: "100px" }}
-                            onClick={() => { setShowAddForm(!showAddForm) }}>추가</Button>
-                        </div>
-                    :
-                        <div className="mt-4">
-                            <FacilityAddForm setShowAddForm={setShowAddForm} />
-                        </div>
-                }
             </Row>
         </Container>
     );

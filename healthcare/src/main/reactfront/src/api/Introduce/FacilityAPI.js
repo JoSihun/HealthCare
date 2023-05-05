@@ -19,8 +19,9 @@ export const fetchFacilitiesV1 = async () => {
 }
 
 /** 시설 삽입 V1 */
-export const createFacilityV1 = async (data) => {
-    const response = await FacilityAPI.post(`/api/v1/facility`, data);
+export const createFacilityV1 = async (imageId, data) => {
+    const queryString = `imageId=${imageId}`;
+    const response = await FacilityAPI.post(`/api/v1/facility?${queryString}`, data);
     return response.data;
 }
 
