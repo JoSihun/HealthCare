@@ -5,6 +5,7 @@ import "../../styles/FreeBoard.css";
 import Paging from "../../components/support/Paging";
 import SideBar from "../../components/support/SideBar";
 import { fetchPageV1 } from "../../api/PostAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const SelectSize = (props) => {
     const handleSelect = async (e) => {
@@ -128,7 +129,7 @@ export default function FreeBoard() {
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />    
+                    <SupportSideBar />    
                 </Col>
 
                 <Col className="col-md-9 mx-2 my-4">

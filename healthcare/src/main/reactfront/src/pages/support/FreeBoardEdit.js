@@ -4,6 +4,7 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
 import { fetchPostV1, updatePostV2 } from "../../api/PostAPI";
 import { fetchFilesV1 } from "../../api/AttachAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const FileList = (props) => {
     const [files, setFiles] = useState([]);
@@ -181,7 +182,7 @@ export default function FreeBoardEdit() {
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
+                    <SupportSideBar />
                 </Col>
 
                 <Col className="col-md-9 mx-2 my-4">

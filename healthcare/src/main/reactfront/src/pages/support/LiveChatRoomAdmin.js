@@ -6,6 +6,7 @@ import * as SockJS from "sockjs-client";
 import * as StompJS from "@stomp/stompjs";
 import { useSearchParams } from "react-router-dom";
 import { fetchChatMessages, fetchChatRoom } from "../../api/LiveChatAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const ChatMessageForm = (props) => {
     const { activeChatForm } = props;
@@ -199,7 +200,7 @@ export default function LiveChatRoomAdmin() {
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
+                    <SupportSideBar />
                 </Col>
 
                 <Col className="col-md-9 mx-2 my-4">

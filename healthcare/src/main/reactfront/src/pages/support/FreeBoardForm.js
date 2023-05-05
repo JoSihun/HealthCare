@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
 import { createPostV2 } from "../../api/PostAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const FileList = (props) => {
     const [files, setFiles] = useState([]);
@@ -156,7 +157,7 @@ export default function FreeBoardForm() {
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
+                    <SupportSideBar />
                 </Col>
 
                 <Col className="col-md-9 mx-2 my-4">

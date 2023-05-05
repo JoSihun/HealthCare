@@ -5,6 +5,7 @@ import SideBar from "../../components/support/SideBar";
 import Comment from "../../components/support/Comment";
 import { deletePostV1, fetchPostV1 } from "../../api/PostAPI";
 import { deleteFilesV1, downloadFile, fetchFilesV1 } from "../../api/AttachAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const FileList = (props) => {
     const handleDownload = async (e) => {
@@ -124,7 +125,7 @@ export default function FreeBoardPost() {
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />                
+                    <SupportSideBar />                
                 </Col>
 
                 <Col className="col-md-9 mx-2 my-4">

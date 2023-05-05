@@ -3,6 +3,7 @@ import { Badge, Button, Card, Col, Container, Modal, Row } from "react-bootstrap
 import { Link } from "react-router-dom";
 import SideBar from "../../components/support/SideBar";
 import { deleteChatRoom, fetchChatRooms } from "../../api/LiveChatAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const ModalCheck = (props) => {
     const { chatRoom, message } = props;
@@ -120,7 +121,7 @@ export default function LiveChatList(props) {
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
+                    <SupportSideBar />
                 </Col>
 
                 <Col className="col-md-9 mx-2 my-4">

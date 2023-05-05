@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import SideBar from "../../components/support/SideBar";
 import bg_black from "../../assets/images/bg_black.jpg";
 import { fetchChatMessages, fetchChatRoom } from "../../api/LiveChatAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const ChatMessageForm = (props) => {
     const { activeChatForm } = props;
@@ -188,7 +189,7 @@ export default function LiveChatRoom() {
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
+                    <SupportSideBar />
                 </Col>
 
                 <Col className="col-md-9 mx-2 my-4">

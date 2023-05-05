@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Container, Row } from "react-bootstrap";
 import SideBar from "../../components/support/SideBar";
 import { createPostV1, deletePostV1, fetchPageV1, updatePostV1 } from "../../api/PostAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const FAQAddForm = (props) => {
     const [values, setValues] = useState({
@@ -163,7 +164,7 @@ export default function FAQBoard() {
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
+                    <SupportSideBar />
                 </Col>
 
                 <Col className="col-md-9 mx-2 my-4">
