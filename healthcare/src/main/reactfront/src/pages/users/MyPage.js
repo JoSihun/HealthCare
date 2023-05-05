@@ -6,81 +6,65 @@ import { fetchBMIList } from '../../api/BMIAPI';
 
 import bg_black from '../../assets/images/bg_black.jpg'
 import ChartComponent from '../../components/user/ChartComponent';
+import { MyPageSideBar } from '../../components/SideBar';
+import { fetchDiets } from '../../api/DietAPI';
 
-const UserComponent = (props) => {
-    const [user, setUser] = useState({});
+
+const DietComponent = (props) => {
+    const [diets, setDiets] = useState([]);
 
     useEffect(() => {
-        fetchUser()
+        fetchDiets()
         .then((response) => {
-            setUser(response);
+            setDiets(response.content);
         }).catch((error) => {
             console.log(error);
         });
     }, []);
 
     return (
-        <Container fluid className='h-100 m-0 p-0'>
-            <Row className='justify-content-center'>
-                <Col className='col-md-12'>
-                    <Card className='mb-3'>
-                        <Card.Body>
-                            <Card.Title><h2><strong>사용자 정보</strong></h2></Card.Title>
-                            <hr/>
-                            <div className='d-flex justify-content-start'>
-                                <div className='text-center mx-2'>
-                                    <div className='mb-2'>
-                                        <Image src={bg_black} width="150" height="150" roundedCircle />
-                                    </div>
-                                    <div className='mt-2'>
-                                        <Button variant='dark'>프로필 이미지 변경</Button>
-                                    </div>
-                                </div>
+        <Card>
+            <Card.Body>
+                <Card.Title className='fs-4 fw-bold'>
+                    내 식단
+                </Card.Title>
+                <hr/>
+                
+                <Table bordered hover size='sm'>
+                    <thead>
+                        <tr>
+                            <th className='text-center' style={{ width: "2%"}}>#</th>
+                            <th className='text-start' style={{ width: "25%"}}>식단명</th>
+                            <th className='text-center' style={{ width: "5%"}}>식단칼로리</th>
+                            <th className='text-center' style={{ width: "5%"}}>권장섭취량</th>
+                            <th className='text-center' style={{ width: "5%"}}>기초대사량</th>
+                            <th className='text-center' style={{ width: "7%"}}>식단생성일자</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {diets.slice(0, 5).map((diet, index) => (
+                            <tr key={index}>
+                                <td className='text-center'>{index + 1}</td>
+                                <td className='text-start'>{diet.title}</td>
+                                <td className='text-end'>{diet.totalCalories.toFixed(2)} Kcal</td>
+                                <td className='text-end'>{diet.recommendedCaloriesIntake.toFixed(2)} Kcal</td>
+                                <td className='text-end'>{diet.basalMetabolicRate.toFixed(2)} Kcal</td>
+                                <td className='text-center'>{diet.createdDate}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
 
-                                <div className='text-end ms-4 me-1'>
-                                    <div><strong>이름:</strong></div>
-                                    <div><strong>email:</strong></div>
-                                    <div><strong>Contact:</strong></div>
-                                </div>
-                                
-                                <div className='text-start mx-1'>
-                                    <div>{user.username}</div>
-                                    <div>{user.email}</div>
-                                    <div>{user.contact}</div>
-                                </div>
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
+                <div className='d-flex justify-content-end me-3'>
+                    <Link to={`/my-page/diet`} style={{ color: "black", textDecoration: "underline" }}>더보기</Link>
+                </div>
 
-            <Row className='h-50 justify-content-center'>
-                <Col className='col-md-12'>
-                    <Card className='h-100 mb-3'>
-                        <Card.Body>
-                            <Card.Title><h4><strong>유저관련정보1</strong></h4></Card.Title>
-                            <hr/>
-                            <div className='d-flex justify-content-start'>
-                                <div className='text-end mx-1'>
-                                    <div><strong>성별/나이/신장:</strong></div>
-                                    <div><strong>ColumnName:</strong></div>
-                                    <div><strong>ColumnName:</strong></div>
-                                </div>
-
-                                <div className='text-start mx-1'>
-                                    <div>남 / 32세 / / 180cm</div>
-                                    <div>Value</div>
-                                    <div>Value</div>
-                                </div>
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
+            </Card.Body>
+        </Card>
 
     );
 }
+
 
 const BMIComponent = (props) => {
     const [data, setData] = useState([]);
@@ -95,9 +79,11 @@ const BMIComponent = (props) => {
     }, []);
 
     return (
-        <Card style={{ minHeight: "100%" }}>
+        <Card className='mb-3'>
             <Card.Body>
-                <Card.Title><h4><strong>Inbody BMI(체성분)</strong></h4></Card.Title>
+                <Card.Title className='fs-4 fw-bold'>
+                    Inbody Graph
+                </Card.Title>
                 <hr/>
     
                 <ChartComponent data={data} size={10} />
@@ -146,83 +132,134 @@ const BMIComponent = (props) => {
     );
 }
 
-const DietRecommend = (props) => {
+
+const UserInfoComponent = (props) => {
+    const [user, setUser] = useState({});
+    const [bmis, setBmis] = useState([]);
+
+    useEffect(() => {
+        fetchUser()
+        .then((response) => {
+            setUser(response);
+        }).catch((error) => {
+            console.log(error);
+        });
+
+        fetchBMIList()
+        .then((response) => {
+            setBmis(response);
+            setSelectedBmi(response[0]);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }, []);
+
+    const [selectedBmi, setSelectedBmi] = useState({});
+    const handleSelect = async (e) => {
+        setSelectedBmi(bmis.find((bmi) => bmi.id.toString() === e.target.value));
+    }
+
     return (
-        <Card style={{ minHeight: "100%" }}>
+        <Card className='mb-3'>
             <Card.Body>
-                <Card.Title><h4><strong>추천 식단</strong></h4></Card.Title>
+                <Card.Title className='fs-2 fw-bold'>
+                    사용자정보
+                </Card.Title>
                 <hr/>
 
-                <div>
-                    Diet Menu 1: This is Card Text<br/>
-                    Diet Menu 2: This is Card Text<br/>
-                    Diet Menu 3: This is Card Text<br/>
-                    Diet Menu 4: This is Card Text<br/>
-                    Diet Menu 5: This is Card Text<br/>
-                    Diet Menu 6: This is Card Text<br/>
-                    Diet Menu 7: This is Card Text<br/>
-                </div>
+                <div className='d-flex justify-content-around'>
+                    <Card style={{ width: "49%" }}>
+                        <Card.Body>
+                            <Card.Title className='fs-4 fw-bold'>
+                                기본정보
+                            </Card.Title>
+                            <hr/>
 
+                            <div className='d-flex justify-content-start'>
+                                <div className='text-center ms-2 me-4'>
+                                   <Image className='mb-2' src={bg_black} width="150" height="150" roundedCircle />
+                                   <Button className='d-block' onClick={() => {}} variant='dark'>프로필 이미지 변경</Button>                          
+                                </div>
+                                <div className='ms-4 me-2'>
+                                    <div><strong>이름: </strong>{user.username}</div>
+                                    <div><strong>Email: </strong>{user.email}</div>
+                                    <div><strong>연락처: </strong>{user.contact}</div>
+                                </div>
+                            </div>
+                        </Card.Body>
+                    </Card>
+
+                    <Card style={{ width: "49%" }}>
+                        <Card.Body>
+                            <Card.Title className='fs-4 fw-bold'>
+                                Inbody
+                            </Card.Title>
+                            <hr/>
+
+                            <select style={{ width: "100%" }} onChange={handleSelect} defaultValue={0}>
+                                {bmis.map((bmi, index) => (
+                                    <option value={bmi.id} key={index}>
+                                        {index + 1}: 측정일자 {bmi.createdDate} |
+                                        체질량지수(BMI): {bmi.bodyMassIndex.toFixed(2)}% |
+                                        기초대사량: {bmi.basalMetabolicRate}Kcal
+                                    </option>
+                                ))}
+                            </select>
+                            <Table bordered hover size='sm'>
+                                <tbody>
+                                    <tr>
+                                        <th>신장</th>
+                                        <td className='text-end'>{selectedBmi.height} cm&nbsp;&nbsp;</td>
+                                        <th>체중</th>
+                                        <td className='text-end'>{selectedBmi.weight} kg&nbsp;&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <th>체지방량</th>
+                                        <td className='text-end'>{selectedBmi.fatMass} kg&nbsp;&nbsp;</td>
+                                        <th>체지방율</th>
+                                        <td className='text-end'>{selectedBmi.fatRate} %&nbsp;&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <th>골격근량</th>
+                                        <td className='text-end'>{selectedBmi.musculoskeletalMass} kg&nbsp;&nbsp;</td>
+                                        <th>골격근율</th>
+                                        <td className='text-end'>{selectedBmi.musculoskeletalRate} %&nbsp;&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <th>체질량지수(BMI)</th>
+                                        <td className='text-end'>{selectedBmi.bodyMassIndex} %&nbsp;&nbsp;</td>
+                                        <th>체수분량</th>
+                                        <td className='text-end'>{selectedBmi.bodyWaterFraction} L&nbsp;&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <th>기초대사량</th>
+                                        <td className='text-end'>{selectedBmi.basalMetabolicRate} Kcal&nbsp;&nbsp;</td>
+                                        <th>측정일자</th>
+                                        <td className='text-end'>{selectedBmi.createdDate}&nbsp;&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                        </Card.Body>
+                    </Card>
+                </div>
             </Card.Body>
         </Card>
-
     );
 }
 
+
 export default function MyPage() {
+
     return (
         <Container fluid>
-            <Row className="justify-content-center my-3">
-                <Col className="col-md-4">
-                    <UserComponent />
+            <Row className='justify-content-center my-3'>
+                <Col className='col-xl-2'>
+                    <MyPageSideBar />
                 </Col>
-
-                <Col className="col-md-8">
+                <Col className='col-xl-10'>
+                    <UserInfoComponent />
                     <BMIComponent />
-                </Col>
-            </Row>
-
-            <Row className="justify-content-center my-3">
-                <Col className="col-md-6">
-                    <Card className="h-100">
-                        <Card.Body>
-                            <div className="d-flex justify-content-center">
-                                <img
-                                    className="rounded"
-                                    src={bg_black}
-                                    width="800"
-                                    height="400"
-                                    alt="undefined"
-                                />
-                            </div>
-                            <hr/>
-                            <Card.Title>This is Card Title (Calendar or Something)</Card.Title>
-                            <Card.Text>
-                                This is Card Text (Not Decided)<br/>
-                                This is Card Text (Not Decided)<br/>
-                                This is Card Text (Not Decided)<br/>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col className="col-md-3">
-                    <Card className="h-100">
-                        <Card.Body>
-                            <Card.Title>This is Card Title (Recommended Routine)</Card.Title><hr/>
-                            <Card.Text>
-                                Routine 1: This is Card Text<br/>
-                                Routine 2: This is Card Text<br/>
-                                Routine 3: This is Card Text<br/>
-                                Routine 4: This is Card Text<br/>
-                                Routine 5: This is Card Text<br/>
-                                Routine 6: This is Card Text<br/>
-                                Routine 7: This is Card Text<br/>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col className="col-md-3">
-                    <DietRecommend />
+                    <DietComponent />
                 </Col>
             </Row>
         </Container>
