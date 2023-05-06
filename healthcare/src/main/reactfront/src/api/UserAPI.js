@@ -17,22 +17,26 @@ export const UserApi = axios.create({
 // 토큰갱신함수
 const refreshAccessToken = async () => {
     const response = await UserApi.get(`/api/v1/auth/refresh`);
-    ACCESS_TOKEN = response.data;
-    localStorage.setItem('accessToken', ACCESS_TOKEN);
-    UserApi.defaults.headers.common['Authorization'] = `${TOKEN_TYPE} ${ACCESS_TOKEN}`;
+    if (response.data) {
+        ACCESS_TOKEN = response.data;
+        localStorage.setItem('accessToken', ACCESS_TOKEN);
+        UserApi.defaults.headers.common['Authorization'] = `${TOKEN_TYPE} ${ACCESS_TOKEN}`;
+    } else {
+        window.location.href= "/signin";
+    }
 }
 
 // 토큰갱신함수
-UserApi.interceptors.response.use((response) => {
-    return response;
-}, async (error) => {
-    const originalRequest = error.config;
-    if (error.response.status === 403 && !originalRequest._retry) {
-        await refreshAccessToken();
-        return UserApi(originalRequest);
+UserApi.interceptors.response.use((response) => response,
+    async (error) => {
+        if (error.response.status === 403 && !error.config._retry) {
+            await refreshAccessToken();
+            error.config.headers.Authorization = `${TOKEN_TYPE} ${ACCESS_TOKEN}`;
+            return UserApi(error.config);
+        }
+        return Promise.reject(error);
     }
-    return Promise.reject(error);
-});
+);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // 유저조회 API
