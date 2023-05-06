@@ -7,24 +7,36 @@ import com.shyd.healthcare.domain.management.Diet;
 import com.shyd.healthcare.domain.support.board.Comment;
 import com.shyd.healthcare.domain.support.board.Post;
 import com.shyd.healthcare.dto.user.UserRequestDto;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // PERSONAL INFO
+    @Column(length = 50, nullable = false)
+    private String name;
     @Column(length = 50)
     private String email;
     @Column(length = 50)
     private String contact;
+    @Column
+    private LocalDate birthday;
+
+    // ACCOUNT INFO
     @Column(length = 50, nullable = false, unique = true)
     private String username;
     @Column(length = 100, nullable = false)
@@ -32,6 +44,7 @@ public class User extends BaseTime {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // RELATIONSHIPS WITH OTHER ENTITIES
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Auth auth;
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
@@ -45,19 +58,11 @@ public class User extends BaseTime {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Diet> diets;
 
-    @Builder
-    public User(String email, String contact, String username, String password, Role role) {
-        this.role = role;
-        this.email = email;
-        this.contact = contact;
-        this.username = username;
-        this.password = password;
-    }
-
     public void update(UserRequestDto requestDto) {
-        this.role = requestDto.getRole();
+        this.name = requestDto.getName();
         this.email = requestDto.getEmail();
         this.contact = requestDto.getContact();
+        this.birthday = LocalDate.parse(requestDto.getBirthday());
     }
 
     public void updatePassword(String password) {
