@@ -2,11 +2,8 @@ package com.shyd.healthcare.domain.support.board;
 
 import com.shyd.healthcare.domain.BaseTime;
 import com.shyd.healthcare.domain.user.User;
-import com.shyd.healthcare.dto.support.post.PostUpdateRequestDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.shyd.healthcare.dto.support.post.PostUpdateRequestDTO;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -39,7 +36,7 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Attachment> attachments;
 
-    public Long update(PostUpdateRequestDto requestDto) {
+    public Long update(PostUpdateRequestDTO requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.secretYn = requestDto.getSecretYn();
