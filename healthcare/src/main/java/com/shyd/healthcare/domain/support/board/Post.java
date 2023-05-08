@@ -19,7 +19,7 @@ public class Post extends BaseTime {
     private Long id;
     @Column(length = 50)
     private String title;
-    @Column(columnDefinition = "longtext")
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     private Integer hits = 0;
