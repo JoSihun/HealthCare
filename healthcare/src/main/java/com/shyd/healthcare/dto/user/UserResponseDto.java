@@ -1,10 +1,7 @@
 package com.shyd.healthcare.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shyd.healthcare.domain.user.User;
 import lombok.*;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
