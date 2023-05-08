@@ -1,6 +1,5 @@
 package com.shyd.healthcare.controller.user;
 
-import com.shyd.healthcare.config.JwtTokenProvider;
 import com.shyd.healthcare.dto.user.UserRequestDto;
 import com.shyd.healthcare.dto.user.UserResponseDto;
 import com.shyd.healthcare.service.user.UserService;
@@ -16,7 +15,6 @@ import java.util.List;
 @RestController
 public class UserRestController {
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
 
     /** Username 중복체크 API */
     @PostMapping("/api/v1/user/check/username")
