@@ -1,44 +1,43 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.support.comment.CommentResponseDto;
-import com.shyd.healthcare.dto.support.comment.CommentSaveRequestDto;
-import com.shyd.healthcare.dto.support.comment.CommentUpdateRequestDto;
+import com.shyd.healthcare.dto.support.comment.CommentResponseDTO;
+import com.shyd.healthcare.dto.support.comment.CommentSaveRequestDTO;
+import com.shyd.healthcare.dto.support.comment.CommentUpdateRequestDTO;
 import com.shyd.healthcare.service.support.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 public class CommentRestController {
     private final CommentService commentService;
 
+    /** 댓글 목록조회 API */
     @GetMapping("/api/v1/comment")
-    public List<CommentResponseDto> readComment(@RequestParam(value = "post") Long postId) {
+    public List<CommentResponseDTO> fetchComments(@RequestParam(value = "post") Long postId) {
         return this.commentService.findAllByPostId(postId);
     }
 
+    /** 댓글 생성 API */
     @PostMapping("/api/v1/comment")
-    public List<CommentResponseDto> saveComment(@RequestHeader("Authorization") String token,
-                                                @RequestParam(value = "post") Long postId,
-                                                @RequestBody CommentSaveRequestDto requestDto) {
-        this.commentService.save(token, postId, requestDto);
-        return this.commentService.findAllByPostId(postId);
+    public Long createComment(@RequestHeader("Authorization") String accessToken,
+                              @RequestParam(value = "post") Long postId,
+                              @RequestBody CommentSaveRequestDTO requestDto) {
+        return this.commentService.create(accessToken, postId, requestDto);
     }
 
-    @PutMapping("/api/v1/comment")
-    public List<CommentResponseDto> updateComment(@RequestParam(value = "post") Long postId,
-                                                  @RequestParam(value = "comment") Long commentId,
-                                                  @RequestBody CommentUpdateRequestDto requestDto) {
-        this.commentService.update(commentId, requestDto);
-        return this.commentService.findAllByPostId(postId);
+    /** 댓글 수정 API */
+    @PutMapping("/api/v1/comment/{id}")
+    public Long updateComment(@PathVariable(value = "id") Long id,
+                              @RequestBody CommentUpdateRequestDTO requestDto) {
+        return this.commentService.update(id, requestDto);
     }
 
-    @DeleteMapping("/api/v1/comment")
-    public List<CommentResponseDto> deleteComment(@RequestParam(value = "post") Long postId,
-                                                  @RequestParam(value = "comment") Long commentId) {
-        this.commentService.delete(commentId);
-        return this.commentService.findAllByPostId(postId);
+    /** 댓글 삭제 API */
+    @DeleteMapping("/api/v1/comment/{id}")
+    public void deleteComment(@PathVariable(value = "id") Long id) {
+        this.commentService.delete(id);
     }
 }
