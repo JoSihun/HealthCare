@@ -2,7 +2,7 @@ package com.shyd.healthcare.domain.support.board;
 
 import com.shyd.healthcare.domain.BaseTime;
 import com.shyd.healthcare.domain.user.User;
-import com.shyd.healthcare.dto.support.comment.CommentUpdateRequestDto;
+import com.shyd.healthcare.dto.support.comment.CommentUpdateRequestDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,7 +25,7 @@ public class Comment extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 
-    public Long update(CommentUpdateRequestDto requestDto) {
+    public Long update(CommentUpdateRequestDTO requestDto) {
         this.content = requestDto.getContent();
         this.secretYn = requestDto.getSecretYn();
         return this.id;
