@@ -1,10 +1,15 @@
 import axios from "axios";
 
+const TOKEN_TYPE = localStorage.getItem("tokenType");
+let ACCESS_TOKEN = localStorage.getItem("accessToken");
+let REFRESH_TOKEN = localStorage.getItem("refreshToken");
+
 export const LiveChatAPI = axios.create({
     // baseURL: 'http://localhost:8080',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Authorization': `${TOKEN_TYPE} ${ACCESS_TOKEN}`,
+        'X-Refresh-Token': REFRESH_TOKEN,
     },
 });
 

@@ -9,7 +9,7 @@ export const UserApi = axios.create({
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `${TOKEN_TYPE} ${ACCESS_TOKEN}`,
-        'REFRESH_TOKEN': REFRESH_TOKEN,
+        'X-Refresh-Token': REFRESH_TOKEN,
     },
 });
 
