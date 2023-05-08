@@ -30,6 +30,7 @@ public class CustomUserDetails implements UserDetails {
     public String getName() {
         return this.user.getName();
     }
+
     public String getEmail() {
         return this.user.getEmail();
     }
