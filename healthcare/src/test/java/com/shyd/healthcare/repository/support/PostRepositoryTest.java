@@ -1,17 +1,18 @@
 package com.shyd.healthcare.repository.support;
 
-import com.shyd.healthcare.domain.support.board.Category;
+import com.shyd.healthcare.domain.support.board.BoardType;
 import com.shyd.healthcare.domain.support.board.Post;
-import com.shyd.healthcare.dto.support.post.PostSaveRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -19,50 +20,74 @@ class PostRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
-//    @Test
-//    @DisplayName("Enum Class 를 사용하여 데이터 저장")
-//    void saveTest() {
-//        PostSaveRequestDto requestDto = new PostSaveRequestDto("TestTitle", "TestContent", "TestAuthor",
-//                Category.FREE_BOARD.name(), 0, true, true);
-//        Post savedPost = this.postRepository.save(requestDto.toEntity());
-//        assertThat(savedPost.getCategory()).isEqualTo(Category.FREE_BOARD);
-//    }
+    @Test
+    @DisplayName("PostRepository.save() 테스트")
+    void saveTest() {
+        Post post = this.postRepository.save(Post.builder()
+                        .hits(0)
+                        .answerYn(false)
+                        .secretYn(false)
+                        .title("TestTitle")
+                        .content("TestContent")
+                        .boardType(BoardType.FREE_BOARD)
+                .build());
+
+        assertThat(post.getHits()).isEqualTo(0);
+        assertThat(post.getAnswerYn()).isEqualTo(false);
+        assertThat(post.getSecretYn()).isEqualTo(false);
+        assertThat(post.getTitle()).isEqualTo("TestTitle");
+        assertThat(post.getContent()).isEqualTo("TestContent");
+        assertThat(post.getBoardType()).isEqualTo(BoardType.FREE_BOARD);
+        this.postRepository.delete(post);
+    }
 
     @Test
-    @DisplayName("Enum Class 를 사용하여 데이터 필터링")
-    void findAllByCategory() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<Post> foundPostList = this.postRepository.findAllByCategory(Category.FREE_BOARD.name(), sort);
-        for (Post foundPost : foundPostList) {
-            assertThat(foundPost.getCategory()).isEqualTo(Category.FREE_BOARD);
+    @DisplayName("Enum Class BoardType 을 사용한 데이터 필터링 - List")
+    void findAllByBoardType1() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        List<Post> posts = this.postRepository.findAllByBoardType(BoardType.FREE_BOARD, sort);
+        for (Post post : posts) {
+            assertThat(post.getBoardType()).isEqualTo(BoardType.FREE_BOARD);
         }
     }
 
     @Test
-    void testFindAllByCategory() {
+    @DisplayName("Enum Class BoardType 을 사용한 데이터 필터링 - Page")
+    void findAllByBoardType2() {
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        Pageable pageable = PageRequest.of(0, 20, sort);
+        Page<Post> posts = this.postRepository.findAllByBoardType(BoardType.FREE_BOARD, pageable);
+
+        assertThat(posts.getSize()).isEqualTo(20);
+        for (Post post : posts.getContent()) {
+            assertThat(post.getBoardType()).isEqualTo(BoardType.FREE_BOARD);
+        }
     }
 
     @Test
-    void findAllByCategoryAndTitleContaining() {
+    void findAllByBoardTypeAndTitleContaining() {
     }
 
     @Test
-    void findAllByCategoryAndContentContaining() {
+    void findAllByBoardTypeAndContentContaining() {
     }
 
     @Test
-    void findAllByCategoryAndAuthorContaining() {
+    void findAllByBoardTypeAndAuthorContaining() {
     }
 
     @Test
-    void findAllByCategoryAndTitleContainingOrContentContaining() {
+    void findAllByBoardTypeAndTitleContainingOrContentContaining() {
     }
 
     @Test
-    void findAllByCategoryAndTitleContainingOrAuthorContaining() {
+    void findAllByBoardTypeAndTitleContainingOrAuthorContaining() {
     }
 
     @Test
-    void findAllByCategoryAndContentContainingOrAuthorContaining() {
+    void findAllByBoardTypeAndContentContainingOrAuthorContaining() {
     }
+
+
+
 }
