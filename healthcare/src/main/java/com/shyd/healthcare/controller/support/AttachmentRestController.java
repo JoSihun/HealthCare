@@ -1,47 +1,66 @@
 package com.shyd.healthcare.controller.support;
 
-import com.shyd.healthcare.dto.support.attachment.AttachmentResponseDto;
+import com.shyd.healthcare.dto.support.attachment.AttachmentResponseDTO;
 import com.shyd.healthcare.service.support.AttachmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 public class AttachmentRestController {
     private final AttachmentService attachmentService;
 
-    @GetMapping("/api/v1/attachment/{postId}")
-    public List<AttachmentResponseDto> readAttachment(@PathVariable Long postId) {
-        return this.attachmentService.findAllByPostId(postId);
-    }
-
-    @GetMapping("/api/v1/attachment/download/{attachmentId}")
-    public ResponseEntity<Resource> downloadAttachment(@PathVariable Long attachmentId) throws MalformedURLException {
-        return this.attachmentService.download(attachmentId);
+    /** 첨부파일 다운로드 API */
+    @GetMapping("/api/v1/attachment/download/{id}")
+    public ResponseEntity<Resource> downloadAttachment(@PathVariable Long id) throws MalformedURLException {
+        Resource resource = this.attachmentService.download(id);
+        String filename = Objects.requireNonNull(resource.getFilename());
+        String encodedFilename = UriUtils.encode(filename, StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=\"" + encodedFilename + "\"";
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @PostMapping("/api/v1/attachment/{postId}")
-    public void saveAttachment(@PathVariable(value = "postId") Long postId,
-                               @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        this.attachmentService.save(postId, files);
+    /** 첨부파일 목록조회 API */
+    @GetMapping("/api/v1/attachment")
+    public List<AttachmentResponseDTO> fetchAttachments(@RequestParam(value = "post") Long postId) {
+        return this.attachmentService.findAllByPostId(postId);
     }
 
-    @PutMapping("/api/v1/attachment/{postId}")
-    public void updateAttachment(@PathVariable(value = "postId") Long postId,
+    /** 첨부파일 생성 API */
+    @PostMapping("/api/v1/attachment")
+    public Long createAttachment(@RequestParam(value = "post") Long postId,
                                  @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        this.attachmentService.update(postId, files);
+        return this.attachmentService.create(postId, files);
     }
 
-    @DeleteMapping("/api/v1/attachment/{postId}")
-    public void deleteAttachment(@PathVariable(value = "postId") Long postId) {
+    /** 첨부파일 수정 API */
+    @PutMapping("/api/v1/attachment")
+    public void updateAttachment(@RequestParam(value = "post") Long postId,
+                                 @RequestParam(value = "attachmentIds") List<Long> attachmentIds,
+                                 @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
+        this.attachmentService.update(postId, attachmentIds, files);
+    }
+
+    /** 첨부파일 삭제 API */
+    @DeleteMapping("/api/v1/attachment")
+    public void deleteAttachment(@RequestParam(value = "post") Long postId) {
         this.attachmentService.deleteAllByPostId(postId);
     }
 }
