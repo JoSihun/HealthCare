@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 public class PostListResponseDTO {
     private final Long id;
+    private final Integer hits;
     private final String title;
     private final String author;
     private final String createdDate;
@@ -13,6 +14,7 @@ public class PostListResponseDTO {
 
     public PostListResponseDTO(Post entity) {
         this.id = entity.getId();
+        this.hits = entity.getHits();
         this.title = entity.getTitle();
         this.author = entity.getAuthor().getName();
         this.createdDate = entity.getCreatedDate().toString();
