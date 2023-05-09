@@ -22,8 +22,11 @@ public class Post extends BaseTime {
     @Column(columnDefinition = "LONGTEXT")
     private String content;
 
+    @Builder.Default
     private Integer hits = 0;
+    @Builder.Default
     private Boolean secretYn = false;
+    @Builder.Default
     private Boolean answerYn = false;
     @Enumerated(EnumType.STRING)
     private BoardType boardType;
