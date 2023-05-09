@@ -38,25 +38,26 @@ public class PostRestController {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /** POST REQUEST - header: "multipart/form-data" */
+    /** 게시글 생성 API V2 - header: "multipart/form-data" */
     @PostMapping("/api/v2/post")
     public Long createPostV2(@RequestHeader("Authorization") String accessToken,
                              @RequestPart(value = "data") PostSaveRequestDTO requestDto,
                              @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
         Long id = this.postService.create(accessToken, requestDto);
-        return this.attachmentService.save(id, files);
+        return this.attachmentService.create(id, files);
     }
 
-    /** PUT REQUEST - header: "multipart/form-data" */
+    /** 게시글 수정 API V2 - header: "multipart/form-data" */
     @PutMapping("/api/v2/post/{id}")
     public Long updatePostV2(@PathVariable(value = "id") Long id,
                              @RequestPart(value = "data") PostUpdateRequestDTO requestDto,
+                             @RequestPart(value = "attachmentIds") List<Long> attachmentIds,
                              @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        this.attachmentService.update(id, files);
+        this.attachmentService.update(id, attachmentIds, files);
         return this.postService.update(id, requestDto);
     }
 
-    /** DELETE REQUEST - header: "multipart/form-data" */
+    /** 게시글 삭제 API V2 - header: "multipart/form-data" */
     @DeleteMapping("/api/v2/post/{id}")
     public void deletePostV2(@PathVariable(value = "id") Long id) {
         this.attachmentService.deleteAllByPostId(id);
