@@ -18,6 +18,7 @@ public class Comment extends BaseTime {
     private Long id;
     @Column(columnDefinition = "LONGTEXT")
     private String content;
+    @Builder.Default
     private Boolean secretYn = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
