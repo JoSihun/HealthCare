@@ -23,7 +23,7 @@ const SignInForm = (props) => {
         AuthAPI.login(formValues)
         .then((response) => {
             localStorage.clear();
-            localStorage.setItem('tokenType', response.tokentype);
+            localStorage.setItem('tokenType', response.tokenType);
             localStorage.setItem('accessToken', response.accessToken);
             localStorage.setItem('refreshToken', response.refreshToken);
             navigate("/home");
