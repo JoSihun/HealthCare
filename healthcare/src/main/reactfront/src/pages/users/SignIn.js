@@ -1,11 +1,10 @@
 import AuthAPI from "../../api/user/AuthAPI";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Form, Image, Row } from "react-bootstrap";
 import bg_signin from "../../assets/images/bg_signin.jpg";
 
 const SignInForm = (props) => {
-    const navigate = useNavigate();
     const [failed, setFailed] = useState(false);
     const [formValues, setFormValues] = useState({
         username: "",
@@ -26,7 +25,7 @@ const SignInForm = (props) => {
             localStorage.setItem('tokenType', response.tokenType);
             localStorage.setItem('accessToken', response.accessToken);
             localStorage.setItem('refreshToken', response.refreshToken);
-            navigate("/home");
+            window.location.assign("/home");
         }).catch((error) => {
             setFailed(true);
             console.log(error);
