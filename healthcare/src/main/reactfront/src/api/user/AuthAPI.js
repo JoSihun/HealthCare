@@ -4,29 +4,32 @@ const TOKEN_TYPE = localStorage.getItem("tokenType");
 let ACCESS_TOKEN = localStorage.getItem("accessToken");
 let REFRESH_TOKEN = localStorage.getItem("refreshToken");
 
-export const AuthApi = axios.create({
+export const AuthAPI = axios.create({
     // baseURL: 'http://localhost:8080',
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `${TOKEN_TYPE} ${ACCESS_TOKEN}`,
-        'X-Refresh-Token': REFRESH_TOKEN,
+        'X-Refresh-Token': `${REFRESH_TOKEN}`,
     },
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // 로그인 API
-export const login = async ({ email, username, password }) => {
-    const data = { email, username, password };
-    const response = await AuthApi.post(`/api/v1/auth/login`, data);
+export const login = async ({ username, password }) => {
+    const data = { username, password };
+    const response = await AuthAPI.post(`/api/v1/auth/login`, data);
     return response.data;
 }
 
 // 회원가입 API
-export const signUp = async ({ email, username, password }) => {
-    const data = { email, username, password };
-    const response = await AuthApi.post(`/api/v1/auth/signup`, data);
+export const signup = async (data) => {
+    const response = await AuthAPI.post(`/api/v1/auth/signup`, data);
     return response.data;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+const ApiObject = { login, signup };
+export default ApiObject;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // Basic Skeleton Codes1
