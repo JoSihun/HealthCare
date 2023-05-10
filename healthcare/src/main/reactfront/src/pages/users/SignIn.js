@@ -1,97 +1,104 @@
-import React, { useState } from "react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import { login } from "../../api/AuthAPI";
-import backgroundImage from "../..//assets/images/bg_signin.jpg";
+import AuthAPI from "../../api/user/AuthAPI";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Card, Col, Container, Form, Image, Row } from "react-bootstrap";
+import bg_signin from "../../assets/images/bg_signin.jpg";
 
-const SingInForm = (props) => {
-    const [visible, setVisible] = useState(false);
-    const [formData, setFormData] = useState({
-        email: "",
+const SignInForm = (props) => {
+    const navigate = useNavigate();
+    const [failed, setFailed] = useState(false);
+    const [formValues, setFormValues] = useState({
         username: "",
         password: "",
     });
-
+    
     const handleChange = async (e) => {
-        e.preventDefault();
-        setFormData({...formData,
-            [e.target.id]: e.target.value
-        });
+        setFormValues((prevValues) => ({...prevValues,
+            [e.target.name]: e.target.value
+        }));
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        login(formData)
+        AuthAPI.login(formValues)
         .then((response) => {
             localStorage.clear();
-            localStorage.setItem('tokenType', response.tokenType);
+            localStorage.setItem('tokenType', response.tokentype);
             localStorage.setItem('accessToken', response.accessToken);
             localStorage.setItem('refreshToken', response.refreshToken);
-            window.location.href = `/`;
+            navigate("/home");
         }).catch((error) => {
-            setVisible(true);
+            setFailed(true);
             console.log(error);
         });
     }
 
+    const ERROR_MESSAGE = "로그인 실패. 아이디와 비밀번호를 확인하세요.";
+    
     return (
-        <Form onSubmit={handleSubmit}>
-            {/* <Form.Group className="mb-3" controlId="email">
-                <Form.Label>이메일</Form.Label>
-                <Form.Control type="email" placeholder="이메일" onChange={handleChange} />
-                <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
-                </Form.Text>
-            </Form.Group> */}
+        <Card style={{ minWidth: "50%" }}>
+            <Card.Body>
+                <Card.Title className="fs-2 fw-bold fst-italic">
+                    Login
+                </Card.Title>
+                <hr/>
 
-            <Form.Group className="mb-3" controlId="username">
-                <Form.Label>아이디 or 이메일</Form.Label>
-                <Form.Control type="text" placeholder="이름" onChange={handleChange} />
-                <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
-                </Form.Text>
-            </Form.Group>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3" controlId="username">
+                        <Form.Label className="text-secondary">아이디</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="username"
+                            value={formValues.username}
+                            onChange={handleChange}
+                            placeholder="Username"
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="password">
+                        <Form.Label className="text-secondary">비밀번호</Form.Label>
+                        <Form.Control
+                            type="password"
+                            name="password"
+                            value={formValues.password}
+                            onChange={handleChange}
+                            placeholder="Password"
+                        />
+                    </Form.Group>
+                    <Form.Group className="mb-3 d-flex justify-content-between align-items-end">
+                        <Form.Check type="checkbox" label="Remember Me" className="text-secondary"/>
+                        <Button type="submit" variant="dark" style={{ width: "100px" }}>로그인</Button>
+                    </Form.Group>
 
-            <Form.Group className="mb-3" controlId="password">
-                <Form.Label>비밀번호</Form.Label>
-                <Form.Control type="password" placeholder="비밀번호" onChange={handleChange} />
-                {visible &&
-                    <Form.Text className="text-danger">
-                        없는 계정이거나 비밀번호가 일치하지 않습니다.
-                    </Form.Text>
-                }
-            </Form.Group>
-
-            {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Check me out" />
-            </Form.Group> */}
-            <div className="d-flex justify-content-end">
-                <Button variant="dark" type="submit">SignIn</Button>
-            </div>
-        </Form>
+                    {failed && <div className="text-danger text-center mb-3">{ERROR_MESSAGE}</div>}
+                    <div className="text-center text-secondary">
+                        <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
+                    </div>
+                </Form>
+            </Card.Body>
+        </Card>
     );
 }
 
 export default function SignIn() {
+    const pageRef = useRef(null);
+
+    useEffect(() => {
+        pageRef.current.scrollIntoView({
+            block: "center",
+            inline: "center",
+            behavior: "smooth",
+        });
+    }, []);
+
     return (
-        <Container fluid>
+        <Container fluid ref={pageRef}>
             <Row className="justify-content-center" style={{ minHeight: "100vh" }}>
-                <Col className="col-md-6 d-flex justify-content-center" style={{ background: "black" }}>
-                    {/* <div className="d-flex align-self-center justify-content-center" style={{ width: "100%", height: "100%" }}>
-                        <img src={backgroundImage} alt="background" width="75%" />
-                    </div> */}
-                    <div className="align-self-center text-center" style={{ width: "100%", height: "100%" }}>
-                        <img src={backgroundImage} alt="background" width="75%" />
-                    </div>
+                <Col className="col-md-6 d-flex justify-content-center align-items-center p-0" style={{ background: "black" }}>
+                    <Image src={bg_signin} width="100%" height="100%" />
                 </Col>
 
-                <Col className="col-md-6 d-flex justify-content-center" style={{ background: "lightgray" }}>
-                    <Card className="align-self-center" style={{ minWidth: "50vh" }}>
-                        <Card.Body>
-                            <Card.Title><h2><strong>SignIn</strong></h2></Card.Title>
-                            <hr/>
-                            <SingInForm />
-                        </Card.Body>
-                    </Card>
+                <Col className="col-md-6 d-flex justify-content-center align-items-center p-0" style={{ background: "lightgray" }}>
+                    <SignInForm />
                 </Col>
             </Row>
         </Container>
