@@ -19,14 +19,14 @@ export default function Navigation() {
         setCurrentUser({});
         setAccessToken(null);
         localStorage.clear();
+        window.location.assign("/home");
     }
 
     return (
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
+        <Navbar bg='dark' variant='dark' fixed='top' expand='lg' collapseOnSelect>
             <Container>
                 <Navbar.Brand href="/">
-                    <img src={logo} width="40" height="35" alt="" />
-                    HealthCare
+                    <img src={logo} width="40" height="35" alt="" /> HealthCare
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
@@ -35,7 +35,6 @@ export default function Navigation() {
                     </Nav>
                     <Nav>
                         <Nav.Link href="/home">Home</Nav.Link>
-
                         <NavDropdown title="Introduce" id="collasible-nav-dropdown">
                             <NavDropdown.Item href="/introduce/staff">Staff</NavDropdown.Item>
                             <NavDropdown.Item href="/introduce/facility">Facility</NavDropdown.Item>
@@ -47,19 +46,17 @@ export default function Navigation() {
                             <NavDropdown.Item href="/support/freeboard">자유게시판</NavDropdown.Item>
                             <NavDropdown.Item href="/support/livechat">LiveChat</NavDropdown.Item>
                         </NavDropdown>
-
-                        {accessToken
-                            ?
-                                <NavDropdown title={currentUser.username + "님 환영합니다"} id="collasible-nav-dropdown">
-                                    <NavDropdown.Item href="/my-page">MyPage</NavDropdown.Item>
-                                    <NavDropdown.Item href="/" onClick={handleLogout}>로그아웃</NavDropdown.Item>
-                                </NavDropdown>
-                            :
-                                <>
-                                    <Nav.Link href="/signup">SignUp</Nav.Link>
-                                    <Nav.Link href="/signin">LogIn</Nav.Link>
-                                </>
-                        }
+                        {accessToken ? (
+                            <NavDropdown title={`${currentUser.username}님 환영합니다.`} id="collasible-nav-dropdown">
+                                <NavDropdown.Item href="/my-page">MyPage</NavDropdown.Item>
+                                <NavDropdown.Item onClick={handleLogout}>로그아웃</NavDropdown.Item>
+                            </NavDropdown>
+                        ) : (
+                            <>
+                                <Nav.Link href="/signup">SignUp</Nav.Link>
+                                <Nav.Link href="/signin">LogIn</Nav.Link>
+                            </>
+                        )}
                     </Nav>
                 </Navbar.Collapse>
             </Container>
