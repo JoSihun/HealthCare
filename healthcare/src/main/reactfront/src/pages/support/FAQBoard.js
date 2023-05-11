@@ -174,10 +174,10 @@ export default function FAQBoard() {
     return (
         <Container fluid>
             <Row className="justify-content-center">
-                <Col className="col-md-2 my-4">
+                <Col className="col-md-2 mx-1 my-4">
                     <SupportSideBar />
                 </Col>
-                <Col className="col-md-9 my-4">
+                <Col className="col-md-9 mx-1 my-4">
                     <FAQBoardList />
                     <AddForm />
                 </Col>
