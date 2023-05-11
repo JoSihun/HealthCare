@@ -51,30 +51,30 @@ export const fetchUser = async () => {
 
 // 유저목록조회 API - List
 export const fetchUserList = async (sort) => {
-    const querystring = `sort=${sort}`;
-    const response = await UserAPI.get(`/api/v1/user/all-list?${querystring}`);
+    const params = { sort };
+    const response = await UserAPI.get(`/api/v1/user/all-list`, { params });
     return response.data;
 };
 
 // 유저목록조회 API - Page
 export const fetchUserPage = async (page, size, sort) => {
-    const querystring = `page=${page}&size=${size}&sort=${sort}`;
-    const response = await UserAPI.get(`/api/v1/user/all-page?${querystring}`);
+    const params = { page, size, sort };
+    const response = await UserAPI.get(`/api/v1/user/all-page`, { params });
     return response.data;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // 유저검색조회 API - List
 export const searchUserList = async (name, sort) => {
-    const querystring = `name=${name}&sort=${sort}`;
-    const response = await UserAPI.get(`/api/v1/user/search-list?${querystring}`);
+    const params = { name, sort };
+    const response = await UserAPI.get(`/api/v1/user/search-list`, { params });
     return response.data;
 }
 
 // 유저검색조회 API - Page
 export const searchUserPage = async (name, page, size, sort) => {
-    const querystring = `name=${name}&page=${page}&size=${size}&sort=${sort}`;
-    const response = await UserAPI.get(`/api/v1/user/search-page?${querystring}`);
+    const params = { name, page, size, sort };
+    const response = await UserAPI.get(`/api/v1/user/search-page`, { params });
     return response.data;
 }
 
