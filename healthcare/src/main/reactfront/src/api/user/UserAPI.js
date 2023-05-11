@@ -16,25 +16,17 @@ export const UserAPI = axios.create({
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // 토큰갱신함수
 const refreshAccessToken = async () => {
-    // 테스트 필요
     await UserAPI.get(`/api/v1/auth/refresh`)
     .then((response) => {
-        ACCESS_TOKEN = response.data;
+        ACCESS_TOKEN = response.data.accessToken;
         localStorage.setItem('accessToken', ACCESS_TOKEN);
         UserAPI.defaults.headers.common['Authorization'] = `${TOKEN_TYPE} ${ACCESS_TOKEN}`;
-    }).catch(() => {
-        // In case of refresh token is expired
-        window.location.assign("/signin");
+    }).catch((error) => {
+        // 테스트 필요
+        if (error.response.status === 401) {
+            window.location.assign("/signin");
+        }
     });
-
-    // const response = await UserAPI.get(`/api/v1/auth/refresh`);
-    // if (response.data) {
-    //     ACCESS_TOKEN = response.data;
-    //     localStorage.setItem('accessToken', ACCESS_TOKEN);
-    //     UserAPI.defaults.headers.common['Authorization'] = `${TOKEN_TYPE} ${ACCESS_TOKEN}`;
-    // } else {
-    //     window.location.href= "/signin";
-    // }
 }
 
 // 토큰갱신함수
