@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
-import "../../styles/FreeBoard.css";
-import Paging from "../../components/support/Paging";
-import { searchPageV1 } from "../../api/PostAPI";
-import { SupportSideBar } from "../../components/SideBar";
 
-const SelectSize = (props) => {
+import { SupportSideBar } from "../../components/SideBar";
+import PageNavigation from "../../components/PageNavigation";
+import PostAPI from "../../api/support/PostAPI";
+
+const Select = (props) => {
+    const { data, setPage, setSize } = props;
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const handleSelect = async (e) => {
-        e.preventDefault();
-        props.searchParams.set("page", parseInt(props.pages.pageable.offset / e.target.value) + 1);
-        props.searchParams.set("size", e.target.value);
-        props.setSearchParams(props.searchParams);
+        searchParams.set("page", Math.floor(data.pageable.offset / e.target.value) + 1);
+        searchParams.set("size", e.target.value);
+        setSearchParams(searchParams);
+        setPage(searchParams.get("page"));
+        setSize(searchParams.get("size"));
     }
 
     return (
         <div className="d-flex justify-content-end mb-3">
             <div className="me-2">보기 옵션</div>
-            <select onChange={handleSelect} value={props.size}>
+            <select onChange={handleSelect} defaultValue={20}>
                 <option value={10}>10개씩</option>
                 <option value={20}>20개씩</option>
                 <option value={30}>30개씩</option>
@@ -29,25 +33,23 @@ const SelectSize = (props) => {
 }
 
 const Search = (props) => {
-    const [searchValue, setSearchValue] = useState(props.searchParams.get("searchValue"));
-    const [searchFilter, setSearchFilter] = useState(props.searchParams.get("searchFilter"));
+    const [searchParams] = useSearchParams();
+    const [searchValue, setSearchValue] = useState(searchParams.get("searchValue"));
+    const [searchFilter, setSearchFilter] = useState(searchParams.get("searchFilter"));
 
     const handleValue = async (e) => {
-        e.preventDefault();
         setSearchValue(e.target.value);
     }
 
     const handleFilter = async (e) => {
-        e.preventDefault();
         setSearchFilter(e.target.value);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        props.searchParams.delete("page");
-        props.searchParams.set("searchFilter", searchFilter);
-        props.searchParams.set("searchValue", searchValue);
-        props.setSearchParams(props.searchParams);
+        searchParams.set("searchValue", searchValue);
+        searchParams.set("searchFilter", searchFilter);
+        window.location.assign(`/support/freeboard/search?${searchParams.toString()}`);
     }
 
     return (
@@ -67,7 +69,7 @@ const Search = (props) => {
                     <input type="text" onChange={handleValue} value={searchValue} />
                 </div>
                 <div className="form-group d-inline ms-1">
-                    <button type="submit">검색</button>
+                    <button type="submit" >검색</button>
                 </div>
             </form>
         </div>
@@ -75,91 +77,105 @@ const Search = (props) => {
 }
 
 const FreeBoardList = (props) => {
-    const { posts } = props;
+    const { data } = props;
+
+    const convertDate = (prevDate) => {
+        const now = new Date();
+        const date = new Date(prevDate);
+        const diff = Math.round((now - date) / (1000 * 60));
+        
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        
+        if (diff <= 10) {
+            const hour = date.getHours().toString().padStart(2, '0');
+            const minute = date.getMinutes().toString().padStart(2, '0');
+            return `${year}-${month}-${day} ${hour}:${minute}`;
+        }
+        return `${year}-${month}-${day}`;
+      }
 
     return (
         <Table responsive hover border="2px">
             <thead>
                 <tr style={{ color: "white", backgroundColor: "black" }}>
-                    <th className="text-left">#</th>
-                    <th className="text-left">제목</th>
-                    <th className="text-center">조회수</th>
-                    <th className="text-center">작성자</th>
-                    <th className="text-center">작성일</th>
+                    <th className="text-center" style={{ width: "5%"}} >#</th>
+                    <th className="text-center" style={{ width: "55%"}} >제목</th>
+                    <th className="text-center" style={{ width: "10%"}} >조회수</th>
+                    <th className="text-center" style={{ width: "10%"}} >작성자</th>
+                    <th className="text-center" style={{ width: "20%"}} >작성일</th>
                 </tr>
             </thead>
             <tbody>
-                {posts.map((post, index) => (
+                {data.content && data.content.map((post, index) => (
                     <tr key={index}>
-                        <td className="text-left">{post.id}</td>
-                        <td className="text-left">
+                        <td className="text-center">{post.id}</td>
+                        <td className="text-start">
                             <Link to={`/support/freeboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
                                 {post.title}
                             </Link>
                         </td>
                         <td className="text-center">{post.hits}</td>
                         <td className="text-center">{post.author}</td>
-                        <td className="text-center">{post.createdDate}</td>
+                        <td className="text-center">{convertDate(post.createdDate)}</td>
                     </tr>
                 ))}
             </tbody>
         </Table>
-    );
+    )
+}
+
+const SearchResultBody = (props) => {
+    const [data, setData] = useState({});
+    const [searchParams] = useSearchParams();
+    const [page, setPage] = useState(searchParams.get("page") || 1);
+    const [size, setSize] = useState(searchParams.get("size") || 20);
+
+    useEffect(() => {
+        const searchValue = searchParams.get("searchValue");
+        const searchFilter = searchParams.get("searchFilter");
+
+        PostAPI.searchPostPage("free-board", { page, size, searchValue, searchFilter })
+        .then(response => setData(response))
+        .catch(error => console.log(error));
+    }, [page, size, searchParams]);
+
+    return (
+        <Card>
+            <Card.Body>
+                <Card.Title className="fs-2 fw-bold">
+                    자유게시판
+                </Card.Title>
+                <hr/>
+                <Select data={data} setSize={setSize} setPage={setPage} />
+                <FreeBoardList data={data} />
+
+                <div className="d-flex justify-content-end">
+                    <Link to={`/support/freeboard/form`}>
+                        <Button variant="dark" style={{ width: "100px"}}>글쓰기</Button>
+                    </Link>
+                </div>
+
+                <PageNavigation data={data} setPage={setPage} />
+                <Search />
+            </Card.Body>
+        </Card>
+    )
 }
 
 export default function FreeBoardSearch() {
-    const [posts, setPosts] = useState([]);
-    const [pages, setPages] = useState({});
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    const searchValue = searchParams.get("searchValue");
-    const searchFilter = searchParams.get("searchFilter");
-    const page = searchParams.get("page") ? searchParams.get("page") : 1;
-    const size = searchParams.get("size") ? searchParams.get("size") : 20;
-
-    useEffect(() => {
-        const queryString1 = `searchFilter=${searchFilter}&searchValue=${searchValue}`;
-        const queryString2 = `page=${page - 1}&size=${size}`;
-        const queryString = `${queryString1}&${queryString2}`;
-
-        searchPageV1("free-board", queryString)
-        .then((response) => {
-            setPages(response);
-            setPosts(response.content);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }, [page, size, searchValue, searchFilter]);
-
     return (
-        <>
         <Container fluid>
             <Row className="justify-content-center">
-                <Col className="col-md-2 mx-2 my-4">
+                <Col className="col-md-2 mx-1 my-4">
                     <SupportSideBar />    
                 </Col>
 
-                <Col className="col-md-9 mx-2 my-4">
-                    <Card>
-                        <Card.Body>
-                            <Card.Title><h2><strong>자유게시판</strong></h2></Card.Title>
-                            <hr/>
-                            <SelectSize pages={pages} size={size} searchParams={searchParams} setSearchParams={setSearchParams} />
-
-                            <FreeBoardList posts={posts} />
-                            <div className="d-flex justify-content-end">
-                                <Link to={"/support/freeboard/form"}>
-                                    <Button variant="dark" style={{ width: "100px" }}>글쓰기</Button>
-                                </Link>
-                            </div>
-                            
-                            <Paging pages={pages} searchParams={searchParams} setSearchParams={setSearchParams} />
-                            <Search searchParams={searchParams} setSearchParams={setSearchParams} />
-                        </Card.Body>
-                    </Card>
+                <Col className="col-md-9 mx-1 my-4">
+                    <SearchResultBody />
                 </Col>
             </Row>
         </Container>
-        </>
     );
 }
