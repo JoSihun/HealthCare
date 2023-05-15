@@ -59,7 +59,7 @@ class PostServiceTest {
     @Test
     @DisplayName("Test Data 대량 삽입")
     void createTestData() {
-        AuthRequestDto authRequestDto = new AuthRequestDto("test7218", "test");
+        AuthRequestDto authRequestDto = new AuthRequestDto("test3058", "test");
         AuthResponseDto authResponseDto = this.authService.login(authRequestDto);
 
         for (int i = 0; i < 300; i++) {
@@ -70,11 +70,11 @@ class PostServiceTest {
             postSaveRequestDTO.setAnswerYn((i % 4 == 0) || (i % 4 == 1));       // true, true, false, false
 
             postSaveRequestDTO.setBoardType(BoardType.FAQ_BOARD);
-            this.postService.create(authResponseDto.getAccessToken(), postSaveRequestDTO);
+            this.postService.create("Bearer " + authResponseDto.getAccessToken(), postSaveRequestDTO);
             postSaveRequestDTO.setBoardType(BoardType.QNA_BOARD);
-            this.postService.create(authResponseDto.getAccessToken(), postSaveRequestDTO);
+            this.postService.create("Bearer " + authResponseDto.getAccessToken(), postSaveRequestDTO);
             postSaveRequestDTO.setBoardType(BoardType.FREE_BOARD);
-            this.postService.create(authResponseDto.getAccessToken(), postSaveRequestDTO);
+            this.postService.create("Bearer " + authResponseDto.getAccessToken(), postSaveRequestDTO);
         }
     }
 
