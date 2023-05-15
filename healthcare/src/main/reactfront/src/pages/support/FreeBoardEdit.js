@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 
 import PostAPI from "../../api/support/PostAPI";
-import AttachAPI from "../../api/support/AttachAPI";
 import { SupportSideBar } from "../../components/SideBar";
 
 // const FileList = (props) => {
