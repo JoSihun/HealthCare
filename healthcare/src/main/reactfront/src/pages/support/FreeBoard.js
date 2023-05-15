@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 
-import { SupportSideBar } from "../../components/SideBar";
-import PageNavigation from "../../components/PageNavigation";
 import PostAPI from "../../api/support/PostAPI";
+import PageNavigation from "../../components/PageNavigation";
+import { SupportSideBar } from "../../components/SideBar";
 
 const Search = (props) => {
     const [searchParams] = useSearchParams();
@@ -94,7 +94,7 @@ const FreeBoardList = (props) => {
             return `${year}-${month}-${day} ${hour}:${minute}`;
         }
         return `${year}-${month}-${day}`;
-      }
+    }
 
     return (
         <Table responsive hover border="2px">
