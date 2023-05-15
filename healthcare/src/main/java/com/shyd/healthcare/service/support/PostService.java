@@ -26,6 +26,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AttachmentService attachmentService;
 
     /** 카테고리별 목록조회 - List */
     @Transactional
@@ -77,6 +78,8 @@ public class PostService {
     /** 제목 + 내용으로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
     public Page<PostListResponseDTO> findAllByBoardTypeAndTitleOrContent(BoardType boardType, String title, String content, Pageable pageable) {
+        // where board_type and ( post title like ) or post content like => where board_type and ( post title like or post content like)
+        // JPARepository 에서 매뉴얼로 SQL Query 날려야 할 것 같음
         Page<Post> posts = this.postRepository.findAllByBoardTypeAndTitleContainingOrContentContaining(boardType, title, content, pageable);
         return posts.map(PostListResponseDTO::new);
     }
@@ -128,6 +131,7 @@ public class PostService {
     public void delete(Long id) {
         Post post = this.postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. post_id = " + id));
+        this.attachmentService.deleteAllByPostId(id);
         this.postRepository.delete(post);
     }
 }
