@@ -11,12 +11,12 @@ import lombok.*;
 @AllArgsConstructor
 public class PostSaveRequestDTO {
     private User author;
-    private Integer hits;
     private String title;
     private String content;
-    private Boolean secretYn;
-    private Boolean answerYn;
     private BoardType boardType;
+    private Integer hits = 0;
+    private Boolean secretYn = false;
+    private Boolean answerYn = false;
 
     public Post toEntity() {
         return Post.builder()
