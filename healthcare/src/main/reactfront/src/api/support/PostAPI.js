@@ -31,14 +31,14 @@ export const fetchPost = async (id) => {
 
 // 게시글 목록조회
 export const fetchPostPage = async (boardType, { page, size, sort } = {}) => {
-    const params = { page, size, sort };
+    const params = { page: page - 1, size, sort };
     const response = await PostAPIv1.get(`/api/v1/post/${boardType}`, { params });
     return response.data;
 }
 
 // 게시글 검색조회
 export const searchPostPage = async (boardType, { page, size, sort, searchValue, searchFilter } = {}) => {
-    const params = { page, size, sort, searchValue, searchFilter };
+    const params = { page: page - 1, size, sort, searchValue, searchFilter };
     const response = await PostAPIv1.get(`/api/v1/post/${boardType}/search`, { params });
     return response.data;
 }
@@ -65,18 +65,11 @@ export const deletePostV1 = async (id) => {
 // 게시글 삽입 v2
 export const createPostV2 = async (data, files) => {
     const formData = new FormData();
+    files.forEach(file => formData.append("files", file));
 
-    // 테스트 필요
-    formData.append("data", JSON.stringify(data));
-    files.map(file => formData.append("files", file));
-
-    // formData.append("data", new Blob([JSON.stringify(data)], {
-    //     type: "application/json"
-    // }));
-
-    // for (var i = 0; i < files.length; i++) {
-    //     formData.append("files", files[i]);
-    // }
+    formData.append("data", new Blob([JSON.stringify(data)], {
+        type: 'application/json'
+    }));
     
     const response = await PostAPIv2.post(`/api/v2/post`, formData);
     return response.data;
@@ -85,18 +78,16 @@ export const createPostV2 = async (data, files) => {
 // 게시글 수정 v2
 export const updatePostV2 = async (id, data, files, remainFileIds) => {
     const formData = new FormData();
+    files.forEach(file => formData.append("files", file));
+
     // 테스트 필요
-    formData.append("data", JSON.stringify(data));
-    formData.append("attachmentIds", remainFileIds);
-    files.map(file => formData.append("files", file));
-
-    // formData.append("data", new Blob([JSON.stringify(data)], {
-    //     type: "application/json"
-    // }));
-
-    // for (var i = 0; i < files.length; i++) {
-    //     formData.append("files", files[i]);
-    // }
+    // formData.append("attachmentIds", remainFileIds);
+    formData.append("data", new Blob([JSON.stringify(data)], {
+        type: 'application/json'
+    }));
+    formData.append("attachmentIds", new Blob([JSON.stringify(remainFileIds)], {
+        type: 'application/json'
+    }));
     
     const response = await PostAPIv2.put(`/api/v2/post/${id}`, formData);
     return response.data;
