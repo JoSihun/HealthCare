@@ -1,54 +1,54 @@
 import React, { useState } from "react";
-import { Card, Nav } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+const SideBarItem = ({ item, selectedKey, setSelectedKey }) => {
+    const handleClick = async (e) => {
+        setSelectedKey(item.eventKey);
+    }
+
+    const handleMoustEnter = async (e) => {
+        if (item.eventKey !== selectedKey) {
+            e.target.className = "text-light bg-dark rounded px-2"
+        }
+    }
+    const handleMoustLeave = async (e) => {
+        if (item.eventKey !== selectedKey) {
+            e.target.className = "text-dark"
+        }
+    }
+
+    return (
+        <Link to={item.href} className="fs-4 fw-bold" style={{ color: "black", textDecoration: "none" }}>
+            <div className={selectedKey === item.eventKey ? "text-light bg-dark rounded p-1" : "text-dark"}
+                onClick={handleClick}
+                onMouseEnter={handleMoustEnter}
+                onMouseLeave={handleMoustLeave}
+            >
+                {item.label}
+            </div>
+        </Link>
+    );
+}
 
 const BaseSideBar = ({ title, items }) => {
     const [selectedKey, setSelectedKey] = useState(
-        items.find((item) => item.href === window.location.pathname)?.eventKey || 1
+        items.find((item) => window.location.pathname.includes(item.href))?.eventKey || 0
     );
   
-    const handleSelect = (selectedKey) => {
-        setSelectedKey(selectedKey);
-    };
-  
     return (
-        <Card className="mb-3">
+        <Card>
             <Card.Body>
                 <Card.Title className="fs-2 fw-bold fst-italic">
-                    <Link to={items[0].href} className="text-dark" style={{ textDecoration: "none" }}>
-                        {title}
+                    <Link to={title.href} className="text-dark" style={{ textDecoration: "none" }}>
+                        {title.label}
                     </Link>
                 </Card.Title>
                 <hr />
-                <Nav className="flex-column">
-                    {items.slice(1).map((item) => (
-                        <Nav.Item key={item.eventKey}>
-                            <Nav.Link
-                            href={item.href}
-                            eventKey={item.eventKey}
-                            onSelect={handleSelect}
-                            active={selectedKey === item.eventKey}
-                            className={selectedKey === item.eventKey ? "text-light bg-dark rounded" : "text-dark p-1"}
-                            >
-                                <div className="fs-4 fw-bold"
-                                onMouseEnter={(e) => { 
-                                    if (selectedKey !== item.eventKey) {
-                                        e.target.className = "fs-4 fw-bold text-light bg-dark rounded px-2";
-                                    }
-                                }}
-                                onMouseLeave={(e) => {
-                                    if (selectedKey !== item.eventKey) {
-                                        e.target.className = "fs-4 fw-bold text-dark";
-                                    }
-                                }}
-                                >
-                                    {item.label}
-                                </div>
-                            </Nav.Link>
-                        </Nav.Item>
-                    ))}
-                </Nav>
+
+                {items.map((item, index) => (
+                    <SideBarItem key={index} item={item} selectedKey={selectedKey} setSelectedKey={setSelectedKey} />
+                ))}
             </Card.Body>
         </Card>
     );
@@ -57,25 +57,25 @@ const BaseSideBar = ({ title, items }) => {
 
 
 export const MyPageSideBar = (props) => {
+    const title = { label: "마이페이지", href: '/my-page' };
     const items = [
-        { eventKey: 1, href: '/my-page', label: '마이페이지'},
-        { eventKey: 2, href: '/my-page/diet', label: '식단추천'},
-        { eventKey: 3, href: '/my-page/routine', label: '루틴추천'},
-        { eventKey: 4, href: '/my-page/bmi', label: '체질량지수(BMI)'},
+        { eventKey: 1, href: '/my-page/diet', label: '식단추천'},
+        { eventKey: 2, href: '/my-page/routine', label: '루틴추천'},
+        { eventKey: 3, href: '/my-page/bmi', label: '체질량지수(BMI)'},
     ];
 
-    return <BaseSideBar title="마이페이지" items={items} />;
+    return <BaseSideBar title={title} items={items} />;
 }
 
 
 export const SupportSideBar = (props) => {
+    const title = { label: 'Support', href: '/support/faqboard' };
     const items = [
-        { eventKey: 1, href: '/support/faqboard', label: 'FAQ'},
         { eventKey: 1, href: '/support/faqboard', label: 'FAQ'},
         { eventKey: 2, href: '/support/qnaboard', label: 'Q&A'},
         { eventKey: 3, href: '/support/freeboard', label: '자유게시판'},
         { eventKey: 4, href: '/support/livechat', label: 'LiveChat'},
     ];
 
-    return <BaseSideBar title="Support" items={items} />;
+    return <BaseSideBar title={title} items={items} />;
 }
