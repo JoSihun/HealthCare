@@ -67,6 +67,17 @@ public class AttachmentService {
         }
     }
 
+//    @Transactional
+//    public List<byte[]> getFileBytes(Long postId) {
+//        Post post = this.postRepository.findById(postId).orElseThrow(
+//                () -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. post_id = " + postId));
+//        List<Attachment> attachments = post.getAttachments();
+//
+//        return attachments.stream()
+//                .map(Attachment::getFileBytes)
+//                .collect(Collectors.toList());
+//    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 첨부파일 목록조회 */
     @Transactional
@@ -80,10 +91,10 @@ public class AttachmentService {
     /** 첨부파일 생성 */
     @Transactional
     public Long create(Long postId, List<MultipartFile> files) throws IOException {
-        Post post = this.postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. post_id = " + postId));
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
+        if (files != null) {
+            Post post = this.postRepository.findById(postId).orElseThrow(
+                    () -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. post_id = " + postId));
+            for (MultipartFile file : files) {
                 AttachmentRequestDTO requestDTO = uploadFile(post, file);
                 this.attachmentRepository.save(requestDTO.toEntity());
             }
@@ -107,8 +118,8 @@ public class AttachmentService {
                 });
 
         // 새 파일 추가
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
+        if (files != null) {
+            for (MultipartFile file : files) {
                 AttachmentRequestDTO attachmentRequestDTO = uploadFile(post, file);
                 this.attachmentRepository.save(attachmentRequestDTO.toEntity());
             }
