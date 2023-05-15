@@ -60,7 +60,8 @@ public class PostRestController {
     /** 게시글 삭제 API V2 - header: "multipart/form-data" */
     @DeleteMapping("/api/v2/post/{id}")
     public void deletePostV2(@PathVariable(value = "id") Long id) {
-        this.attachmentService.deleteAllByPostId(id);
+        // Removing a detached instance 오류 발생
+        // this.attachmentService.deleteAllByPostId(id);
         this.postService.delete(id);
     }
 }
