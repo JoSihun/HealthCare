@@ -124,7 +124,7 @@ const FAQBoardItem = (props) => {
         PostAPI.fetchPost(id)
         .then(response => setPost(response))
         .catch(error => console.log(error));
-    }, []);
+    }, [id]);
 
     return (post &&
         <Accordion.Item eventKey={post.id}>
