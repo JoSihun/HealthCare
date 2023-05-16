@@ -12,6 +12,8 @@ public class UserResponseDto {
     private String contact;
     private String username;
     private String birthday;
+    private String createdDate;
+    private String updatedDate;
 
     public UserResponseDto(User entity) {
         this.id = entity.getId();
@@ -20,5 +22,7 @@ public class UserResponseDto {
         this.contact = entity.getContact();
         this.username = entity.getUsername();
         this.birthday = entity.getBirthday().toString();
+        this.createdDate = entity.getCreatedDate().toString();
+        this.updatedDate = entity.getUpdatedDate().toString();
     }
 }
