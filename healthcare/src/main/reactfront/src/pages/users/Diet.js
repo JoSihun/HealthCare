@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
-import { createDiet, deleteDiet, fetchDiets, fetchRecommendFoods } from "../../api/DietAPI";
 import { useSearchParams } from "react-router-dom";
-import { fetchBMI, fetchBMIList } from "../../api/BMIAPI";
-import Paging from "../../components/support/Paging";
+
+import { createDiet, deleteDiet, fetchDiets, fetchRecommendFoods } from "../../api/user/DietAPI";
+import { fetchBMI, fetchBMIList } from "../../api/user/BMIAPI";
 import { MyPageSideBar } from "../../components/SideBar";
+import PageNavigation from "../../components/PageNavigation";
 
 // const FoodList = (props) => {
 //     const { foods } = props;
@@ -494,7 +495,7 @@ const DietList = (props) => {
     const { editData, setEditData } = props;
     const { showEditForm, setShowEditForm } = props;
     
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const page = searchParams.get('page') ? searchParams.get('page') : 1;
     const size = searchParams.get('size') ? searchParams.get('size') : 10;
 
@@ -536,8 +537,7 @@ const DietList = (props) => {
                                 ))}
                             </tbody>
                         </Table>
-
-                        <Paging pages={data} searchParams={searchParams} setSearchParams={setSearchParams} />
+                        <PageNavigation data={data} />
                     </Card.Body>
                 </Card>
             </Col>
