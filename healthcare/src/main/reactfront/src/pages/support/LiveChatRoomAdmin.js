@@ -4,7 +4,7 @@ import bg_black from "../../assets/images/bg_black.jpg";
 import * as SockJS from "sockjs-client";
 import * as StompJS from "@stomp/stompjs";
 import { useSearchParams } from "react-router-dom";
-import { fetchChatMessages, fetchChatRoom } from "../../api/LiveChatAPI";
+import { fetchChatMessages, fetchChatRoom } from "../../api/support/LiveChatAPI";
 import { SupportSideBar } from "../../components/SideBar";
 
 const ChatMessageForm = (props) => {
