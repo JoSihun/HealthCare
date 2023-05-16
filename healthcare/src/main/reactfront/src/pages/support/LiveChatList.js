@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Badge, Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { deleteChatRoom, fetchChatRooms } from "../../api/LiveChatAPI";
+import { deleteChatRoom, fetchChatRooms } from "../../api/support/LiveChatAPI";
 import { SupportSideBar } from "../../components/SideBar";
 
 const ModalCheck = (props) => {
