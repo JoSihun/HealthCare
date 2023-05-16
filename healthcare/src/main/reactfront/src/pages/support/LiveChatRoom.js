@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import bg_black from "../../assets/images/bg_black.jpg";
-import { fetchChatMessages, fetchChatRoom } from "../../api/LiveChatAPI";
+import { fetchChatMessages, fetchChatRoom } from "../../api/support/LiveChatAPI";
 import { SupportSideBar } from "../../components/SideBar";
 
 const ChatMessageForm = (props) => {
