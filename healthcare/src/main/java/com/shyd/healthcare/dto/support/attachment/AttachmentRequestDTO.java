@@ -13,6 +13,8 @@ public class AttachmentRequestDTO {
     private Long fileSize;
     private String fileName;
     private String filePath;
+    private String fileType;
+    private byte[] fileByte;
 
     public Attachment toEntity() {
         return Attachment.builder()
@@ -20,6 +22,8 @@ public class AttachmentRequestDTO {
                 .fileSize(this.fileSize)
                 .fileName(this.fileName)
                 .filePath(this.filePath)
+                .fileType(this.fileType)
+                .fileByte(this.fileByte)
                 .build();
     }
 }
