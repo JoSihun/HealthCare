@@ -12,7 +12,7 @@ const FileList = (props) => {
     const [files, setFiles] = useState([]);
 
     useEffect(() => {
-        AttachAPI.fetchFilesV1(id)
+        AttachAPI.fetchAttachesV1(id)
         .then(response => setFiles(response))
         .catch(error => console.log(error));
     }, [id]);
