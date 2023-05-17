@@ -76,16 +76,11 @@ export const createPostV2 = async (data, files) => {
 }
 
 // 게시글 수정 v2
-export const updatePostV2 = async (id, data, files, remainFileIds) => {
+export const updatePostV2 = async (id, data, files) => {
     const formData = new FormData();
     files.forEach(file => formData.append("files", file));
 
-    // 테스트 필요
-    // formData.append("attachmentIds", remainFileIds);
     formData.append("data", new Blob([JSON.stringify(data)], {
-        type: 'application/json'
-    }));
-    formData.append("attachmentIds", new Blob([JSON.stringify(remainFileIds)], {
         type: 'application/json'
     }));
     
