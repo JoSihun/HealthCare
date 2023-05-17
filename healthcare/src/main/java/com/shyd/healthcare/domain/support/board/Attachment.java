@@ -18,14 +18,19 @@ public class Attachment extends BaseTime {
     private Long fileSize;
     private String fileName;
     private String filePath;
+    private String fileType;
 
+    @Lob
+    private byte[] fileByte;
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    public Long update(AttachmentRequestDTO requestDto) {
-        this.fileSize = requestDto.getFileSize();
-        this.fileName = requestDto.getFileName();
-        this.filePath = requestDto.getFilePath();
+    public Long update(AttachmentRequestDTO requestDTO) {
+        this.fileSize = requestDTO.getFileSize();
+        this.fileName = requestDTO.getFileName();
+        this.filePath = requestDTO.getFilePath();
+        this.fileType = requestDTO.getFileType();
+        this.fileByte = requestDTO.getFileByte();
         return this.id;
     }
 }
