@@ -14,17 +14,9 @@ export const AttachAPI = axios.create({
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-/** 첨부파일 목록 */
-export const fetchFilesV1 = async (postId) => {
-    const params = { post: postId };
-    const response = await AttachAPI.get(`/api/v1/attachment`, { params });
-    return response.data;
-}
-
-/** 첨부파일 삭제 */
-export const deleteFilesV1 = async (postId) => {
-    const params = { post: postId };
-    const response = await AttachAPI.delete(`/api/v1/attachment`, { params });
+/** 첨부파일 바이너리 데이터 */
+export const fetchBinary = async (id) => {
+    const response = await AttachAPI.get(`/api/v1/attachment/binary/${id}`, { responseType: 'blob' });
     return response.data;
 }
 
@@ -53,7 +45,50 @@ export const downloadFile = async (id) => {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
+/** 첨부파일 목록 */
+export const fetchAttachesV1 = async (postId) => {
+    const params = { post: postId };
+    const response = await AttachAPI.get(`/api/v1/attachment`, { params });
+    return response.data;
+}
+
+/** 첨부파일 생성 */
+export const createAttachesV1 = async (postId, files) => {
+    const params = { post: postId };
+    const formData = new FormData();
+    files.forEach(file => formData.append("files", file));
+    
+    const response = await AttachAPI.post(`/api/v1/attachment`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        params: params, 
+    });
+    return response.data;
+}
+
+/** 첨부파일 수정 */
+export const updateAttachesV1 = async (postId, files) => {
+    const params = { post: postId };
+    const formData = new FormData();
+    files.forEach(file => formData.append("files", file));
+    
+    const response = await AttachAPI.put(`/api/v1/attachment`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        params: params, 
+    });
+    return response.data;
+}
+
+/** 첨부파일 삭제 */
+export const deleteAttachesV1 = async (postId) => {
+    const params = { post: postId };
+    const response = await AttachAPI.delete(`/api/v1/attachment`, { params });
+    return response.data;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
 const ApiObject = {
-    AttachAPI, fetchFilesV1, deleteFilesV1, downloadFile
+    AttachAPI,
+    fetchAttachesV1, fetchBinary, downloadFile,
+    createAttachesV1, updateAttachesV1, deleteAttachesV1,
 };
 export default ApiObject;
