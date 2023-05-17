@@ -51,9 +51,8 @@ public class PostRestController {
     @PutMapping("/api/v2/post/{id}")
     public Long updatePostV2(@PathVariable(value = "id") Long id,
                              @RequestPart(value = "data") PostUpdateRequestDTO requestDto,
-                             @RequestPart(value = "attachmentIds") List<Long> attachmentIds,
                              @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        this.attachmentService.update(id, attachmentIds, files);
+        this.attachmentService.update(id, files);
         return this.postService.update(id, requestDto);
     }
 
