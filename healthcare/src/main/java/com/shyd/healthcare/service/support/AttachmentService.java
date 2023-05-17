@@ -28,14 +28,43 @@ public class AttachmentService {
     private final PostRepository postRepository;
     private final AttachmentRepository attachmentRepository;
 
-    /** 첨부파일 다운로드 */
+    /** 실제파일 바이너리 */
     @Transactional
-    public Resource download(Long id) throws MalformedURLException {
+    public byte[] fetchBinary(Long id) {
+        Attachment attachment = this.attachmentRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 첨부파일을 찾을 수 없습니다. attachment_id = " + id));
+        return attachment.getFileByte();
+    }
+
+    /** 실제파일 다운로드 */
+    @Transactional
+    public Resource downloadFile(Long id) throws MalformedURLException {
         Attachment attachment = this.attachmentRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 첨부파일을 찾을 수 없습니다. attachment_id = " + id));
         return new UrlResource(Paths.get(attachment.getFilePath()).toUri());
     }
 
+//    /** 실제파일 바이너리 목록 */
+//    @Transactional
+//    public List<byte[]> fetchBinaries(Long postId) {
+//        Post post = this.postRepository.findById(postId).orElseThrow(
+//                () -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. post_id = " + postId));
+//        List<Attachment> attachments = post.getAttachments();
+//
+//        return attachments.stream()
+//                .map(Attachment::getFileByte)
+//                .collect(Collectors.toList());
+//    }
+
+//    /** 실제파일 다운로드 - 바이너리 데이터도 가능 */
+//    @Transactional
+//    public Resource downloadFile(Long id) throws MalformedURLException {
+//        Attachment attachment = this.attachmentRepository.findById(id).orElseThrow(
+//                () -> new IllegalArgumentException("해당 첨부파일을 찾을 수 없습니다. attachment_id = " + id));
+//        return new ByteArrayResource(attachment.getFileByte());
+//    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 실제파일 저장 */
     private AttachmentRequestDTO uploadFile(Post post, MultipartFile file) throws IOException {
         // 저장경로 설정 (Windows: "/", Linux: "\\", Default: "\\")
@@ -53,7 +82,9 @@ public class AttachmentService {
         // AttachmentSaveRequestDto 생성 및 반환
         return AttachmentRequestDTO.builder()
                 .fileName(file.getOriginalFilename())
+                .fileType(file.getContentType())
                 .filePath(filePath.toString())
+                .fileByte(file.getBytes())
                 .fileSize(file.getSize())
                 .post(post)
                 .build();
@@ -67,18 +98,15 @@ public class AttachmentService {
         }
     }
 
-//    @Transactional
-//    public List<byte[]> getFileBytes(Long postId) {
-//        Post post = this.postRepository.findById(postId).orElseThrow(
-//                () -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. post_id = " + postId));
-//        List<Attachment> attachments = post.getAttachments();
-//
-//        return attachments.stream()
-//                .map(Attachment::getFileBytes)
-//                .collect(Collectors.toList());
-//    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** 첨부파일 조회 */
+    @Transactional
+    public AttachmentResponseDTO findById(Long id) {
+        Attachment attachment = this.attachmentRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 첨부파일을 찾을 수 없습니다. attachment_id = " + id));
+        return new AttachmentResponseDTO(attachment);
+    }
+
     /** 첨부파일 목록조회 */
     @Transactional
     public List<AttachmentResponseDTO> findAllByPostId(Long postId) {
@@ -88,6 +116,7 @@ public class AttachmentService {
         return attachments.stream().map(AttachmentResponseDTO::new).collect(Collectors.toList());
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 첨부파일 생성 */
     @Transactional
     public Long create(Long postId, List<MultipartFile> files) throws IOException {
@@ -104,15 +133,13 @@ public class AttachmentService {
 
     /** 첨부파일 수정 */
     @Transactional
-    public Long update(Long postId, List<Long> attachmentIds, List<MultipartFile> files) throws IOException {
+    public Long update(Long postId, List<MultipartFile> files) throws IOException {
         Post post = this.postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. post_id = " + postId));
         List<Attachment> attachments = post.getAttachments();
 
-        // 기존 파일 갱신
-        attachments.stream()
-                .filter(attachment -> !attachmentIds.contains(attachment.getId()))
-                .forEach(attachment -> {
+        // 기존 파일 삭제
+        attachments.forEach(attachment -> {
                     this.deleteFile(attachment);
                     this.attachmentRepository.delete(attachment);
                 });
