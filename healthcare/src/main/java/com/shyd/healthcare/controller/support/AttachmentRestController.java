@@ -26,14 +26,29 @@ public class AttachmentRestController {
     /** 첨부파일 다운로드 API */
     @GetMapping("/api/v1/attachment/download/{id}")
     public ResponseEntity<Resource> downloadAttachment(@PathVariable Long id) throws MalformedURLException {
-        Resource resource = this.attachmentService.download(id);
-        String filename = Objects.requireNonNull(resource.getFilename());
+        AttachmentResponseDTO responseDTO = this.attachmentService.findById(id);
+        Resource resource = this.attachmentService.downloadFile(id);
+        String filename = responseDTO.getFileName();
         String encodedFilename = UriUtils.encode(filename, StandardCharsets.UTF_8);
         String contentDisposition = "attachment; filename=\"" + encodedFilename + "\"";
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
+    }
+
+    /** 첨부파일 바이너리 데이터 API */
+    @GetMapping("/api/v1/attachment/binary/{id}")
+    public ResponseEntity<byte[]> fetchBinaryData(@PathVariable Long id) {
+        AttachmentResponseDTO responseDTO = this.attachmentService.findById(id);
+        byte[] bytes = this.attachmentService.fetchBinary(id);
+        String filename = responseDTO.getFileName();
+        String encodedFilename = UriUtils.encode(filename, StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=\"" + encodedFilename + "\"";
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(bytes);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,9 +68,8 @@ public class AttachmentRestController {
     /** 첨부파일 수정 API */
     @PutMapping("/api/v1/attachment")
     public void updateAttachment(@RequestParam(value = "post") Long postId,
-                                 @RequestParam(value = "attachmentIds") List<Long> attachmentIds,
                                  @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        this.attachmentService.update(postId, attachmentIds, files);
+        this.attachmentService.update(postId, files);
     }
 
     /** 첨부파일 삭제 API */
