@@ -99,6 +99,10 @@ export const deletePostV2 = async (id) => {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-const ApiObject = { PostAPIv1, PostAPIv2, fetchPost, fetchPostPage, searchPostPage,
-    createPostV1, updatePostV1, deletePostV1, createPostV2, updatePostV2, deletePostV2 };
+const ApiObject = {
+    PostAPIv1, PostAPIv2,
+    fetchPost, fetchPostPage, searchPostPage,
+    createPostV1, updatePostV1, deletePostV1,
+    createPostV2, updatePostV2, deletePostV2,
+};
 export default ApiObject;
