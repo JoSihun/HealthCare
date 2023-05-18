@@ -49,12 +49,14 @@ const CommentForm = (props) => {
                             onChange={handleChange} value={formValues.content}/>
                     </div>
                     <div className="form-group d-flex justify-content-between">
-                        <label className="ms-1" htmlFor="secretYn">
+                        <div className="col-2 d-flex justify-content-start">
                             <input type="checkbox" className="form-check-input" id="secretYn" name="secretYn"
                                 onChange={handleCheckbox} checked={formValues.secretYn} />
-                            &nbsp;비밀댓글
-                        </label>
-                        <Button type="submit" variant="dark" style={{ width: "8%" }}>등록</Button>
+                            <label className="ms-1" htmlFor="secretYn">&nbsp;비밀댓글</label>
+                        </div>
+                        <div className="col-1 d-flex justify-content-center">
+                            <Button type="submit" variant="dark" style={{ width: "100%" }}>등록</Button>
+                        </div>
                     </div>
                 </form>
             </Card.Body>
