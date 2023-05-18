@@ -88,7 +88,7 @@ const PostBody = (props) => {
         const minute = date.getMinutes().toString().padStart(2, '0');
         const second = date.getSeconds().toString().padStart(2, '0');
 
-        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+        return `${year}.${month}.${day} ${hour}:${minute}:${second}`;
     }
 
     const handleEdit = async (e) => {
@@ -96,8 +96,9 @@ const PostBody = (props) => {
     }
 
     const handleDelete = async (e) => {
-        // 방법 2 사용, Service 간 호출로 해결해야할 듯
-        // 임시방편으로 Controller에 @Transactional 옵션으로 해결
+        // 방법 2 사용, Service 간 호출로 문제해결
+        // 임시방편으로 Controller에 @Transactional 옵션으로 해결가능
+        // Service간 통신으로 PostService에서 AttachmentService 호출로 최종해결
         PostAPI.deletePostV2(id)
         .then(window.location.assign(`/support/freeboard`))
         .catch(error => console.log(error));
@@ -158,12 +159,12 @@ export default function FreeBoardPost() {
     
     return (
         <Container fluid>
-            <Row className="justify-content-center">
-                <Col className="col-md-2 mx-1 my-4">
+            <Row className="justify-content-center mt-3">
+                <Col className="col-12 col-lg-2 mb-3">
                     <SupportSideBar />
                 </Col>
 
-                <Col className="col-md-9 mx-1 my-4">
+                <Col className="col-12 col-lg-9 mb-3">
                     <PostBody />
                     <Comment postId={id} />
                 </Col>
