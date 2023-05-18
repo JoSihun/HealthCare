@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 
 import PostAPI from "../../api/support/PostAPI";
+import AttachAPI from "../../api/support/AttachAPI";
 import { SupportSideBar } from "../../components/SideBar";
 
 const FileList = (props) => {
@@ -44,10 +45,10 @@ const FileList = (props) => {
                 {Array.from(files).map((file, index) => (
                     <div key={index} className="d-flex justify-content-start"
                         onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                        <div className="text-start" style={{ width: "5%" }}>{index + 1}</div>
-                        <div className="text-start" style={{ width: "75%" }}>{file.name}</div>
-                        <div className="text-end" style={{ width: "15%" }}>{formatFileSize(file.size)}</div>
-                        <div className="text-end" style={{ width: "5%" }}>
+                        <div className="col-1 text-start">{index + 1}</div>
+                        <div className="col-8 text-start">{file.name}</div>
+                        <div className="col-2 text-end">{formatFileSize(file.size)}</div>
+                        <div className="col-1 text-end">
                             <Link className="fw-bold text-danger" onClick={(e) => {handleDelete(index, e)}}>
                                 X
                             </Link>
@@ -65,6 +66,7 @@ const EditForm = (props) => {
     const [formValues, setFormValues] = useState({
         title: "",
         content: "",
+        secretYn: false,
         boardType: "QNA_BOARD",
     });
 
@@ -73,17 +75,26 @@ const EditForm = (props) => {
         .then(response => setFormValues(response))
         .catch(error => console.log(error));
 
-        // AttachAPI.fetchFilesV1(id)
-        // .then((response) => {
-        //     const fileList = response.map((file) => ({
-        //         name: file.fileName,
-        //         size: file.fileSize,
-        //     }));
-        //     setFiles(fileList);
-        //     console.log(response);
-        // }).catch((error) => {
-        //     console.log(error);
-        // });
+        AttachAPI.fetchAttachesV1(id)
+        .then((response) => {
+            const promise = response.map(async (item) => {
+                return await AttachAPI.fetchBinary(item.id)
+                    .then((binary) => {
+                        const blob = new Blob([binary]);
+                        return new File([blob], item.fileName, {
+                            type: item.fileType
+                        });
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+            });
+
+            Promise.all(promise)
+                .then(files => setFiles(files))
+                .catch(error => console.log(error));
+        }).catch((error) => {
+            console.log(error);
+        });
     }, [id]);
     
     const fileRef = useRef(null);
@@ -100,7 +111,13 @@ const EditForm = (props) => {
         newFiles.sort((a, b) => a.name.localeCompare(b.name));
         setFiles(newFiles);
     }
-    
+
+    const handleCheckbox = async (e) => {
+        setFormValues({...formValues,
+            [e.target.name]: e.target.checked
+        });
+    }
+
     const handleChange = async (e) => {
         setFormValues({...formValues,
             [e.target.name]: e.target.value
@@ -182,9 +199,16 @@ const EditForm = (props) => {
                 <label className="fs-5 fw-bold px-1" htmlFor="content">내용</label>
                 <textarea className="form-control" id="content" name="content" rows={20} onChange={handleChange} value={formValues.content} />
             </div>
-            <div className="form-group d-flex justify-content-end">
-                <Button type="submit" className="me-1" variant="dark" style={{ width: "8%" }}>수정</Button>
-                <Button onClick={handleCancel} className="ms-1" variant="danger" style={{ width: "8%" }}>취소</Button>
+            <div className="form-group d-flex justify-content-between">
+                <div className="col-2 d-flex justify-content-start">
+                    <input type="checkbox" className="form-check-input" id="secretYn" name="secretYn"
+                        onChange={handleCheckbox} checked={formValues.secretYn} />
+                    <label className="ms-1" htmlFor="secretYn">&nbsp;비밀글</label>
+                </div>
+                <div className="col-2 d-flex justify-content-center">
+                    <Button type="submit" className="me-1" variant="dark" style={{ width: "100%" }}>수정</Button>
+                    <Button onClick={handleCancel} className="ms-1" variant="danger" style={{ width: "100%" }}>취소</Button>
+                </div>
             </div>
         </form>
     );
@@ -207,12 +231,12 @@ const EditFormBody = (props) => {
 export default function QNABoardEdit() {
     return (
         <Container fluid>
-            <Row className="justify-content-center">
-                <Col className="col-md-2 mx-1 my-4">
+            <Row className="justify-content-center mt-3">
+                <Col className="col-12 col-lg-2 mb-3">
                     <SupportSideBar />
                 </Col>
 
-                <Col className="col-md-9 mx-1 my-4">
+                <Col className="col-12 col-lg-9 mb-3">
                     <EditFormBody />
                 </Col>
             </Row>
