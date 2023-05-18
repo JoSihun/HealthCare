@@ -205,6 +205,7 @@ export default function FreeBoard() {
                 <Col className="col-12 col-lg-2 mb-3">
                     <SupportSideBar />    
                 </Col>
+                
                 <Col className="col-12 col-lg-9 mb-3">
                     <FreeBoardBody />
                 </Col>
