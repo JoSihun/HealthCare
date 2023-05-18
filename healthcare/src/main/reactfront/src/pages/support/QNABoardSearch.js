@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 
+import UserAPI from "../../api/user/UserAPI";
 import PostAPI from "../../api/support/PostAPI";
 import PageNavigation from "../../components/PageNavigation";
 import { SupportSideBar } from "../../components/SideBar";
@@ -53,10 +54,10 @@ const Search = (props) => {
     }
 
     return (
-        <div className="d-flex justify-content-center mb-3">
-            <form onSubmit={handleSubmit}>
-                <div className="form-group d-inline me-1">
-                    <select onChange={handleFilter} value={searchFilter}>
+        <form onSubmit={handleSubmit}>
+            <div className="d-flex justify-content-center">
+                <div className="form-group mb-2" style={{ width: "11%" }}>
+                    <select className="form-select border-secondary" onChange={handleFilter} value={searchFilter}>
                         <option value="Title">제목</option>
                         <option value="Content">내용</option>
                         <option value="Author">작성자</option>
@@ -65,19 +66,26 @@ const Search = (props) => {
                         <option value="ContentAuthor">내용+작성자</option>
                     </select>
                 </div>
-                <div className="form-group d-inline mx-1">
-                    <input type="text" onChange={handleValue} value={searchValue} />
+                <div className="form-group mb-2" style={{ width: "40%" }}>
+                    <input type="text" className="form-control border-secondary" onChange={handleValue} value={searchValue} />
                 </div>
-                <div className="form-group d-inline ms-1">
-                    <button type="submit" >검색</button>
+                <div className="form-group mb-2" style={{ width: "11%" }}>
+                    <Button type="submit" variant="outline-secondary" style={{ width: "100%" }}>검색</Button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     );
 }
 
 const QNABoardList = (props) => {
     const { data } = props;
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        UserAPI.fetchUser()
+        .then(response => setUser(response))
+        .catch(error => console.log(error));
+    }, []);
 
     const convertDate = (prevDate) => {
         const now = new Date();
@@ -93,29 +101,59 @@ const QNABoardList = (props) => {
             const minute = date.getMinutes().toString().padStart(2, '0');
             return `${year}-${month}-${day} ${hour}:${minute}`;
         }
-        return `${year}-${month}-${day}`;
-      }
+        return `${year}.${month}.${day}`;
+    }
+
+    const GetTitle = ({ user, post }) => {
+        // 답변작성 여부
+        const ANSWER_COMPLETE_TEXT = (post.answerYn &&
+            <div className='d-inline fw-bold text-secondary'>
+                [답변완료]
+            </div>
+        );
+
+        // 비공개인 경우
+        if (post.secretYn) {
+            // 로그인하지 않은 경우 or 로그인 유저가 작성자 본인이 아닌 경우
+            if (!user || (user && user.name !== post.author)) {
+                return (
+                    <div className="fw-bold text-secondary">
+                        🔒 {ANSWER_COMPLETE_TEXT} [비공개] 비공개 질문입니다.
+                    </div>
+                );
+            }
+            // 로그인 유저가 작성자 본인인 경우
+            return (
+                <Link to={`/support/qnaboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
+                    🔓 {ANSWER_COMPLETE_TEXT} {post.title}
+                </Link>
+            );
+        }
+
+        // 비공개가 아닌 경우
+        return (
+            <Link to={`/support/qnaboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
+                {ANSWER_COMPLETE_TEXT} {post.title}
+            </Link>
+        );
+    }
 
     return (
         <Table responsive hover border="2px">
             <thead>
                 <tr style={{ color: "white", backgroundColor: "black" }}>
-                    <th className="text-center" style={{ width: "5%"}} >#</th>
-                    <th className="text-center" style={{ width: "55%"}} >제목</th>
-                    <th className="text-center" style={{ width: "10%"}} >조회수</th>
-                    <th className="text-center" style={{ width: "10%"}} >작성자</th>
-                    <th className="text-center" style={{ width: "20%"}} >작성일</th>
+                    <th className="col-lg-1 text-center">#</th>
+                    <th className="col-lg-7 text-center">제목</th>
+                    <th className="col-lg-1 text-center">조회수</th>
+                    <th className="col-lg-1 text-center">작성자</th>
+                    <th className="col-lg-2 text-center">작성일</th>
                 </tr>
             </thead>
             <tbody>
                 {data.content && data.content.map((post, index) => (
                     <tr key={index}>
                         <td className="text-center">{post.id}</td>
-                        <td className="text-start">
-                            <Link to={`/support/qnaboard/post/${post.id}`} style={{ color: "black", textDecoration: "none" }}>
-                                {post.title}
-                            </Link>
-                        </td>
+                        <td className="text-start"><GetTitle user={user} post={post} /></td>
                         <td className="text-center">{post.hits}</td>
                         <td className="text-center">{post.author}</td>
                         <td className="text-center">{convertDate(post.createdDate)}</td>
@@ -151,7 +189,7 @@ const SearchResultBody = (props) => {
                 <Select data={data} setSize={setSize} setPage={setPage} />
                 <QNABoardList data={data} />
 
-                <div className="d-flex justify-content-end">
+                <div className="d-flex justify-content-end mb-3">
                     <Link to={`/support/qnaboard/form`}>
                         <Button variant="dark" style={{ width: "100px"}}>글쓰기</Button>
                     </Link>
@@ -167,12 +205,12 @@ const SearchResultBody = (props) => {
 export default function QNABoardSearch() {
     return (
         <Container fluid>
-            <Row className="justify-content-center">
-                <Col className="col-md-2 mx-1 my-4">
+            <Row className="justify-content-center mt-3">
+                <Col className="col-12 col-lg-2 mb-3">
                     <SupportSideBar />    
                 </Col>
 
-                <Col className="col-md-9 mx-1 my-4">
+                <Col className="col-12 col-lg-9 mb-3">
                     <SearchResultBody />
                 </Col>
             </Row>
