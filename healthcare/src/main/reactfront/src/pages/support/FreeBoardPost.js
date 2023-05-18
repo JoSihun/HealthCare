@@ -141,9 +141,9 @@ const PostBody = (props) => {
                     </div>
                 </Card.Title>
                 <hr/>
-                <div className="border border-2 rounded mb-3 p-1" style={{ minHeight: "30vh" }}>
+                <textarea className="form-control border border-2 mb-3" rows={15} readOnly>
                     { post.content }
-                </div>
+                </textarea>
                 <FileList />
                 <div className="d-flex justify-content-end">
                     <Button onClick={handleEdit} className="me-1" variant="dark" style={{ width: "8%" }}>수정</Button>
