@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, Card, Row, Col, Container } from "react-bootstrap";
-import {Link} from "react-router-dom";
+import { Card, Row, Col, Container } from "react-bootstrap";
 import SideBar from "../../components/introduce/SideBar";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 
