@@ -6,6 +6,7 @@ import com.shyd.healthcare.domain.management.BMI;
 import com.shyd.healthcare.domain.management.Diet;
 import com.shyd.healthcare.domain.support.board.Comment;
 import com.shyd.healthcare.domain.support.board.Post;
+import com.shyd.healthcare.domain.support.livechat.UserChatRoom;
 import com.shyd.healthcare.dto.user.UserRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Entity
@@ -53,6 +55,9 @@ public class User extends BaseTime {
     private List<Post> posts;
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Set<UserChatRoom> userChatRooms;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<BMI> bmis;
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
