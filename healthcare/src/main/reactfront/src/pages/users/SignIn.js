@@ -25,7 +25,7 @@ const SignInForm = (props) => {
             localStorage.setItem('tokenType', response.tokenType);
             localStorage.setItem('accessToken', response.accessToken);
             localStorage.setItem('refreshToken', response.refreshToken);
-            window.location.assign("/home");
+            window.location.assign("/");
         }).catch((error) => {
             setFailed(true);
             console.log(error);
