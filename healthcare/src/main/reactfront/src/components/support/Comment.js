@@ -138,7 +138,7 @@ const CommentItem = (props) => {
 
                 {!activeEdit ? (
                     <div className="px-1 pt-1">
-                        {comment.secretYn && user.username !== comment.author ? "비밀댓글입니다." : comment.content}
+                        {comment.secretYn && user.username !== comment.author ? "🔒 비밀댓글입니다." : `🔒 ${comment.content}`}
                     </div>
                 ) : (
                     <form className="px-1 pt-2" onSubmit={handleSubmit}>
