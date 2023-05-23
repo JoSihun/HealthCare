@@ -1,63 +1,69 @@
-import { Nav, Navbar, Container, NavDropdown } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
-import UserAPI from '../api/user/UserAPI';
+import React, { useEffect, useState } from "react";
+import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
+
+import UserAPI from "../api/user/UserAPI";
 import logo from '../logo.svg';
 
 export default function Navigation() {
-    const [currentUser, setCurrentUser] = useState({});
-    const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
-
+    const [user, setUser] = useState(null);
+    
     useEffect(() => {
-        if (accessToken) {
+        if (localStorage.getItem("accessToken")) {
             UserAPI.fetchUser()
-            .then(response => setCurrentUser(response))
-            .catch(error => console.log(error));
+            .then(response => setUser(response))
+            .catch(error => console.log(error))
         }
-    }, [accessToken]);
+    }, [])
 
     const handleLogout = async () => {
-        setCurrentUser({});
-        setAccessToken(null);
+        setUser(null);
         localStorage.clear();
-        window.location.assign("/home");
+        window.location.assign("/");
     }
 
     return (
-        <Navbar bg='dark' variant='dark' fixed='top' expand='lg' collapseOnSelect>
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" fixed="top">
             <Container>
-                <Navbar.Brand href="/">
-                    <img src={logo} width="40" height="35" alt="" /> HealthCare
+                <Navbar.Brand className="d-flex align-items-center" href="/">
+                    <img className="img-fluid" width="45" src={logo} alt="Logo" />
+                    <div className="fw-bold">HealthCare</div>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                
                 <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="me-auto" alt="Nav Empty Space">
+                    <Nav className="ms-auto">
+                        <Nav.Link className="fw-bold" href="/">Home</Nav.Link>
 
+                        <NavDropdown className="fw-bold" title="Introduce" id="collasible-nav-dropdown">
+                            <NavDropdown.Item className="fw-bold" href="/introduce/staff">Staff</NavDropdown.Item>
+                            <NavDropdown.Item className="fw-bold" href="/introduce/facility">Facility</NavDropdown.Item>
+                            <NavDropdown.Item className="fw-bold" href="/introduce/direction">Direction</NavDropdown.Item>
+                        </NavDropdown>
+                        <NavDropdown className="fw-bold" title="Support" id="collasible-nav-dropdown">
+                            <NavDropdown.Item className="fw-bold" href="/support/faqboard">FAQ</NavDropdown.Item>
+                            <NavDropdown.Item className="fw-bold" href="/support/qnaboard">Q&A</NavDropdown.Item>
+                            <NavDropdown.Item className="fw-bold" href="/support/livechat">LiveChat</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item className="fw-bold" href="/support/freeboard">자유게시판</NavDropdown.Item>
+                        </NavDropdown>
                     </Nav>
-                    <Nav>
-                        <Nav.Link href="/home">Home</Nav.Link>
-                        <NavDropdown title="Introduce" id="collasible-nav-dropdown">
-                            <NavDropdown.Item href="/introduce/staff">Staff</NavDropdown.Item>
-                            <NavDropdown.Item href="/introduce/facility">Facility</NavDropdown.Item>
-                            <NavDropdown.Item href="/introduce/direction">Direction</NavDropdown.Item>
-                        </NavDropdown>
-                        <NavDropdown title="Support" id="collasible-nav-dropdown">
-                            <NavDropdown.Item href="/support/faqboard">FAQ</NavDropdown.Item>
-                            <NavDropdown.Item href="/support/qnaboard">Q&A</NavDropdown.Item>
-                            <NavDropdown.Item href="/support/freeboard">자유게시판</NavDropdown.Item>
-                            <NavDropdown.Item href="/support/livechat">LiveChat</NavDropdown.Item>
-                        </NavDropdown>
-                        {accessToken ? (
-                            <NavDropdown title={`${currentUser.username}님 환영합니다.`} id="collasible-nav-dropdown">
-                                <NavDropdown.Item href="/my-page">MyPage</NavDropdown.Item>
-                                <NavDropdown.Item onClick={handleLogout}>로그아웃</NavDropdown.Item>
+                    {user ? (
+                        <Nav>
+                            <NavDropdown className="fw-bold" title={`${user.name}님 환영합니다.`} id="collasible-nav-dropdown">
+                                <NavDropdown.Item className="fw-bold" href="/my-page/bmi">BMI</NavDropdown.Item>
+                                <NavDropdown.Item className="fw-bold" href="/my-page/diet">내 식단</NavDropdown.Item>
+                                <NavDropdown.Item className="fw-bold" href="/my-page/routine">운동루틴</NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <NavDropdown.Item className="fw-bold" href="/my-page">MyPage</NavDropdown.Item>
+                                <NavDropdown.Item className="fw-bold" onClick={handleLogout}>로그아웃</NavDropdown.Item>
                             </NavDropdown>
-                        ) : (
-                            <>
-                                <Nav.Link href="/signup">SignUp</Nav.Link>
-                                <Nav.Link href="/signin">LogIn</Nav.Link>
-                            </>
-                        )}
-                    </Nav>
+                        </Nav>
+                    ) : (
+                        <Nav>
+                            <Nav.Link className="fw-bold" href="/signin">Login</Nav.Link>
+                            <Nav.Link className="fw-bold" href="/signup">SignUp</Nav.Link>
+                        </Nav>
+                    )}
                 </Navbar.Collapse>
             </Container>
         </Navbar>
