@@ -1,162 +1,173 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
-import SideBar from "../../components/support/SideBar";
+import { useParams } from "react-router-dom";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
+
+import PostAPI from "../../api/support/PostAPI";
+import AttachAPI from "../../api/support/AttachAPI";
 import Comment from "../../components/support/Comment";
-import { deletePostV1, fetchPostV1 } from "../../api/PostAPI";
-import { deleteFilesV1, downloadFile, fetchFilesV1 } from "../../api/AttachAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const FileList = (props) => {
-    const handleDownload = async (e) => {
-        e.preventDefault();
-        downloadFile(e.target.id);
+    const { id } = useParams();
+    const [files, setFiles] = useState([]);
+
+    useEffect(() => {
+        AttachAPI.fetchAttachesV1(id)
+        .then(response => setFiles(response))
+        .catch(error => console.log(error));
+    }, [id]);
+
+    const formatFileSize = (bytes) => {
+        if (bytes < 1024) {
+            return `${bytes.toFixed(2).toLocaleString()} bytes`;
+        }
+        const kilobytes = bytes / 1024;
+        if (kilobytes < 1024) {
+            return `${(kilobytes).toFixed(2).toLocaleString()} KB`;
+        }
+        const megabytes = kilobytes / 1024;
+        if (megabytes < 1024) {
+            return `${(megabytes).toFixed(2).toLocaleString()} MB`;
+        }
+        const gigabytes = megabytes / 1024;
+        return `${(gigabytes).toFixed(2).toLocaleString()} GB`;
     }
 
-    const [modalShow, setModalShow] = useState(false);
-    const [downloadFileId, setDownloadFileId] = useState(0);
-    const [downloadFileName, setDownloadFileName] = useState("");
-    const handleClickLink = async (params, e) => {
-        setModalShow(true);
-        setDownloadFileId(params.id);
-        setDownloadFileName(params.fileName);
+    const handleMouseEnter = async (e) => {
+        e.currentTarget.style.cursor = "pointer";
+        e.currentTarget.style.backgroundColor = 'lightgray';
+    }
+    
+    const handleMouseLeave = async (e) => {
+        e.currentTarget.style.cursor = "";
+        e.currentTarget.style.backgroundColor = '';
+    }
+
+    const handleDownload = async (e) => {
+        e.preventDefault();
+        AttachAPI.downloadFile(e.currentTarget.id);
+    }
+
+    return (files.length !== 0 &&
+        <Card className="mb-3">
+            <Card.Body>
+                <Card.Title className="fs-5 fw-bold">
+                    첨부파일
+                </Card.Title>
+                <hr/>
+                {files.map((file, index) => (
+                    <div key={index} className="d-flex justify-content-start px-1" onClick={handleDownload}
+                        onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} id={file.id}>
+                        <div className="text-start" style={{ width: "50%" }}>{ file.fileName }</div>
+                        <div className="text-end" style={{ width: "50%" }}>{ formatFileSize(file.fileSize) }</div>
+                    </div>
+                ))}
+            </Card.Body>
+        </Card>
+    );
+}
+
+const PostBody = (props) => {
+    const { id } = useParams();
+    const [post, setPost] = useState({});
+
+    useEffect(() => {
+        PostAPI.fetchPost(id)
+        .then(response => setPost(response))
+        .catch(error => console.log(error));
+    }, [id]);
+
+    const convertDate = (prevDate) => {
+        const date = new Date(prevDate);
+
+        const year = date.getFullYear().toString().padStart(2, '0');
+        const month = date.getMonth().toString().padStart(2, '0');
+        const day = date.getDay().toString().padStart(2, '0');
+
+        const hour = date.getHours().toString().padStart(2, '0');
+        const minute = date.getMinutes().toString().padStart(2, '0');
+        const second = date.getSeconds().toString().padStart(2, '0');
+
+        return `${year}.${month}.${day} ${hour}:${minute}:${second}`;
+    }
+
+    const handleEdit = async (e) => {
+        window.location.assign(`/support/freeboard/form/${id}`);
+    }
+
+    const handleDelete = async (e) => {
+        // 방법 2 사용, Service 간 호출로 문제해결
+        // 임시방편으로 Controller에 @Transactional 옵션으로 해결가능
+        // Service간 통신으로 PostService에서 AttachmentService 호출로 최종해결
+        PostAPI.deletePostV2(id)
+        .then(window.location.assign(`/support/freeboard`))
+        .catch(error => console.log(error));
+
+        // 방법 1: Post, Attachment 각각 삭제, 정상작동함
+        // await axios.delete(`/api/v1/attachment/${id}`)
+        // .then((response) => {
+
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
+
+        // await axios.delete(`/api/v1/post/${id}`)
+        // .then((response) => {
+        //     windlow.location.assign(`/support/freeboard`);
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
+
+        // 방법 2: Post, Attachment 한 번에 삭제, 오류있음
+        // 영속성 컨텍스트, @Transactional 문제로 추측, 'Removing a detached instance' 오류발생
+        // await axios.delete(`/api/v2/post/${id}`)
+        // .then((response) => {
+        //     window.location.assign(`/support/freeboard`);
+        // }).catch((error) => {
+        //     console.log(error);
+        // });
     }
 
     return (
-        <Card className="mb-3">
+        <Card>
             <Card.Body>
-                <Card.Title><strong>첨부파일</strong></Card.Title>
+                <Card.Title className="d-flex justify-content-between">
+                    <div className="fs-2 fw-bold">
+                        { post.title }
+                    </div>
+                    <div className="fs-6 text-secondary">
+                        <div>작성일: {convertDate(post.createdDate)}</div>
+                        <div>수정일: {convertDate(post.updatedDate)}</div>
+                    </div>
+                </Card.Title>
                 <hr/>
-                {props.files.map((file, index) => {
-                    return (
-                        <div className="d-flex justify-content-between" key={index}>
-                            <Link onClick={(e) => handleClickLink(file, e)} style={{ color: "black" }}>{ file.fileName }</Link>
-                            <div>{ file.createdDate }</div>
-                        </div>
-                    ) 
-                })}
-
-                <Modal show={modalShow} onHide={() => setModalShow(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Download</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        Do you really want to download file?<br/>
-                        <strong><u>{ downloadFileName }</u></strong>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="dark" onClick={handleDownload} id={ downloadFileId }>
-                            Download
-                        </Button>
-                        <Button variant="danger" onClick={() => setModalShow(false)}>
-                            Cancel
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                <textarea className="form-control border border-2 mb-3"
+                    rows={15} value={post.content} readOnly />
+                <FileList />
+                <div className="d-flex justify-content-end">
+                    <Button onClick={handleEdit} className="me-1" variant="dark" style={{ width: "8%" }}>수정</Button>
+                    <Button onClick={handleDelete} className="ms-1" variant="danger" style={{ width: "8%" }}>삭제</Button>
+                </div>
             </Card.Body>
         </Card>
-    )
+    );
 }
 
 export default function FreeBoardPost() {
     const { id } = useParams();
-    const [post, setPost] = useState({});
-    const [files, setFiles] = useState([]);
-
-    useEffect(() => {
-        fetchPostV1(id)
-        .then((response) => {
-            setPost(response);
-        }).catch((error) => {
-            console.log(error);
-        });
-
-        fetchFilesV1(id)
-        .then((response) => {
-            setFiles(response);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }, [id]);
-
-    const handleDelete = async (e) => {
-        e.preventDefault();
-
-        // 방법 1 API 모듈화
-        deleteFilesV1(id)
-        .catch((error) => {
-            console.log(error);
-        });
-
-        deletePostV1(id)
-        .then(() => {
-            window.location.href = `/support/freeboard`;
-        }).catch((error) => {
-            console.log(error);
-        });
-
-        // 방법 1: Attachment, Post 각각 삭제
-        // await axios.delete(`/api/attachment/${id}`)
-        // .then((response) => {
-
-        // }).catch((error) => {
-        //     console.log(error);
-        // });
-
-        // await PostAPIV1.delete(`/api/v1/post/${id}`)
-        // .then((response) => {
-        //     window.location.href = `/support/freeboard`;
-        // }).catch((error) => {
-        //     console.log(error);
-        // });
-
-        // 방법 2: Post 삭제를 통해 Attachment도 삭제
-        // ERROR Removing a detached instance 발생, @Transaction에 관한 문제로 추측
-        // await axios.delete(`/api/v2/post/${id}`)
-        // .then((response) => {
-        //     window.location.href = `/support/freeboard`;
-        // }).catch((error) => {
-        //     console.log(error);
-        // });
-    }
-
+    
     return (
-        <>
         <Container fluid>
-            <Row className="justify-content-center">
-                <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />                
+            <Row className="justify-content-center mt-3">
+                <Col className="col-12 col-lg-2 mb-3">
+                    <SupportSideBar />
                 </Col>
 
-                <Col className="col-md-9 mx-2 my-4">
-                    <Card>
-                        <Card.Body>
-                            <Card.Title><h2><strong>자유게시판</strong></h2></Card.Title>
-                            <hr/>
-
-                            <Card.Title><h3><strong>{ post.title }</strong></h3></Card.Title>
-                            <Card className="mb-3" style={{ minHeight: "50vh" }}>
-                                <Card.Body>
-                                    <Card.Text>{ post.content }</Card.Text>
-                                </Card.Body>
-                            </Card>
-
-                            {0 < files.length &&
-                                <FileList files={files} />
-                            }
-
-                            <div className="d-flex justify-content-end">
-                                <Link to={`/support/freeboard/form/${post.id}`}>
-                                    <Button variant="dark" className="ms-2" style={{ width: "100px" }}>수정</Button>
-                                </Link>
-                                <Button variant="danger" className="ms-2" style={{ width: "100px" }} onClick={handleDelete}>삭제</Button>
-                            </div>
-                        </Card.Body>
-                    </Card>
-
+                <Col className="col-12 col-lg-9 mb-3">
+                    <PostBody />
                     <Comment postId={id} />
                 </Col>
             </Row>
         </Container>
-        </>
     );
 }

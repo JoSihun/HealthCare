@@ -1,172 +1,214 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import SideBar from "../../components/support/SideBar";
-import { createPostV2 } from "../../api/PostAPI";
+
+import PostAPI from "../../api/support/PostAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const FileList = (props) => {
-    const [files, setFiles] = useState([]);
+    const { files, setFiles } = props;
 
-    useEffect(() => {
-        const values = [];
-        const keys = Object.keys(props.files)
-        for (let i = 0; i < keys.length; i++) {
-            values.push({
-                key: keys[i],
-                name: props.files[keys[i]].name,
-                size: props.files[keys[i]].size,
-            });
+    const formatFileSize = (bytes) => {
+        if (bytes < 1024) {
+            return `${bytes.toFixed(2).toLocaleString()} bytes`;
         }
+        const kilobytes = bytes / 1024;
+        if (kilobytes < 1024) {
+            return `${(kilobytes).toFixed(2).toLocaleString()} KB`;
+        }
+        const megabytes = kilobytes / 1024;
+        if (megabytes < 1024) {
+            return `${(megabytes).toFixed(2).toLocaleString()} MB`;
+        }
+        const gigabytes = megabytes / 1024;
+        return `${(gigabytes).toFixed(2).toLocaleString()} GB`;
+    }
 
-        setFiles(values);
-    }, [props]);
+    const handleMouseEnter = async (e) => {
+        e.currentTarget.style.backgroundColor = 'lightgray';
+    }
+    
+    const handleMouseLeave = async (e) => {
+        e.currentTarget.style.backgroundColor = '';
+    }
 
-    const handleDelete = async (e) => {
-        e.preventDefault();
-        const dataTransfer = new DataTransfer();
-        let fileArray = Array.from(props.files);
-        fileArray.splice(e.target.parentElement.id, 1);
-        fileArray.forEach(file => { dataTransfer.items.add(file); });
-        props.fileRef.current.files = dataTransfer.files;
-        props.setFiles(dataTransfer.files);
+    const handleDelete = async (index, e) => {
+        const newFiles = Array.from(files);
+        newFiles.splice(index, 1);
+        setFiles(newFiles);
     }
 
     return (
-        <Card>
+        <Card style={{ minHeight: "10vh" }}>
             <Card.Body>
-                {files.map((file, index) => {
-                    return (
-                        <div key={index} className="d-flex justify-content-between">
-                            <div>{file.name}</div>
-                            <div>{file.size} Byte&nbsp;
-                                <Link id={file.key} onClick={handleDelete} style={{ color: "gray" }}><strong>X</strong></Link>
-                            </div>
+                {Array.from(files).map((file, index) => (
+                    <div key={index} className="d-flex justify-content-start"
+                        onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                        <div className="col-1 text-start">{index + 1}</div>
+                        <div className="col-8 text-start">{file.name}</div>
+                        <div className="col-2 text-end">{formatFileSize(file.size)}</div>
+                        <div className="col-1 text-end">
+                            <Link className="fw-bold text-danger" onClick={(e) => {handleDelete(index, e)}}>
+                                X
+                            </Link>
                         </div>
-                    )
-                })}
+                    </div>
+                ))}
             </Card.Body>
         </Card>
     );
 }
 
-const InputForm = () => {
-    const fileRef = useRef(null);
+const InputForm = (props) => {
     const [files, setFiles] = useState([]);
-    const [values, setValues] = useState({
+    const [formValues, setFormValues] = useState({
         title: "",
         content: "",
-        category: "FREE_BOARD",
         secretYn: false,
+        boardType: "FREE_BOARD",
     });
     
+    const fileRef = useRef(null);
+    useEffect(() => {
+        if (fileRef.current) {
+            const dataTransfer = new DataTransfer();
+            Array.from(files).forEach(file => dataTransfer.items.add(file));
+            fileRef.current.files = dataTransfer.files;
+        }
+    }, [files]);
+
+    const handleFileChange = async (e) => {
+        const newFiles = [...files, ...e.target.files];
+        newFiles.sort((a, b) => a.name.localeCompare(b.name));
+        setFiles(newFiles);
+    }
+    
+    const handleCheckbox = async (e) => {
+        setFormValues({...formValues,
+            [e.target.name]: e.target.checked
+        });
+    }
+
     const handleChange = async (e) => {
-        e.preventDefault();
-        setValues({...values,
-            [e.target.id]: e.target.value
+        setFormValues({...formValues,
+            [e.target.name]: e.target.value
         });
     }
     
-    const handleChangeFiles = async (e) => {
-        e.preventDefault();
-        setFiles(e.target.files);
+    const handleCancel = async (e) => {
+        window.location.assign(`/support/freeboard`);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // 방법 2 API 모듈화
-        createPostV2(values, files)
+        PostAPI.createPostV2(formValues, files)
         .then((response) => {
-            window.location.href = `/support/freeboard/post/${response}`;
+            window.location.assign(`/support/freeboard/post/${response}`)
         }).catch((error) => {
-            console.log(error);
-        })
+            console.log(error)
+        });
 
-        // 방법 1: Attachment, Post 각각 저장, 정상작동함
-        // let postId = null;
-        // await axios.post(`/api/v1/post`, values)
+        // 방법 1: Post, Attachment 각각 저장, 정상작동함
+        // let id = null;
+        // await axios.post(`/api/v1/post`, formValues)
         // .then((response) => {
-        //     postId = response.data;
-        // }).catch((error) => {
+        //     id = response.data;
+        // })
+        // .catch((error) => {
         //     console.log(error);
         // });
 
         // const formData = new FormData();
-        // for (var i = 0; i < files.length; i++) {
-        //     formData.append("files", files[i]);
-        // }
+        // Array.from(files).forEach((file) => {
+        //     formData.append("files", file);
+        // });
 
-        // await axios.post(`/api/attachment/${postId}`, formData, {
+        // await axios.post(`/api/v1/attachment/${id}`, formData, {
         //     headers: {
-        //         "Content-Type": "multipart/form-data",
+        //         'Content-Type': 'multipart/form-data',
         //     },
         // }).then((response) => {
-        //     window.location.href = `/support/freeboard/post/${postId}`;
+        //     window.location.assign(`/support/freeboard/post/${id}`);
         // }).catch((error) => {
         //     console.log(error);
         // });
 
-        // 방법 2: Post 저장을 통해 Attachment도 저장
-        // 변수가 더 깔끔하여 채택
+        // 방법 2: RequestPart로 한 번에 저장, 정상작동함
         // const formData = new FormData();
-        // formData.append("data", new Blob([JSON.stringify(values)], {
-        //     type: "application/json"
+        // Array.from(files).forEach((file) => {
+        //     formData.append("files", file);
+        // });
+        // formData.append("data", new Blob([JSON.stringify(formValues)], {
+        //     type: 'application/json'
         // }));
 
-        // for (var i = 0; i < files.length; i++) {
-        //     formData.append("files", files[i]);
-        // }
-        
         // await axios.post(`/api/v2/post`, formData, {
         //     headers: {
-        //         "Content-Type": "multipart/form-data"
-        //     }
+        //         'Content-Type': 'multipart/form-data',
+        //     },
         // }).then((response) => {
-        //     window.location.href = `/support/freeboard/post/${response.data}`;
+        //     window.location.assign(`/support/freeboard/post/${response.data}`);
         // }).catch((error) => {
         //     console.log(error);
-        // });
+        // })
     }
-
+    
     return (
         <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="form-group mb-2">
-                <label htmlFor="title" style={{ fontSize: "20px", fontWeight: "bold"}}>제목</label>
-                <input type="text" className="form-control" id="title" onChange={handleChange} value={values.title||''}></input>
+                <label className="fs-5 fw-bold px-1" htmlFor="title">제목</label>
+                <input type="text" className="form-control" id="title" name="title" onChange={handleChange} />
             </div>
+            <hr/>
             <div className="form-group mb-3">
-                <label htmlFor="file" style={{ fontSize: "20px", fontWeight: "bold"}}>첨부파일</label>
-                <input type="file" className="form-control" id="file" name="file" multiple="multiple" onChange={handleChangeFiles} ref={fileRef}></input>
-                {0 < files.length && <FileList files={files} setFiles={setFiles} fileRef={fileRef} />}
+                <label className="fs-5 fw-bold px-0" htmlFor="file">첨부파일</label>
+                <input type="file" className="form-control" id="file" name="file" multiple="multiple" onChange={handleFileChange} ref={fileRef} />
+                <FileList files={files} setFiles={setFiles} />
             </div>
+            <hr/>
             <div className="form-group mb-3">
-                <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용</label>
-                <textarea className="form-control" id="content" rows="20" onChange={handleChange} value={values.content}></textarea>
+                <label className="fs-5 fw-bold px-1" htmlFor="content">내용</label>
+                <textarea className="form-control" id="content" name="content" rows={20} onChange={handleChange} />
             </div>
-            <div className="form-group d-flex justify-content-end">
-                <Button type="submit" className="me-1" style={{ width: "100px" }} variant="dark">등록</Button>
-                <Button href="/support/freeboard" className="ms-1" style={{ width: "100px" }} variant="danger">취소</Button>
+            <div className="form-group d-flex justify-content-between">
+                <div className="col-2 d-flex justify-content-start">
+                    <input type="checkbox" className="form-check-input" id="secretYn" name="secretYn"
+                        onChange={handleCheckbox} checked={formValues.secretYn} />
+                    <label className="ms-1" htmlFor="secretYn">&nbsp;비밀글</label>
+                </div>
+                <div className="col-2 d-flex justify-content-center">
+                    <Button type="submit" className="me-1" variant="dark" style={{ width: "100%" }}>등록</Button>
+                    <Button onClick={handleCancel} className="ms-1" variant="danger" style={{ width: "100%" }}>취소</Button>
+                </div>
             </div>
         </form>
+    );
+}
+
+const FormBody = (props) => {
+    return (
+        <Card>
+            <Card.Body>
+                <Card.Title className="fs-2 fw-bold">
+                    자유게시판
+                </Card.Title>
+                <hr/>
+                <InputForm />
+            </Card.Body>
+        </Card>
     )
 }
 
 export default function FreeBoardForm() {
     return (
         <Container fluid>
-            <Row className="justify-content-center">
-                <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
+            <Row className="justify-content-center mt-3">
+                <Col className="col-12 col-lg-2 mb-3">
+                    <SupportSideBar />
                 </Col>
 
-                <Col className="col-md-9 mx-2 my-4">
-                    <Card>
-                        <Card.Body>
-                            <Card.Title><h2><strong>자유게시판</strong></h2></Card.Title>
-                            <hr/>
-                            <InputForm />
-                        </Card.Body>
-                    </Card>
+                <Col className="col-12 col-lg-9 mb-3">
+                    <FormBody />
                 </Col>
             </Row>
         </Container>

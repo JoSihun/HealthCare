@@ -3,27 +3,17 @@ package com.shyd.healthcare.dto.support.comment;
 import com.shyd.healthcare.domain.support.board.Comment;
 import com.shyd.healthcare.domain.support.board.Post;
 import com.shyd.healthcare.domain.user.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class CommentSaveRequestDto {
+@AllArgsConstructor
+public class CommentSaveRequestDTO {
     private Post post;
     private User author;
     private String content;
     private Boolean secretYn;
-
-    @Builder
-    public CommentSaveRequestDto(User author, String content, Boolean secretYn, Post post) {
-        this.post = post;
-        this.author = author;
-        this.content = content;
-        this.secretYn = secretYn;
-    }
 
     public Comment toEntity() {
         return Comment.builder()

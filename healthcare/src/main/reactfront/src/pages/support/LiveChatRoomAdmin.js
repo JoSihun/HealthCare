@@ -1,190 +1,76 @@
+import SockJS from "sockjs-client";
+import { Client } from "@stomp/stompjs";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
-import SideBar from "../../components/support/SideBar";
-import bg_black from "../../assets/images/bg_black.jpg";
-import * as SockJS from "sockjs-client";
-import * as StompJS from "@stomp/stompjs";
 import { useSearchParams } from "react-router-dom";
-import { fetchChatMessages, fetchChatRoom } from "../../api/LiveChatAPI";
+import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
+import { SupportSideBar } from "../../components/SideBar";
+
+import UserAPI from "../../api/user/UserAPI";
+import LiveChatAPI from "../../api/support/LiveChatAPI";
+import bg_black from "../../assets/images/bg_black.jpg";
 
 const ChatMessageForm = (props) => {
-    const { activeChatForm } = props;
-    const [chatData, setChatData] = useState({
-        roomUuid: props.roomUuid,
-        sender: props.adminId,
-        message: "",
+    const { setChatMessages } = props;
+    const [formValues, setFormValues] = useState({
+        message: ""
     });
-
-    useEffect(() => {
-        setChatData({
-            roomUuid: props.roomUuid,
-            sender: props.adminId,
-            message: "",
-        })
-    }, [props.roomUuid, props.adminId]);
-
-    const handleChange = async (e) => {
-        e.preventDefault();
-        setChatData({...chatData,
-            message: e.target.value,
-        });
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        props.publish(chatData);
-        setChatData({...chatData,
-            message: "",
-        });
-    }
-
-    return (
-        <form onSubmit={handleSubmit}>
-            <div className="form-group mb-3">
-                <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용 입력</label>
-                <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={chatData.message} required disabled={!activeChatForm}></textarea>
-            </div>
-            <div className="form-group d-flex justify-content-end">
-                <Button type="submit" variant="dark" style={{ minWidth: "100px" }} disabled={!activeChatForm}>
-                    {activeChatForm ? "전송" : "연결중"}
-                    {!activeChatForm && <Spinner className="ms-2" animation="border" size="sm" variant="secondary" />}
-                </Button>
-            </div>
-        </form>
-    );
-}
-
-const AdminMessageItem = (props) => {
-    return (
-        <div className="mb-2">
-            <div className="d-flex justify-content-start">
-                <div className="me-1"><strong>운영자</strong></div>
-                <div className="ms-1" style={{ color: "gray" }}><small>{props.chatMessage.createdDate}</small></div>
-            </div>
-
-            <div className="d-flex justify-content-start">
-                <img className="rounded-circle me-1" width="50" height="50"
-                    src={bg_black} alt="profile" />
-                <div className="border border-secondary rounded m-1 p-2" style={{ width: "40vh"}}>
-                    {props.chatMessage.message}
-                </div>
-            </div>
-        </div>
-    )
-}
-
-const UserMessageItem = (props) => {
-    return (
-        <div className="mb-2">
-            <div className="d-flex justify-content-end">
-                <div className="me-1"><strong>{props.chatMessage.sender}</strong></div>
-                <div className="ms-1" style={{ color: "gray" }}><small>{props.chatMessage.createdDate}</small></div>
-            </div>
-
-            <div className="d-flex justify-content-end">
-                <div className="border border-secondary rounded m-1 p-2" style={{ width: "40vh"}}>
-                    {props.chatMessage.message}
-                </div>
-                <img className="rounded-circle ms-1" width="50" height="50"
-                    src={bg_black} alt="profile" />
-            </div>
-        </div>
-    );
-}
-
-const ChatMessageList = (props) => {
-    return (
-        <>
-        {props.chatMessages.map((chatMessage, index) => (
-            <div key={index}>
-                {chatMessage["sender"] === props.adminId
-                ? <AdminMessageItem chatMessage={chatMessage} />
-                : <UserMessageItem chatMessage={chatMessage} />}
-            </div>
-        ))}
-        </>
-    )
-}
-
-export default function LiveChatRoomAdmin() {
-    const [userId, setUserId] = useState("");
-    const [adminId, ] = useState("Admin");
-
-    const [chatRoom, setChatRoom] = useState({});
-    const [chatMessages, setChatMessages] = useState([]);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [roomUuid, setRoomUuid] = useState(searchParams.get("uuid"));
-
-    useEffect(() => {
-        if (roomUuid) {
-            fetchChatRoom(roomUuid)
-            .then((response) => {
-                setChatRoom(response);
-                setUserId(response.roomName);
-            }).catch((error) => {
-                console.log(error);
-            });
     
-            fetchChatMessages(roomUuid)
-            .then((response) => {
-                setChatMessages(response);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-    }, [roomUuid]);
+    const stompClient = useRef(null);
+    const [searchParams] = useSearchParams();
+    const [connected, setConnected] = useState(false);
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    const client = useRef({});
-    const [activeChatForm, setActiveChatForm] = useState(false);
-    const [subscribeChannel, setSubscribeChannel] = useState(roomUuid);
-
-    // Send Message
-    const publish = useCallback((chatData) => {
-        if (!client.current.connected) return;
-        client.current.publish({
-            destination: `/pub/chat`,
-            body: JSON.stringify(chatData),
-        });
-    }, []);
-
-    // Receive Message
+    // SUBSCRIBE CHANNEL
     const subscribe = useCallback(() => {
-        client.current.subscribe(`/sub/chat/${subscribeChannel}`, (response) => {
-            if (subscribeChannel !== JSON.parse(response.body).roomUuid) {
-                setRoomUuid(JSON.parse(response.body).roomUuid);
-                setSubscribeChannel(JSON.parse(response.body).roomUuid);
-                searchParams.set("uuid", JSON.parse(response.body).roomUuid);
-                setSearchParams(searchParams);
-            }
-            setChatMessages(_chatMessages => [..._chatMessages, JSON.parse(response.body)]);
-        })
-    }, [searchParams, setSearchParams, subscribeChannel]);
-
-    // WebSocket Connect
-    const connect = useCallback(() => {
-        client.current = new StompJS.Client({
-            reconnectDelay: 5000,
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
-            onConnect: (frame) => {
-                subscribe();
-                console.log(frame);         // 디버깅 코드 추후 삭제
-                setActiveChatForm(true);
-            },
-            onStompError: (frame) => {
-                console.log(frame);
-            },
-            // WebSocket Endpoint
-            // brokerURL: `/support/livechat`,
-            webSocketFactory: () => new SockJS(`/support/livechat`),
+        const channel = searchParams.get("uuid");
+        stompClient.current.subscribe(`/sub/chat/${channel}`, (response) => {
+            const message = JSON.parse(response.body);
+            setChatMessages(_chatMessages => [..._chatMessages, message]);
         });
-        client.current.activate();
-    }, [subscribe]);
+    }, [setChatMessages, searchParams]);
 
-    // WebSocket Disconnect
+    // PUBLISH(SEND) MESSAGE
+    const publish = useCallback((formValues) => {
+        const TOKEN_TYPE = localStorage.getItem("tokenType");
+        let ACCESS_TOKEN = localStorage.getItem("accessToken");
+        let REFRESH_TOKEN = localStorage.getItem("refreshToken");
+
+        const headers = {
+            'Authorization': `${TOKEN_TYPE} ${ACCESS_TOKEN}`,
+            'X-Refresh-Token': `${REFRESH_TOKEN}`,
+        }
+
+        const channel = searchParams.get("uuid");
+        stompClient.current.publish({
+            headers: headers,
+            destination: `/pub/chat/${channel}`,
+            body: JSON.stringify(formValues),
+        })
+    }, [searchParams]);
+    
+    // CONNECT STOMP WEBSOCKET CLIENT
+    const connect = useCallback(() => {
+        const socket = new SockJS('/support/livechat');
+        stompClient.current = new Client({
+            // brokerURL: '/support/livechat',
+            webSocketFactory: () => socket,
+            reconnectDelay: 5000,
+        })
+
+        stompClient.current.onConnect = (frame) => {
+            subscribe();
+            setConnected(true);
+        }
+
+        stompClient.current.onStompError = (frame) => {
+            console.log(frame);
+        }
+
+        stompClient.current.activate();
+    }, [subscribe])
+
+    // DISCONNECT STOMP WEBSOCKET CLIENT
     const disconnect = useCallback(() => {
-        client.current.deactivate();
+        stompClient.current.deactivate();
     }, []);
 
     useEffect(() => {
@@ -192,48 +78,189 @@ export default function LiveChatRoomAdmin() {
         return () => disconnect();
     }, [connect, disconnect]);
 
+    const handleChange = async (e) => {
+        setFormValues({...formValues,
+            [e.target.name]: e.target.value
+        });
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        publish(formValues);
+        setFormValues({
+            message: ""
+        });
+    }
+    
+    return (
+        <form onSubmit={handleSubmit}>
+            <div className="form-group mb-3">
+                <label htmlFor="message" style={{ fontSize: "20px", fontWeight: "bold"}}>내용 입력</label>
+                <textarea className="form-control" id="message" name="message" rows={3} value={formValues.message}
+                    onChange={handleChange} disabled={!connected} required></textarea>
+            </div>
+            <div className="form-group d-flex justify-content-end">
+                <Button type="submit" variant="dark" style={{ minWidth: "100px" }} disabled={!connected}>
+                    {!connected ? "연결중" : "전송"}
+                    {!connected && <Spinner className="ms-2" animation="border" size="sm" variant="secondary" />}
+                </Button>
+            </div>
+        </form>
+    );
+}
+
+const ChatMessageItem = (props) => {
+    const { user, chatMessage } = props;
+
+    const convertDate = (prevDate) => {
+        const date = new Date(prevDate);
+        
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        
+        const hour = date.getHours().toString().padStart(2, '0');
+        const minute = date.getMinutes().toString().padStart(2, '0');
+        
+        return `${year}.${month}.${day} ${hour}:${minute}`;
+    }
+
+    return (user.id === chatMessage.sender.id ? (
+        <div className="mb-2">
+            <div className="d-flex justify-content-end">
+                <div className="me-1"><small>{convertDate(chatMessage.createdDate)}</small></div>
+                <div className="ms-1"><strong>{chatMessage.sender.name}</strong></div>
+            </div>
+            <div className="d-flex justify-content-end">
+                <div className="border border-secondary rounded mx-2 my-1 p-2">
+                    {chatMessage.message}
+                </div>
+                <img className="rounded-circle" width="50" height="50"
+                    src={bg_black} alt="profile" />
+            </div>
+        </div>
+    ) : (
+        <div className="mb-2">
+            <div className="d-flex justify-content-start">
+                <div className="me-1"><strong>운영자</strong></div>
+                <div className="ms-1"><small>{convertDate(chatMessage.createdDate)}</small></div>
+            </div>
+            <div className="d-flex justify-content-start">
+                <img className="rounded-circle" width="50" height="50"
+                    src={bg_black} alt="profile" />
+                <div className="border border-secondary rounded mx-2 my-1 p-2">
+                    {chatMessage.message}
+                </div>
+            </div>
+        </div>
+    ));
+}
+
+const ChatMessageList = (props) => {
+    const { user } = props;
+    const [chatMessages, setChatMessages] = useState([]);
+    
+    const [searchParams] = useSearchParams();
+    const chatRoomUuid = searchParams.get("uuid");
+
+    useEffect(() => {
+        LiveChatAPI.fetchChatMessages(null, chatRoomUuid)
+        .then(response => setChatMessages(response))
+        .catch(error => console.log(error));
+    }, [chatRoomUuid]);
+
     const scrollRef = useRef(null);
-    useEffect(() => { scrollRef.current.scrollTop = scrollRef.current.scrollHeight; });
+    useEffect(() => {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    });
 
     return (
-        <Container fluid>
-            <Row className="justify-content-center">
-                <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
-                </Col>
+        <Card>
+            <Card.Body ref={scrollRef} style={{ minHeight: "25vh", maxHeight: "50vh", overflow: "auto" }}>
+                {chatMessages.map((chatMessage, index) => (
+                    <ChatMessageItem key={index} user={user} chatMessage={chatMessage} />
+                ))}
+            </Card.Body>
+            <Card.Body className="border-top">
+                <ChatMessageForm setChatMessages={setChatMessages} />
+            </Card.Body>
+        </Card>
+    );
+}
 
-                <Col className="col-md-9 mx-2 my-4">
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>
-                                <h2><strong>LiveChat Support</strong></h2>
-                                <h5><strong><small>관리자ID: {adminId}</small></strong></h5>
-                            </Card.Title>
-                            <hr/>
-                            <Card.Title className="d-flex justify-content-between">
-                                <div>
-                                    <div><h4><strong>{userId}님의 문의사항</strong></h4></div>
-                                    {roomUuid && 
-                                    <div style={{ color: "gray" }}><h6><small>({chatRoom.uuid})</small></h6></div>}
-                                </div>
-                                {roomUuid && 
-                                <div style={{ color: "gray" }}>
-                                    <div className="d-flex justify-content-end"><h6><small>문의생성일자: {chatRoom.createdDate}</small></h6></div>
-                                    <div className="d-flex justify-content-end"><h6><small>문의수정일자: {chatRoom.updatedDate}</small></h6></div>
-                                </div>}
-                            </Card.Title>
-                            
-                            <Card>
-                                <Card.Body ref={scrollRef} style={{ minHeight: "25vh", maxHeight: "50vh", overflow: "auto"}}>
-                                    <ChatMessageList adminId={adminId} chatMessages={chatMessages} />
-                                </Card.Body>
-                                <hr/>
-                                <Card.Body>
-                                    <ChatMessageForm adminId={adminId} roomUuid={roomUuid} publish={publish} activeChatForm={activeChatForm} />
-                                </Card.Body>
-                            </Card>
-                        </Card.Body>
-                    </Card>
+const LiveChatRoomBody = (props) => {
+    const [user, setUser] = useState({});
+    const [admin, setAdmin] = useState({});
+    const [chatRoom, setChatRoom] = useState({});
+
+    const [searchParams] = useSearchParams();
+    const chatRoomUuid = searchParams.get("uuid");
+
+    useEffect(() => {
+        UserAPI.fetchUser()
+        .then(response => setAdmin(response))
+        .catch(error => console.log(error));
+
+        if (chatRoomUuid) {
+            LiveChatAPI.fetchChatRoomByUuid(chatRoomUuid)
+            .then((response) => {
+                setChatRoom(response);
+                setUser(response.users[0]);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    }, [chatRoomUuid]);
+
+    const convertDate = (prevDate) => {
+        const date = new Date(prevDate);
+        
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        
+        const hour = date.getHours().toString().padStart(2, '0');
+        const minute = date.getMinutes().toString().padStart(2, '0');
+        
+        return `${year}.${month}.${day} ${hour}:${minute}`;
+    }
+
+    return (
+        <Card>
+            <Card.Body>
+                <Card.Title>
+                    <h2><strong>LiveChat Support</strong></h2>
+                    <h5><strong><small>관리자: {admin.name || "Undefined"}님({admin.email})</small></strong></h5>
+                </Card.Title>
+                <hr/>
+                <Card.Title>
+                    <div className="d-flex justify-content-between align-items-center">
+                        <div className="text-dark">
+                            <div><h5><strong>{user.name || "Undefined"}님의 문의사항</strong></h5></div>
+                            <div><h6><small>({chatRoom.uuid})</small></h6></div>
+                        </div>
+                        <div className="fs-6 text-secondary">
+                            <div><small>문의생성일자: {convertDate(chatRoom.createdDate)}</small></div>
+                            <div><small>문의수정일자: {convertDate(chatRoom.updatedDate)}</small></div>
+                        </div>
+                    </div>
+                </Card.Title>
+
+                <ChatMessageList user={user} />
+            </Card.Body>
+        </Card>
+    );
+}
+
+export default function LiveChatRoomAdmin() {
+    return (
+        <Container fluid>
+            <Row className="justify-content-center mt-3">
+                <Col className="col-12 col-lg-2 mb-3">
+                    <SupportSideBar />
+                </Col>
+                <Col className="col-12 col-lg-9 mb-3">
+                    <LiveChatRoomBody />
                 </Col>
             </Row>
         </Container>

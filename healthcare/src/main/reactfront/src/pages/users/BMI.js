@@ -1,9 +1,11 @@
 import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchBMIPage } from "../../api/BMIAPI";
-import Paging from "../../components/support/Paging";
+
+import { fetchBMIPage } from "../../api/user/BMIAPI";
 import ChartComponent from "../../components/user/ChartComponent";
+import { MyPageSideBar } from "../../components/SideBar";
+import PageNavigation from "../../components/PageNavigation";
 
 // 추후 필요하면 주석해제해서 사용
 // const CreateForm = (props) => {
@@ -86,8 +88,8 @@ import ChartComponent from "../../components/user/ChartComponent";
 // }
 
 const BMIList = (props) => {
-    const { page, data, pageSize } = props;
-    const { searchParams, setSearchParams } = props;
+    const { page, setPage, data, pageSize } = props;
+    const { searchParams } = props;
 
     const handleSelect = async (e) => {
         searchParams.set("page", parseInt(page.pageable.offset / e.target.value) + 1);
@@ -138,7 +140,7 @@ const BMIList = (props) => {
                     ))}
                 </tbody>
             </Table>
-            <Paging pages={page} searchParams={searchParams} setSearchParams={setSearchParams} />
+            <PageNavigation data={page} setPage={setPage} />
         </div>
 
     );
@@ -168,7 +170,7 @@ const BMIComponent = (props) => {
                 <hr/>
                 <ChartComponent data={data} size={pageSize} />
                 <hr/>
-                <BMIList page={page} data={data} searchParams={searchParams} setSearchParams={setSearchParams} />
+                <BMIList page={page} setPage={setPage} data={data} searchParams={searchParams} setSearchParams={setSearchParams} />
             </Card.Body>
         </Card>
     );
@@ -182,10 +184,7 @@ export default function BMI() {
         <Container fluid>
             <Row className="justify-content-center my-3">
                 <Col className="col-md-2">
-                    <div className="h-100 border border-dark">
-                        <h2><strong>Temp Side Menu</strong></h2>
-                        <hr/>
-                    </div>
+                    <MyPageSideBar />
                 </Col>
                 <Col className="col-md-10">
                     <BMIComponent />

@@ -1,27 +1,27 @@
-import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
-import SideBar from "../../components/support/SideBar";
 import bg_black from "../../assets/images/bg_black.jpg";
 import * as SockJS from "sockjs-client";
 import * as StompJS from "@stomp/stompjs";
 import { useSearchParams } from "react-router-dom";
+import { fetchChatMessages, fetchAdminChatRooms } from "../../api/support/LiveChatAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
-const ChatForm = (props) => {
-    const { activeForm } = props;
+const ChatMessageForm = (props) => {
+    const { activeChatForm } = props;
     const [chatData, setChatData] = useState({
         roomUuid: props.roomUuid,
-        sender: props.userId,
+        sender: props.adminId,
         message: "",
     });
 
     useEffect(() => {
         setChatData({
             roomUuid: props.roomUuid,
-            sender: props.userId,
+            sender: props.adminId,
             message: "",
         })
-    }, [props]);
+    }, [props.roomUuid, props.adminId]);
 
     const handleChange = async (e) => {
         e.preventDefault();
@@ -35,26 +35,26 @@ const ChatForm = (props) => {
         props.publish(chatData);
         setChatData({...chatData,
             message: "",
-        });    
+        });
     }
 
     return (
         <form onSubmit={handleSubmit}>
             <div className="form-group mb-3">
                 <label htmlFor="content" style={{ fontSize: "20px", fontWeight: "bold"}}>내용 입력</label>
-                <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={chatData.message} required disabled={!activeForm}></textarea>
+                <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={chatData.message} required disabled={!activeChatForm}></textarea>
             </div>
             <div className="form-group d-flex justify-content-end">
-                <Button type="submit" variant="dark" style={{ minWidth: "100px" }} disabled={!activeForm}>
-                    {activeForm ? "전송" : "연결중"}
-                    {!activeForm && <Spinner className="ms-2" animation="border" size="sm" variant="secondary" />}
+                <Button type="submit" variant="dark" style={{ minWidth: "100px" }} disabled={!activeChatForm}>
+                    {activeChatForm ? "전송" : "연결중"}
+                    {!activeChatForm && <Spinner className="ms-2" animation="border" size="sm" variant="secondary" />}
                 </Button>
             </div>
         </form>
     );
 }
 
-const AdminChat = (props) => {
+const AdminMessageItem = (props) => {
     return (
         <div className="mb-2">
             <div className="d-flex justify-content-start">
@@ -73,7 +73,7 @@ const AdminChat = (props) => {
     )
 }
 
-const UserChat = (props) => {
+const UserMessageItem = (props) => {
     return (
         <div className="mb-2">
             <div className="d-flex justify-content-end">
@@ -92,97 +92,98 @@ const UserChat = (props) => {
     );
 }
 
-const ChatContent = (props) => {
+const ChatMessageList = (props) => {
     return (
         <>
         {props.chatMessages.map((chatMessage, index) => (
             <div key={index}>
-                {/* Sender 조건문 정상동작 확인필요 */}
-                {chatMessage["sender"] === "Admin"
-                ? <AdminChat chatMessage={chatMessage} />
-                : <UserChat chatMessage={chatMessage} />
-                }
+                {chatMessage["sender"] === props.adminId
+                ? <AdminMessageItem chatMessage={chatMessage} />
+                : <UserMessageItem chatMessage={chatMessage} />}
             </div>
         ))}
         </>
     )
 }
 
-export default function LiveChatRoom() {
+export default function LiveChatRoomAdmin() {
+    const [userId, setUserId] = useState("");
+    const [adminId, ] = useState("Admin");
+
     const [chatRoom, setChatRoom] = useState({});
     const [chatMessages, setChatMessages] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
     const [roomUuid, setRoomUuid] = useState(searchParams.get("uuid"));
 
     useEffect(() => {
-        const axiosGetChatRoom = async () => {
-            const queryString = `uuid=${roomUuid}`;
-            await axios.get(`/api/livechat/room?${queryString}`)
-            .then((response) => {
-                setChatRoom(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-        
-        const axiosGetChatMessages = async () => {
-            const queryString = `uuid=${roomUuid}`;
-            await axios.get(`/api/livechat/message?${queryString}`)
-            .then((response) => {
-                setChatMessages(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
         if (roomUuid) {
-            axiosGetChatRoom();
-            axiosGetChatMessages();
+            fetchAdminChatRooms(roomUuid)
+            .then((response) => {
+                setChatRoom(response);
+                setUserId(response.roomName);
+            }).catch((error) => {
+                console.log(error);
+            });
+    
+            fetchChatMessages(roomUuid)
+            .then((response) => {
+                setChatMessages(response);
+            }).catch((error) => {
+                console.log(error);
+            });
         }
     }, [roomUuid]);
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     const client = useRef({});
-    const userId = "TestUserName";
-    const [activeForm, setActiveForm] = useState(false);
-    const [subscribeChannel, setSubscribeChannel] = useState(roomUuid ? roomUuid : userId);
+    const [activeChatForm, setActiveChatForm] = useState(false);
+    const [subscribeChannel, setSubscribeChannel] = useState(roomUuid);
 
+    // Send Message
+    const publish = useCallback((chatData) => {
+        if (!client.current.connected) return;
+        client.current.publish({
+            destination: `/pub/chat`,
+            body: JSON.stringify(chatData),
+        });
+    }, []);
+
+    // Receive Message
     const subscribe = useCallback(() => {
         client.current.subscribe(`/sub/chat/${subscribeChannel}`, (response) => {
-            searchParams.set("uuid", JSON.parse(response.body).roomUuid);
-            setSearchParams(searchParams);
-            setRoomUuid(JSON.parse(response.body).roomUuid);
-            setSubscribeChannel(JSON.parse(response.body).roomUuid);
+            if (subscribeChannel !== JSON.parse(response.body).roomUuid) {
+                setRoomUuid(JSON.parse(response.body).roomUuid);
+                setSubscribeChannel(JSON.parse(response.body).roomUuid);
+                searchParams.set("uuid", JSON.parse(response.body).roomUuid);
+                setSearchParams(searchParams);
+            }
             setChatMessages(_chatMessages => [..._chatMessages, JSON.parse(response.body)]);
-        });
+        })
     }, [searchParams, setSearchParams, subscribeChannel]);
 
-    const publish = useCallback((chatData) => {
-        // '/pub/{MessageMapping}'
-        client.current.publish({
-            destination: `/pub/chat`,           
-            body: JSON.stringify(chatData),
-        });      
-    }, []);
-    
+    // WebSocket Connect
     const connect = useCallback(() => {
         client.current = new StompJS.Client({
-            // brokerURL: `/support/livechat`,
+            reconnectDelay: 5000,
+            heartbeatIncoming: 4000,
+            heartbeatOutgoing: 4000,
             onConnect: (frame) => {
                 subscribe();
-                setActiveForm(true);
-                console.log(frame);
+                console.log(frame);         // 디버깅 코드 추후 삭제
+                setActiveChatForm(true);
             },
             onStompError: (frame) => {
                 console.log(frame);
             },
             // WebSocket Endpoint
-            webSocketFactory: () => new SockJS(`/support/livechat`),    
+            // brokerURL: `/support/livechat`,
+            webSocketFactory: () => new SockJS(`/support/livechat`),
         });
         client.current.activate();
     }, [subscribe]);
 
+    // WebSocket Disconnect
     const disconnect = useCallback(() => {
-        setActiveForm(false);
         client.current.deactivate();
     }, []);
 
@@ -192,21 +193,22 @@ export default function LiveChatRoom() {
     }, [connect, disconnect]);
 
     const scrollRef = useRef(null);
-    useEffect(() => {
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    });
+    useEffect(() => { scrollRef.current.scrollTop = scrollRef.current.scrollHeight; });
 
     return (
         <Container fluid>
             <Row className="justify-content-center">
                 <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
+                    <SupportSideBar />
                 </Col>
 
                 <Col className="col-md-9 mx-2 my-4">
                     <Card>
                         <Card.Body>
-                            <Card.Title><h2><strong>LiveChat Support</strong></h2></Card.Title>
+                            <Card.Title>
+                                <h2><strong>LiveChat Support</strong></h2>
+                                <h5><strong><small>관리자ID: {adminId}</small></strong></h5>
+                            </Card.Title>
                             <hr/>
                             <Card.Title className="d-flex justify-content-between">
                                 <div>
@@ -223,11 +225,11 @@ export default function LiveChatRoom() {
                             
                             <Card>
                                 <Card.Body ref={scrollRef} style={{ minHeight: "25vh", maxHeight: "50vh", overflow: "auto"}}>
-                                    <ChatContent chatMessages={chatMessages} />
+                                    <ChatMessageList adminId={adminId} chatMessages={chatMessages} />
                                 </Card.Body>
                                 <hr/>
                                 <Card.Body>
-                                    <ChatForm userId={userId} roomUuid={roomUuid} publish={publish} activeForm={activeForm} />
+                                    <ChatMessageForm adminId={adminId} roomUuid={roomUuid} publish={publish} activeChatForm={activeChatForm} />
                                 </Card.Body>
                             </Card>
                         </Card.Body>

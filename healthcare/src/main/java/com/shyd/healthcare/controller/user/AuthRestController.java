@@ -3,9 +3,7 @@ package com.shyd.healthcare.controller.user;
 import com.shyd.healthcare.dto.user.AuthRequestDto;
 import com.shyd.healthcare.dto.user.AuthResponseDto;
 import com.shyd.healthcare.dto.user.UserRequestDto;
-import com.shyd.healthcare.dto.user.UserResponseDto;
 import com.shyd.healthcare.service.user.AuthService;
-import com.shyd.healthcare.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +30,8 @@ public class AuthRestController {
 
     /** 토큰갱신 API */
     @GetMapping("/api/v1/auth/refresh")
-    public ResponseEntity<?> refreshToken(@RequestHeader("REFRESH_TOKEN") String refreshToken) {
-        String newAccessToken = this.authService.refreshToken(refreshToken);
-        return ResponseEntity.status(HttpStatus.OK).body(newAccessToken);
+    public ResponseEntity<?> refreshToken(@RequestHeader("X-Refresh-Token") String refreshToken) {
+        AuthResponseDto responseDto = this.authService.refreshToken(refreshToken);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }

@@ -3,28 +3,20 @@ package com.shyd.healthcare.dto.support.livechat;
 import com.shyd.healthcare.domain.support.livechat.ChatRoom;
 import com.shyd.healthcare.domain.support.livechat.UserChatRoom;
 import com.shyd.healthcare.domain.user.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
-public class UserChatRoomRequestDto {
+@AllArgsConstructor
+public class UserChatRoomRequestDTO {
     private User user;
     private ChatRoom chatRoom;
 
-    @Builder
-    public UserChatRoomRequestDto(User user, ChatRoom chatRoom) {
-        this.user = user;
-        this.chatRoom = chatRoom;
-    }
-
     public UserChatRoom toEntity() {
         return UserChatRoom.builder()
-                .chatRoom(this.chatRoom)
                 .user(this.user)
+                .chatRoom(this.chatRoom)
                 .build();
     }
 }

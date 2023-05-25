@@ -2,57 +2,52 @@ package com.shyd.healthcare.domain.support.board;
 
 import com.shyd.healthcare.domain.BaseTime;
 import com.shyd.healthcare.domain.user.User;
-import com.shyd.healthcare.dto.support.post.PostUpdateRequestDto;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.shyd.healthcare.dto.support.post.PostUpdateRequestDTO;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(length = 500)
+    @Column(length = 50)
     private String title;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
-    private Integer hits;
-    private String category;
+    @Builder.Default
+    private Integer hits = 0;
+    @Builder.Default
+    private Boolean secretYn = false;
+    @Builder.Default
+    private Boolean answerYn = false;
+    @Enumerated(EnumType.STRING)
+    private BoardType boardType;
 
-    private Boolean secretYn;
-    private Boolean answerYn;
-
+    // RELATIONSHIPS WITH OTHER ENTITIES
     @ManyToOne(fetch = FetchType.LAZY)
     private User author;
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Comment> commentList;
+    private List<Comment> comments;
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Attachment> attachmentList;
+    private List<Attachment> attachments;
 
-    @Builder
-    public Post(String title, String content, User author, String category,
-                Integer hits, Boolean secretYn, Boolean answerYn) {
-        this.hits = hits;
-        this.title = title;
-        this.author = author;
-        this.content = content;
-        this.category = category;
-        this.secretYn = secretYn;
-        this.answerYn = answerYn;
-    }
-
-    public Long update(PostUpdateRequestDto requestDto) {
+    public Long update(PostUpdateRequestDTO requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.secretYn = requestDto.getSecretYn();
         this.answerYn = requestDto.getAnswerYn();
         return this.id;
+    }
+
+    public void increaseHits() {
+        this.hits++;
     }
 }

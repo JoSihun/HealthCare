@@ -4,8 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Row, Col, Container, Table } from "react-bootstrap";
 import SideBar from "../../components/introduce/SideBar";
 import { fetchStaffV1, deleteStaffV1, createStaffV1 } from '../../api/Introduce/StaffAPI';
-import { searchUsers } from '../../api/UserAPI';
-import { Link } from 'react-router-dom';
+import { searchUserList } from '../../api/user/UserAPI';
 
 const AddForm = (props) => {
     const { setUsers, handleShow } = props;
@@ -117,7 +116,7 @@ const SearchForm = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        searchUsers(value)
+        searchUserList(value)
         .then((response) => {
             setUsers(response);
         }).catch((error) => {

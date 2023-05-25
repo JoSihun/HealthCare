@@ -42,6 +42,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Long getUserIdFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(jwtSecretKey)
@@ -74,6 +75,7 @@ public class JwtTokenProvider {
                 .getExpiration();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public Boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecretKey).parseClaimsJws(token);

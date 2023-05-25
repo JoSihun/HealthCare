@@ -24,66 +24,65 @@ import FreeBoardForm from './pages/support/FreeBoardForm';
 import FreeBoardEdit from './pages/support/FreeBoardEdit';
 import FreeBoardSearch from './pages/support/FreeBoardSearch';
 
-// import LiveChat from "./pages/support/LiveChat";
 import LiveChatList from "./pages/support/LiveChatList";
 import LiveChatRoom from "./pages/support/LiveChatRoom";
 import LiveChatListAdmin from "./pages/support/LiveChatListAdmin";
 import LiveChatRoomAdmin from "./pages/support/LiveChatRoomAdmin";
 
-import SignIn from './pages/users/SignIn';
-import SignUp from './pages/users/SignUp';
-import MyPage from "./pages/users/MyPage";
 import BMI from './pages/users/BMI';
 import Diet from './pages/users/Diet';
+import MyPage from "./pages/users/MyPage";
 
-function App() {
-  return (
-      <div>
-          <BrowserRouter>
-              <Navigation />
-              <Banner />
-              <Routes>
-                  <Route path="/" element={<Home />}></Route>
-                  <Route path="/home" element={<Home />}></Route>
+import SignIn from './pages/users/SignIn';
+import SignUp from './pages/users/SignUp';
 
-                  <Route path="/introduce/facility" element={<Facility />}></Route>
-                  <Route path="/introduce/staff" element={<Staff />}></Route>
-                  <Route path="/introduce/direction" element={<Direction />}></Route>
+export default function App() {
+    return (
+        <BrowserRouter>
+            <Navigation />
+            <Banner />
+            <Routes>
+                <Route path='/' element={<Home />} />
 
-                  <Route path="/support/faqboard" element={<FAQBoard />}></Route>
-                  <Route path="/support/qnaboard" element={<QNABoard />}></Route>
-                  <Route path="/support/qnaboard/search" element={<QNABoardSearch />}></Route>
-                  <Route path="/support/qnaboard/form" element={<QNABoardForm />}></Route>
-                  <Route path="/support/qnaboard/form/:id" element={<QNABoardEdit />}></Route>
-                  <Route path="/support/qnaboard/post/:id" element={<QNABoardPost />}></Route>
+                {/* INTRODUCE */}
+                <Route path="/introduce/staff" element={<Staff />}></Route>
+                <Route path="/introduce/facility" element={<Facility />}></Route>
+                <Route path="/introduce/direction" element={<Direction />}></Route>
 
-                  <Route path="/support/freeboard" element={<FreeBoard />}></Route>
-                  <Route path="/support/freeboard/search" element={<FreeBoardSearch />}></Route>
-                  <Route path="/support/freeboard/form" element={<FreeBoardForm />}></Route>
-                  <Route path="/support/freeboard/form/:id" element={<FreeBoardEdit />}></Route>
-                  <Route path="/support/freeboard/post/:id" element={<FreeBoardPost />}></Route>
+                {/* SUPPORT */}
+                <Route path="/support/faqboard" element={<FAQBoard />}></Route>
+                <Route path="/support/qnaboard" element={<QNABoard />}></Route>
+                <Route path="/support/qnaboard/search" element={<QNABoardSearch />}></Route>
+                <Route path="/support/qnaboard/form" element={<QNABoardForm />}></Route>
+                <Route path="/support/qnaboard/form/:id" element={<QNABoardEdit />}></Route>
+                <Route path="/support/qnaboard/post/:id" element={<QNABoardPost />}></Route>
 
-                  <Route path="/support/livechat" element={<LiveChatList />}></Route>
-                  <Route path="/support/livechat/list" element={<LiveChatList />}></Route>
-                  <Route path="/support/livechat/room" element={<LiveChatRoom />}></Route>
-                  <Route path="/support/livechat/list/admin" element={<LiveChatListAdmin />}></Route>
-                  <Route path="/support/livechat/room/admin" element={<LiveChatRoomAdmin />}></Route>
+                <Route path="/support/freeboard" element={<FreeBoard />}></Route>
+                <Route path="/support/freeboard/search" element={<FreeBoardSearch />}></Route>
+                <Route path="/support/freeboard/form" element={<FreeBoardForm />}></Route>
+                <Route path="/support/freeboard/form/:id" element={<FreeBoardEdit />}></Route>
+                <Route path="/support/freeboard/post/:id" element={<FreeBoardPost />}></Route>
 
-                  <Route path="/my-page" element={<MyPage />}></Route>
-                  <Route path="/my-page/bmi" element={<BMI />}></Route>
-                  <Route path="/my-page/diet" element={<Diet />}></Route>
-                  <Route path="/my-page/routine" element={<MyPage />}></Route>
+                <Route path="/support/livechat" element={<LiveChatList />}></Route>
+                <Route path="/support/livechat/list" element={<LiveChatList />}></Route>
+                <Route path="/support/livechat/room" element={<LiveChatRoom />}></Route>
+                <Route path="/support/livechat/list/admin" element={<LiveChatListAdmin />}></Route>
+                <Route path="/support/livechat/room/admin" element={<LiveChatRoomAdmin />}></Route>
 
-                  <Route path="/signup" element={<SignUp />}></Route>
-                  <Route path="/signin" element={<SignIn />}></Route>
+                {/* MY-PAGE */}
+                <Route path="/my-page" element={<MyPage />}></Route>
+                <Route path="/my-page/bmi" element={<BMI />}></Route>
+                <Route path="/my-page/diet" element={<Diet />}></Route>
+                <Route path="/my-page/routine" element={<MyPage />}></Route>
+                
+                {/* USER */}
+                <Route path="/signup" element={<SignUp />}></Route>
+                <Route path="/signin" element={<SignIn />}></Route>
 
-
-                  <Route path="*" element={<NotFound />}></Route>
-              </Routes>
-              <Footer />
-          </BrowserRouter>
-    </div>
-  );
+                {/* 404 NOT FOUND */}
+                <Route path='*' element={<NotFound />} />
+            </Routes>
+            <Footer />
+        </BrowserRouter>
+    );
 }
-
-export default App;

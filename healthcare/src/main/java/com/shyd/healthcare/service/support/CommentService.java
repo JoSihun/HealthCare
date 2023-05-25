@@ -3,9 +3,9 @@ package com.shyd.healthcare.service.support;
 import com.shyd.healthcare.domain.support.board.Comment;
 import com.shyd.healthcare.domain.support.board.Post;
 import com.shyd.healthcare.domain.user.User;
-import com.shyd.healthcare.dto.support.comment.CommentResponseDto;
-import com.shyd.healthcare.dto.support.comment.CommentSaveRequestDto;
-import com.shyd.healthcare.dto.support.comment.CommentUpdateRequestDto;
+import com.shyd.healthcare.dto.support.comment.CommentResponseDTO;
+import com.shyd.healthcare.dto.support.comment.CommentSaveRequestDTO;
+import com.shyd.healthcare.dto.support.comment.CommentUpdateRequestDTO;
 import com.shyd.healthcare.repository.support.CommentRepository;
 import com.shyd.healthcare.repository.support.PostRepository;
 import com.shyd.healthcare.repository.user.UserRepository;
@@ -17,8 +17,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
@@ -27,42 +27,39 @@ public class CommentService {
 
     /** 댓글 조회 */
     @Transactional
-    public List<CommentResponseDto> findAllByPostId(final Long postId) {
-        Post postEntity = this.postRepository.findById(postId).orElseThrow(
+    public List<CommentResponseDTO> findAllByPostId(Long postId) {
+        Post posts = this.postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. post_id = " + postId));
-        List<Comment> commentList = postEntity.getCommentList();
-        return commentList.stream().map(CommentResponseDto::new).collect(Collectors.toList());
+        List<Comment> comments = posts.getComments();
+        return comments.stream().map(CommentResponseDTO::new).collect(Collectors.toList());
     }
 
     /** 댓글 생성 */
     @Transactional
-    public Long save(String token, final Long postId, final CommentSaveRequestDto requestDto) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        Long userId = this.jwtTokenProvider.getUserIdFromToken(token);
-        User userEntity = this.userRepository.findById(userId).orElseThrow(
+    public Long create(String accessToken, Long postId, CommentSaveRequestDTO requestDto) {
+        Long userId = this.jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
+        User user = this.userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. user_id = " + userId));
-        Post postEntity = this.postRepository.findById(postId).orElseThrow(
+        Post post = this.postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. post_id = " + postId));
-        requestDto.setPost(postEntity);
-        requestDto.setAuthor(userEntity);
+        requestDto.setPost(post);
+        requestDto.setAuthor(user);
         return this.commentRepository.save(requestDto.toEntity()).getId();
     }
 
     /** 댓글 수정 */
     @Transactional
-    public Long update(final Long commentId, final CommentUpdateRequestDto requestDto) {
-        Comment commentEntity = this.commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. comment_id = " + commentId));
-        return commentEntity.update(requestDto);
+    public Long update(Long id, CommentUpdateRequestDTO requestDto) {
+        Comment comment = this.commentRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. comment_id = " + id));
+        return comment.update(requestDto);
     }
 
     /** 댓글 삭제 */
     @Transactional
-    public void delete(final Long commentId) {
-        Comment commentEntity = this.commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. comment_id = " + commentId));
-        this.commentRepository.delete(commentEntity);
+    public void delete(Long id) {
+        Comment comment = this.commentRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. comment_id = " + id));
+        this.commentRepository.delete(comment);
     }
 }

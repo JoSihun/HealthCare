@@ -1,191 +1,188 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, Button, Card, Col, Container, Row } from "react-bootstrap";
-import SideBar from "../../components/support/SideBar";
-import { createPostV1, deletePostV1, fetchPageV1, updatePostV1 } from "../../api/PostAPI";
+import { SupportSideBar } from "../../components/SideBar";
+import PostAPI from "../../api/support/PostAPI";
 
-const FAQAddForm = (props) => {
-    const [values, setValues] = useState({
+const AddForm = (props) => {
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [formValues, setFormValues] = useState({
         title: "",
         content: "",
-        category: "FAQ_BOARD",
-        secretYn: false,
+        boardType: "FAQ_BOARD",
     });
+    
+    const handleClick = () => {
+        setShowAddForm(!showAddForm)
+    }
 
     const handleChange = async (e) => {
-        e.preventDefault();
-        setValues({...values,
-            [e.target.id]: e.target.value
+        setFormValues({...formValues,
+            [e.target.name]: e.target.value
         });
     }
-
-    const handleCancel = async (e) => {
-        e.preventDefault();
-        props.setShowAddForm(false);
-    }
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-        createPostV1(values)
-        .then(() => {
-            window.location.reload();
-        }).catch((error) => {
-            console.log(error);
-        });
+        PostAPI.createPostV1(formValues)
+        .then(window.location.reload())
+        .catch(error => console.log(error));
     }
-
-    return (
-        <Card border="dark">
+    
+    return (showAddForm ? (
+        <Card className="border-secondary">
             <Card.Body>
+                <Card.Title className="fs-2 fw-bold fst-italic">
+                    FAQ 추가
+                </Card.Title>
+                <hr/>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group mb-3">
                         <label htmlFor="title"><h5><strong>자주 묻는 질문</strong></h5></label>
-                        <input type="text" className="form-control" id="title" onChange={handleChange} value={ values.title } />
+                        <input className="form-control" type="text" id="title" name="title" onChange={handleChange} value={formValues.title} />
                     </div>
                     <div className="form-group mb-3">
-                        <label htmlFor="content"><h5><strong>질문 답변</strong></h5></label>
-                        <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={ values.content } />
+                        <label htmlFor="content"><h5><strong>자주 묻는 질문 답변</strong></h5></label>
+                        <textarea className="form-control" type="text" id="content" name="content" rows={3} onChange={handleChange} value={formValues.content} />
                     </div>
                     <div className="form-group d-flex justify-content-end">
-                        <Button className="me-1" variant="dark" style={{ width: "100px" }}
-                        type="submit" >추가</Button>
-                        <Button className="ms-1" variant="danger" style={{ width: "100px" }}
-                        onClick={handleCancel} >취소</Button>
+                        <div className="col-2 d-flex justify-content-center">
+                            <Button className="me-1" onClick={handleClick} variant="danger" style={{ width: "100%" }}>취소</Button>
+                            <Button className="ms-1" type="submit" variant="dark" style={{ width: "100%" }}>추가</Button>
+                        </div>
                     </div>
                 </form>
             </Card.Body>
         </Card>
-    );
+    ) : (
+        <div className="d-flex justify-content-end">
+            <div className="col-1 d-flex justify-content-center">
+                <Button onClick={handleClick} variant="dark" style={{ width: "100%" }}>추가</Button>
+            </div>
+        </div>
+    ));
 }
 
-const FAQEditForm = (props) => {
-    const [values, setValues] = useState(props.faq);
+const EditForm = (props) => {
+    const { post } = props;
+    const [formValues, setFormValues] = useState(post);
+    const [showEditForm, setShowEditForm] = useState(false);
+    
+    const handleClick = async (e) => {
+        setFormValues(post);
+        setShowEditForm(!showEditForm);
+    }
 
     const handleChange = async (e) => {
-        e.preventDefault();
-        setValues({...values,
-            [e.target.id]: e.target.value
+        setFormValues({...formValues,
+            [e.target.name]: e.target.value
         });
     }
-
-    const handleCancel = async (e) => {
-        e.preventDefault();
-        props.setShowEditForm(false);
-    }
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-        updatePostV1(props.faq.id, values)
-        .then(() => {
-            window.location.reload();
-        }).catch((error) => {
-            console.log(error);
-        });
+        PostAPI.updatePostV1(post.id, formValues)
+        .then(window.location.reload())
+        .catch(error => console.log(error));
     }
 
+    const handleDelete = async (e) => {
+        PostAPI.deletePostV1(post.id)
+        .then(window.location.reload())
+        .catch(error => console.log(error));
+    }
+    
+    return (showEditForm ? (
+        <div className="border border-2 rounded mt-3 p-3">
+            <form onSubmit={handleSubmit}>
+                <div className="form-group input-group mb-3">
+                    <label className="input-group-text"><h5><strong>Q.</strong></h5></label>
+                    <input className="form-control" type="text" id="title" name="title" onChange={handleChange} value={formValues.title} />
+                </div>
+                <div className="form-group input-group mb-3">
+                    <label className="input-group-text"><h5><strong>A.</strong></h5></label>
+                    <textarea className="form-control" type="text" id="content" name="content" rows={3} onChange={handleChange} value={formValues.content} />
+                </div>
+                <div className="form-group d-flex justify-content-end">
+                    <div className="col-2 d-flex justify-content-center">
+                        <Button className="me-1" onClick={handleClick} variant="danger" style={{ width: "100%" }}>취소</Button>
+                        <Button className="ms-1" type="submit" variant="primary" style={{ width: "100%" }}>수정</Button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    ) : (
+        <div className="d-flex justify-content-end">
+            <div className="col-2 d-flex justify-content-center">
+                <Button className="me-1" onClick={handleClick} variant="primary" style={{ width: "100%" }}>수정</Button>
+                <Button className="ms-1" onClick={handleDelete} variant="danger" style={{ width: "100%" }}>삭제</Button>                
+            </div>
+        </div>
+    ));
+}
+
+const FAQBoardItem = (props) => {
+    const { id } = props;
+    const [post, setPost] = useState({});
+
+    useEffect(() => {
+        PostAPI.fetchPost(id)
+        .then(response => setPost(response))
+        .catch(error => console.log(error));
+    }, [id]);
+
     return (
-        <Card>
-            <Card.Body>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group mb-3">
-                        <label htmlFor="title"><h5><strong>자주 묻는 질문</strong></h5></label>
-                        <input type="text" className="form-control" id="title" onChange={handleChange} value={ values.title } />
-                    </div>
-                    <div className="form-group mb-3">
-                        <label htmlFor="content"><h5><strong>질문 답변</strong></h5></label>
-                        <textarea className="form-control" id="content" rows={3} onChange={handleChange} value={ values.content } />
-                    </div>
-                    <div className="form-group d-flex justify-content-end">
-                        <Button className="me-1" variant="primary" style={{ width: "100px" }}
-                        type="submit" >수정</Button>
-                        <Button className="me-1" variant="danger" style={{ width: "100px" }}
-                        onClick={handleCancel} >취소</Button>
-                    </div>
-                </form>
-            </Card.Body>
-        </Card>
+        <Accordion.Item eventKey={post.id}>
+            <Accordion.Header>
+                <h3><strong>Q. {post.title}</strong></h3>
+            </Accordion.Header>
+            <Accordion.Body>
+                <h5><strong><i>A. {post.content}</i></strong></h5>
+                <EditForm post={post}/>
+            </Accordion.Body>
+        </Accordion.Item>
     );
 }
 
 const FAQBoardList = (props) => {
-    const [showEditForm, setShowEditForm] = useState(false);
-
-    const handleDelete = async (params, e) => {
-        e.preventDefault();
-        deletePostV1(params)
-        .then(() => {
-            window.location.reload();
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-
-    return (
-        <Accordion>
-            {props.posts.map((faq, index) => (
-                <Accordion.Item key={ index } eventKey={ faq.id }>
-                    <Accordion.Header>
-                        <h3><strong>Q. { faq.title }</strong></h3>
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <h5>A. { faq.content }</h5>
-                        {showEditForm
-                        ?
-                            <FAQEditForm faq={faq} setShowEditForm={setShowEditForm} />
-                        :
-                            <div className="d-flex justify-content-end">
-                                <Button className="me-1" variant="primary" style={{ width: "100px" }}
-                                onClick={(e) => { setShowEditForm(!showEditForm) }}>수정</Button>
-                                <Button className="me-1" variant="danger" style={{ width: "100px" }}
-                                onClick={(e) => { handleDelete(faq.id, e) }}>삭제</Button>
-                            </div>
-                        }
-                    </Accordion.Body>
-                </Accordion.Item>
-            ))}
-        </Accordion>
-    );
-}
-
-export default function FAQBoard() {
-    const [posts, setPosts] = useState([]);
-    const [showAddForm, setShowAddForm] = useState(false);
+    const [data, setData] = useState({});
 
     useEffect(() => {
-        fetchPageV1("faq-board")
+        PostAPI.fetchPostPage("faq-board", { size: 10 })
         .then((response) => {
-            setPosts(response.content);
+            setData(response);
         }).catch((error) => {
             console.log(error);
         });
     }, []);
 
     return (
+        <Card className="vh-50 mb-3">
+            <Card.Body>
+                <Card.Title className="fs-2 fw-bold fst-italic">
+                    FAQ
+                </Card.Title>
+                <hr/>
+                <Accordion>
+                    {data.content && data.content.map((item, index) => (
+                        <FAQBoardItem id={item.id} key={index} />
+                    ))}
+                </Accordion>
+            </Card.Body>
+        </Card>
+    );
+}
+
+export default function FAQBoard() {
+    return (
         <Container fluid>
-            <Row className="justify-content-center">
-                <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
+            <Row className="justify-content-center mt-3">
+                <Col className="col-12 col-lg-2 mb-3">
+                    <SupportSideBar />
                 </Col>
 
-                <Col className="col-md-9 mx-2 my-4">
-                    <Card style={{ minHeight: "50vh" }}>
-                        <Card.Body>
-                            <Card.Title><h2><strong>FAQ</strong></h2></Card.Title>
-                            <hr/>
-                            <FAQBoardList posts={posts} />
-                        </Card.Body>
-                    </Card>
-
-                    {!showAddForm
-                    ?
-                        <div className="d-flex justify-content-end mt-3">
-                            <Button className="me-1" variant="dark" style={{ width: "100px" }}
-                            onClick={() => { setShowAddForm(!showAddForm) }}>추가</Button>
-                        </div>
-                    :
-                        <div className="mt-4">
-                            <FAQAddForm setShowAddForm={setShowAddForm} />
-                        </div>
-                    }                    
+                <Col className="col-12 col-lg-9 mb-3">
+                    <FAQBoardList />
+                    <AddForm />
                 </Col>
             </Row>
         </Container>

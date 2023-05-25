@@ -1,25 +1,35 @@
 package com.shyd.healthcare.dto.support.livechat;
 
 import com.shyd.healthcare.domain.support.livechat.ChatRoom;
-import lombok.Getter;
+import com.shyd.healthcare.domain.support.livechat.UserChatRoom;
+import com.shyd.healthcare.dto.user.UserResponseDto;
+import lombok.*;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Getter
-public class ChatRoomResponseDto {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChatRoomResponseDTO {
     private Long id;
     private String uuid;
-    private String roomName;
     private Boolean answerYn;
-    private String createdDate;
-    private String updatedDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
+    private Set<UserResponseDto> users;
 
-    public ChatRoomResponseDto(ChatRoom entity) {
+    public ChatRoomResponseDTO(ChatRoom entity) {
         this.id = entity.getId();
         this.uuid = entity.getUuid();
-        this.roomName = entity.getRoomName();
         this.answerYn = entity.getAnswerYn();
-        this.createdDate = entity.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-        this.updatedDate = entity.getUpdatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+        this.createdDate = entity.getCreatedDate();
+        this.updatedDate = entity.getUpdatedDate();
+        this.users = entity.getUserChatRooms().stream()
+                .map(UserChatRoom::getUser)
+                .map(UserResponseDto::new)
+                .collect(Collectors.toSet());
     }
 }

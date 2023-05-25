@@ -1,10 +1,12 @@
 package com.shyd.healthcare.service.support;
 
+import com.shyd.healthcare.domain.support.board.BoardType;
 import com.shyd.healthcare.domain.support.board.Post;
 import com.shyd.healthcare.domain.user.User;
-import com.shyd.healthcare.dto.support.post.PostResponseDto;
-import com.shyd.healthcare.dto.support.post.PostSaveRequestDto;
-import com.shyd.healthcare.dto.support.post.PostUpdateRequestDto;
+import com.shyd.healthcare.dto.support.post.PostListResponseDTO;
+import com.shyd.healthcare.dto.support.post.PostResponseDTO;
+import com.shyd.healthcare.dto.support.post.PostSaveRequestDTO;
+import com.shyd.healthcare.dto.support.post.PostUpdateRequestDTO;
 import com.shyd.healthcare.repository.support.PostRepository;
 import com.shyd.healthcare.repository.user.UserRepository;
 import com.shyd.healthcare.config.JwtTokenProvider;
@@ -24,102 +26,92 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AttachmentService attachmentService;
 
-    /** 카테고리별 목록조회 - 작성순, List */
+    /** 카테고리별 목록조회 - List */
     @Transactional
-    public List<PostResponseDto> findAllByCategoryAsc(String category) {
-        Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        List<Post> postList = this.postRepository.findAllByCategory(category, sort);
-        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+    public List<PostListResponseDTO> findAllByBoardType(BoardType boardType, String sortOption) {
+        Sort sort = Sort.by(sortOption.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "id");
+        List<Post> posts = this.postRepository.findAllByBoardType(boardType, sort);
+        return posts.stream().map(PostListResponseDTO::new).collect(Collectors.toList());
     }
 
-    /** 카테고리별 목록조회 - 최신순, List */
+    /** 카테고리별 목록조회 - Page */
     @Transactional
-    public List<PostResponseDto> findAllByCategoryDesc(String category) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<Post> postList = this.postRepository.findAllByCategory(category, sort);
-        return postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+    public Page<PostListResponseDTO> findAllByBoardType(BoardType boardType, Pageable pageable) {
+        Page<Post> posts = this.postRepository.findAllByBoardType(boardType, pageable);
+        return posts.map(PostListResponseDTO::new);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /** 카테고리별 목록조회 - 작성순, Page */
-    @Transactional
-    public Page<PostResponseDto> findAllByCategoryAsc(String category, Pageable pageable) {
-        // Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        // Pageable pageable = PageRequest.of(curPage, maxPage, sort);
-        Page<Post> postPage = this.postRepository.findAllByCategory(category, pageable);
-        return postPage.map(PostResponseDto::new);
-    }
-
-    /** 카테고리별 목록조회 - 최신순, Page */
-    @Transactional
-    public Page<PostResponseDto> findAllByCategoryDesc(String category, Pageable pageable) {
-        // Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        // Pageable pageable = PageRequest.of(curPage, maxPage, sort);
-        Page<Post> postPage = this.postRepository.findAllByCategory(category, pageable);
-        return postPage.map(PostResponseDto::new);
-    }
+//    /** 카테고리별 목록조회 - Page, 하드코딩 */
+//    @Transactional
+//    public Page<PostListResponseDTO> findAllByBoardType(int page, int size, String sortOption, BoardType boardType) {
+//        Sort sort = Sort.by(sortOption.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "id");
+//        Pageable pageable = PageRequest.of(page - 1, size, sort);
+//        Page<Post> posts = this.postRepository.findAllByBoardType(boardType, pageable);
+//        return posts.map(PostListResponseDTO::new);
+//    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 제목으로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
-    public Page<PostResponseDto> findAllByCategoryAndTitle(String category, String title, Pageable pageable) {
-        Page<Post> postPage = this.postRepository.findAllByCategoryAndTitleContaining(category, title, pageable);
-        return postPage.map(PostResponseDto::new);
+    public Page<PostListResponseDTO> findAllByBoardTypeAndTitle(BoardType boardType, String title, Pageable pageable) {
+        Page<Post> posts = this.postRepository.findAllByBoardTypeAndTitleContaining(boardType, title, pageable);
+        return posts.map(PostListResponseDTO::new);
     }
 
     /** 내용으로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
-    public Page<PostResponseDto> findAllByCategoryAndContent(String category, String content, Pageable pageable) {
-        Page<Post> postPage = this.postRepository.findAllByCategoryAndContentContaining(category, content, pageable);
-        return postPage.map(PostResponseDto::new);
+    public Page<PostListResponseDTO> findAllByBoardTypeAndContent(BoardType boardType, String content, Pageable pageable) {
+        Page<Post> posts = this.postRepository.findAllByBoardTypeAndContentContaining(boardType, content, pageable);
+        return posts.map(PostListResponseDTO::new);
     }
 
     /** 작성자로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
-    public Page<PostResponseDto> findAllByCategoryAndAuthor(String category, String author, Pageable pageable) {
-        Page<Post> postPage = this.postRepository.findAllByCategoryAndAuthorContaining(category, author, pageable);
-        return postPage.map(PostResponseDto::new);
+    public Page<PostListResponseDTO> findAllByBoardTypeAndAuthor(BoardType boardType, String author, Pageable pageable) {
+        Page<Post> posts = this.postRepository.findAllByBoardTypeAndAuthorContaining(boardType, author, pageable);
+        return posts.map(PostListResponseDTO::new);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 제목 + 내용으로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
-    public Page<PostResponseDto> findAllByCategoryAndTitleOrContent(String category, String title, String content, Pageable pageable) {
-        Page<Post> postPage = this.postRepository.findAllByCategoryAndTitleContainingOrContentContaining(category, title, content, pageable);
-        return postPage.map(PostResponseDto::new);
+    public Page<PostListResponseDTO> findAllByBoardTypeAndTitleOrContent(BoardType boardType, String title, String content, Pageable pageable) {
+        // where board_type and ( post title like ) or post content like => where board_type and ( post title like or post content like)
+        // JPARepository 에서 매뉴얼로 SQL Query 날려야 할 것 같음
+        Page<Post> posts = this.postRepository.findAllByBoardTypeAndTitleContainingOrContentContaining(boardType, title, content, pageable);
+        return posts.map(PostListResponseDTO::new);
     }
 
     /** 제목 + 작성자로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
-    public Page<PostResponseDto> findAllByCategoryAndTitleOrAuthor(String category, String title, String author, Pageable pageable) {
-        Page<Post> postPage = this.postRepository.findAllByCategoryAndTitleContainingOrAuthorContaining(category, title, author, pageable);
-        return postPage.map(PostResponseDto::new);
+    public Page<PostListResponseDTO> findAllByBoardTypeAndTitleOrAuthor(BoardType boardType, String title, String author, Pageable pageable) {
+        Page<Post> posts = this.postRepository.findAllByBoardTypeAndTitleContainingOrAuthorContaining(boardType, title, author, pageable);
+        return posts.map(PostListResponseDTO::new);
     }
 
     /** 내용 + 작성자로 검색, 카테고리별 게시판 목록조회 - 최신순, Pageable */
     @Transactional
-    public Page<PostResponseDto> findAllByCategoryAndContentOrAuthor(String category, String content, String author, Pageable pageable) {
-        Page<Post> postPage = this.postRepository.findAllByCategoryAndContentContainingOrAuthorContaining(category, content, author, pageable);
-        return postPage.map(PostResponseDto::new);
+    public Page<PostListResponseDTO> findAllByBoardTypeAndContentOrAuthor(BoardType boardType, String content, String author, Pageable pageable) {
+        Page<Post> posts = this.postRepository.findAllByBoardTypeAndContentContainingOrAuthorContaining(boardType, content, author, pageable);
+        return posts.map(PostListResponseDTO::new);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /** 게시글 조회 */
     @Transactional
-    public PostResponseDto findById(final Long id) {
-        Post entity = this.postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id));
-        return new PostResponseDto(entity);
+    public PostResponseDTO findById(Long id) {
+        Post post = this.postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. post_id = " + id));
+        post.increaseHits();
+        return new PostResponseDTO(post);
     }
 
     /** 게시글 생성 */
     @Transactional
-    public Long save(String token, final PostSaveRequestDto requestDto) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        Long userId = this.jwtTokenProvider.getUserIdFromToken(token);
+    public Long create(String accessToken, PostSaveRequestDTO requestDto) {
+        Long userId = this.jwtTokenProvider.getUserIdFromToken(accessToken.substring(7));
         User user = this.userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. user_id = " + userId));
         requestDto.setAuthor(user);
@@ -128,17 +120,18 @@ public class PostService {
 
     /** 게시글 수정 */
     @Transactional
-    public Long update(final Long id, final PostUpdateRequestDto requestDto) {
-        Post entity = this.postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id));
-        return entity.update(requestDto);
+    public Long update(Long id, PostUpdateRequestDTO requestDto) {
+        Post post = this.postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. post_id = " + id));
+        return post.update(requestDto);
     }
 
     /** 게시글 삭제 */
     @Transactional
-    public void delete(final Long id) {
-        Post entity = this.postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. id = " + id));
-        this.postRepository.delete(entity);
+    public void delete(Long id) {
+        Post post = this.postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. post_id = " + id));
+        this.attachmentService.deleteAllByPostId(id);
+        this.postRepository.delete(post);
     }
 }

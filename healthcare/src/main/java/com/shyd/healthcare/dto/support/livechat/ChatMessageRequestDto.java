@@ -2,33 +2,22 @@ package com.shyd.healthcare.dto.support.livechat;
 
 import com.shyd.healthcare.domain.support.livechat.ChatMessage;
 import com.shyd.healthcare.domain.support.livechat.ChatRoom;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.shyd.healthcare.domain.user.User;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
-public class ChatMessageRequestDto {
-    private String sender;
+@AllArgsConstructor
+public class ChatMessageRequestDTO {
+    private User sender;
     private String message;
-    private String roomUuid;
     private ChatRoom chatRoom;
-
-    @Builder
-    public ChatMessageRequestDto(String roomUuid, String sender, String message, ChatRoom chatRoom) {
-        this.sender = sender;
-        this.message = message;
-        this.roomUuid = roomUuid;
-        this.chatRoom = chatRoom;
-    }
 
     public ChatMessage toEntity() {
         return ChatMessage.builder()
                 .sender(this.sender)
                 .message(this.message)
-                .roomUuid(this.roomUuid)
                 .chatRoom(this.chatRoom)
                 .build();
     }

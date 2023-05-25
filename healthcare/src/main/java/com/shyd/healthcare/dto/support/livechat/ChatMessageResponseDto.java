@@ -1,25 +1,29 @@
 package com.shyd.healthcare.dto.support.livechat;
 
 import com.shyd.healthcare.domain.support.livechat.ChatMessage;
-import lombok.Getter;
+import com.shyd.healthcare.dto.user.UserResponseDto;
+import lombok.*;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
-@Getter
-public class ChatMessageResponseDto {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChatMessageResponseDTO {
     private Long id;
-    private String sender;
     private String message;
-    private String roomUuid;
-    private String createdDate;
-    private String updatedDate;
+    private UserResponseDto sender;
+    private ChatRoomResponseDTO chatRoom;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
 
-    public ChatMessageResponseDto(ChatMessage entity) {
+    public ChatMessageResponseDTO(ChatMessage entity) {
         this.id = entity.getId();
-        this.sender = entity.getSender();
         this.message = entity.getMessage();
-        this.roomUuid = entity.getRoomUuid();
-        this.createdDate = entity.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-        this.updatedDate = entity.getUpdatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+        this.createdDate = entity.getCreatedDate();
+        this.updatedDate = entity.getUpdatedDate();
+        this.sender = new UserResponseDto(entity.getSender());
+        this.chatRoom = new ChatRoomResponseDTO(entity.getChatRoom());
     }
 }

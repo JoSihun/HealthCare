@@ -1,39 +1,36 @@
 package com.shyd.healthcare.domain.support.board;
 
 import com.shyd.healthcare.domain.BaseTime;
-import com.shyd.healthcare.dto.support.attachment.AttachmentUpdateRequestDto;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.shyd.healthcare.dto.support.attachment.AttachmentRequestDTO;
+import lombok.*;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @Getter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Attachment extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long size;
+    private Long fileSize;
     private String fileName;
     private String filePath;
+    private String fileType;
 
-    @ManyToOne
+    @Lob
+    private byte[] fileByte;
+    @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @Builder
-    public Attachment(Long size, String fileName, String filePath, Post post) {
-        this.post = post;
-        this.size = size;
-        this.fileName = fileName;
-        this.filePath = filePath;
-    }
-
-    public Long update(AttachmentUpdateRequestDto requestDto) {
-        this.size = requestDto.getSize();
-        this.fileName = requestDto.getFileName();
-        this.filePath = requestDto.getFilePath();
+    public Long update(AttachmentRequestDTO requestDTO) {
+        this.fileSize = requestDTO.getFileSize();
+        this.fileName = requestDTO.getFileName();
+        this.filePath = requestDTO.getFilePath();
+        this.fileType = requestDTO.getFileType();
+        this.fileByte = requestDTO.getFileByte();
         return this.id;
     }
 }

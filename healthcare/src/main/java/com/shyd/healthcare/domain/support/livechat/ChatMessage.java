@@ -1,32 +1,33 @@
 package com.shyd.healthcare.domain.support.livechat;
 
 import com.shyd.healthcare.domain.BaseTime;
-import com.shyd.healthcare.domain.support.livechat.ChatRoom;
+import com.shyd.healthcare.domain.user.User;
+import com.shyd.healthcare.dto.support.livechat.ChatMessageRequestDTO;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @Getter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatMessage extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String sender;
     private String message;
-    private String roomUuid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User sender;
+    @ManyToOne(fetch = FetchType.LAZY)
     private ChatRoom chatRoom;
 
-    @Builder
-    public ChatMessage(String roomUuid, String sender, String message, ChatRoom chatRoom) {
-        this.sender = sender;
-        this.message = message;
-        this.roomUuid = roomUuid;
-        this.chatRoom = chatRoom;
+    public Long update(ChatMessageRequestDTO requestDto) {
+        this.message = requestDto.getMessage();
+        return this.id;
     }
 }

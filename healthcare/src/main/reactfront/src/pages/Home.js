@@ -1,27 +1,8 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Container from "react-bootstrap/Container";
-import { Card, Col, Row } from "react-bootstrap";
+import React from "react";
+import { Container, Card, Col, Row } from "react-bootstrap";
+
 import CardImage from "../assets/images/bg_black.jpg";
 import BackGroundImage from "../assets/images/bg_home.jpg";
-
-const TestHomeAPI = (props) => {
-    const [testData, setTestData] = useState("Test Data Before");
-    useEffect(() => {
-        const callAPI = async () => {
-            axios.get(`/home`)
-            .then((response) => {
-                setTestData(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
-        callAPI();
-    }, []);
-
-    return <h1>{testData}</h1>
-}
 
 const CardItem = (props) => {
     return (
@@ -31,7 +12,6 @@ const CardItem = (props) => {
                 <Card.Title>Card Title</Card.Title>
                 <div>
                     Some quick example text to build on the card title and make up the bulk of the card's content.
-                    <TestHomeAPI />
                 </div>
             </Card.Body>
         </Card>
@@ -39,8 +19,6 @@ const CardItem = (props) => {
 }
 
 export default function Home() {
-
-
     return (
         <Container fluid className="min-vh-100 bg-white text-black"
             style={{ backgroundImage: `url(${BackGroundImage})`,
@@ -49,60 +27,59 @@ export default function Home() {
                     backgroundSize: "cover",
                     backgroundAttachment: "fixed" }}>
 
-            <Row className="justify-content-center py-4" style={{ minHeight: "25vh" }}>
-                <Col className="col-md-3">
+            <Row className="min-vh-25 justify-content-center pt-3">
+                <Col className="col-12 col-lg-3 mb-3">
                     <CardItem />
                 </Col>
-                <Col className="col-md-3">
+                <Col className="col-12 col-lg-3 mb-3">
                     <CardItem />
                 </Col>
-                <Col className="col-md-3">
-                    <CardItem />
-                </Col>
-            </Row>
-
-            <Row className="justify-content-center pb-4" style={{ minHeight: "25vh" }}>
-                <Col className="col-md-3">
-                    <CardItem />
-                </Col>
-                <Col className="col-md-3">
-                    <CardItem />
-                </Col>
-                <Col className="col-md-3">
+                <Col className="col-12 col-lg-3 mb-3">
                     <CardItem />
                 </Col>
             </Row>
 
-            <Row className="justify-content-center pb-4" style={{ minHeight: "25vh" }}>
-                <Col className="col-md-3">
+            <Row className="min-vh-25 justify-content-center pt-3">
+                <Col className="col-12 col-lg-3 mb-3">
                     <CardItem />
                 </Col>
-                <Col className="col-md-3">
+                <Col className="col-12 col-lg-3 mb-3">
                     <CardItem />
                 </Col>
-                <Col className="col-md-3">
-                    <CardItem />
-                </Col>
-                <Col className="col-md-3">
+                <Col className="col-12 col-lg-3 mb-3">
                     <CardItem />
                 </Col>
             </Row>
 
-            <Row className="justify-content-center pb-4" style={{ minHeight: "25vh" }}>
-                <Col className="col-md-3">
+            <Row className="min-vh-25 justify-content-center pt-3">
+                <Col className="col-12 col-lg-3 mb-3">
                     <CardItem />
                 </Col>
-                <Col className="col-md-3">
+                <Col className="col-12 col-lg-3 mb-3">
                     <CardItem />
                 </Col>
-                <Col className="col-md-3">
+                <Col className="col-12 col-lg-3 mb-3">
                     <CardItem />
                 </Col>
-                <Col className="col-md-3">
+                <Col className="col-12 col-lg-3 mb-3">
                     <CardItem />
                 </Col>
             </Row>
-            
+
+            <Row className="min-vh-25 justify-content-center pt-3">
+                <Col className="col-12 col-lg-3 mb-3">
+                    <CardItem />
+                </Col>
+                <Col className="col-12 col-lg-3 mb-3">
+                    <CardItem />
+                </Col>
+                <Col className="col-12 col-lg-3 mb-3">
+                    <CardItem />
+                </Col>
+                <Col className="col-12 col-lg-3 mb-3">
+                    <CardItem />
+                </Col>
+            </Row>
         </Container>
-    )
+    );
 }

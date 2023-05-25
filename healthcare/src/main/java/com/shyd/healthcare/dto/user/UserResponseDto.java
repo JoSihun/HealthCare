@@ -7,16 +7,22 @@ import lombok.*;
 @Setter
 public class UserResponseDto {
     private Long id;
-    private String role;
+    private String name;
     private String email;
     private String contact;
     private String username;
+    private String birthday;
+    private String createdDate;
+    private String updatedDate;
 
     public UserResponseDto(User entity) {
         this.id = entity.getId();
+        this.name = entity.getName();
         this.email = entity.getEmail();
         this.contact = entity.getContact();
         this.username = entity.getUsername();
-        this.role = entity.getRole().name();
+        this.birthday = entity.getBirthday().toString();
+        this.createdDate = entity.getCreatedDate().toString();
+        this.updatedDate = entity.getUpdatedDate().toString();
     }
 }

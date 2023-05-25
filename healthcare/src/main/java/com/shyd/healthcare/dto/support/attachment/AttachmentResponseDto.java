@@ -1,25 +1,28 @@
 package com.shyd.healthcare.dto.support.attachment;
 
 import com.shyd.healthcare.domain.support.board.Attachment;
-import lombok.Getter;
+import lombok.*;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
-@Getter
-public class AttachmentResponseDto {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AttachmentResponseDTO {
     private Long id;
-    private Long size;
+    private Long fileSize;
     private String fileName;
-    private String filePath;
-    private String createdDate;
-    private String updatedDate;
+    private String fileType;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
 
-    public AttachmentResponseDto(Attachment entity) {
+    public AttachmentResponseDTO(Attachment entity) {
         this.id = entity.getId();
-        this.size = entity.getSize();
         this.fileName = entity.getFileName();
-        this.filePath = entity.getFilePath();
-        this.createdDate = entity.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
-        this.updatedDate = entity.getUpdatedDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+        this.fileSize = entity.getFileSize();
+        this.fileType = entity.getFileType();
+        this.createdDate = entity.getCreatedDate();
+        this.updatedDate = entity.getUpdatedDate();
     }
 }

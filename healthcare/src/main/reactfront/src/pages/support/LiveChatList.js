@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import SideBar from "../../components/support/SideBar";
-import { deleteChatRoom, fetchChatRooms } from "../../api/LiveChatAPI";
+import { Badge, Button, Card, Col, Container, Modal, Row } from "react-bootstrap";
+
+import UserAPI from "../../api/user/UserAPI";
+import LiveChatAPI from "../../api/support/LiveChatAPI";
+import { SupportSideBar } from "../../components/SideBar";
 
 const ModalCheck = (props) => {
     const { chatRoom, message } = props;
@@ -13,7 +15,7 @@ const ModalCheck = (props) => {
     }
 
     const handleDelete = async (e) => {
-        deleteChatRoom(chatRoom.id)
+        LiveChatAPI.deleteChatRoom(chatRoom.id)
         .then(() => {
             window.location.reload();
         }).catch((error) => {
@@ -31,19 +33,15 @@ const ModalCheck = (props) => {
                 <div>(uuid={chatRoom.uuid})</div>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleHide} style={{ minWidth: "100px" }}>
-                    취소
-                </Button>
-                <Button variant="danger" onClick={handleDelete} style={{ minWidth: "100px" }}>
-                    삭제
-                </Button>
+                <Button variant="secondary" onClick={handleHide} style={{ minWidth: "100px" }}>취소</Button>
+                <Button variant="danger" onClick={handleDelete} style={{ minWidth: "100px" }}>삭제</Button>
             </Modal.Footer>
         </Modal>
     );
 }
 
 const ChatRoomItem = (props) => {
-    const { chatRoom } = props;
+    const { user, chatRoom } = props;
     const [modalShow, setModalShow] = useState(false);
 
     const handleEnter = async (e) => {
@@ -58,33 +56,33 @@ const ChatRoomItem = (props) => {
     }
 
     return (
-        <Card className="mb-3">
+        <Card>
             <Link onClick={handleEnter} style={{ color:"black", textDecoration: "none" }}>
-                <Card.Body>
+                <Card.Body className="pb-0">
                     <Card.Title className="d-flex justify-content-between">
                         <div>
-                            <div><h5><strong>{chatRoom.roomName}님의 문의사항</strong></h5></div>
-                            <div style={{ color: "gray" }}><h6><small>({chatRoom.uuid})</small></h6></div>
+                            <div className="text-dark"><h5><strong>{user.name}님의 문의사항</strong></h5></div>
+                            <div className="text-secondary"><h6><small>({chatRoom.uuid})</small></h6></div>
                             {chatRoom.answerYn
                             ? <Badge pill bg="success">답변완료</Badge>
                             : <Badge pill bg="primary">답변대기</Badge>}
                         </div>
-                        <div style={{ color: "gray" }}>
-                            <div className="d-flex justify-content-end"><h6><small>문의생성일자: {chatRoom.createdDate}</small></h6></div>
-                            <div className="d-flex justify-content-end"><h6><small>문의수정일자: {chatRoom.updatedDate}</small></h6></div>
+                        <div className="fs-6 text-secondary">
+                            <div><small>문의생성일자: {chatRoom.createdDate}</small></div>
+                            <div><small>문의수정일자: {chatRoom.updatedDate}</small></div>
                         </div>
                     </Card.Title>
                 </Card.Body>
             </Link>
-
-            <Card.Body className="px-2 py-0">
+            
+            <Card.Body className="pt-0 pb-1">
                 <Card.Title>
                     <div className="d-flex justify-content-end">
-                        <Link onClick={handleEnter}><Badge className="me-1" bg="dark">문의하기</Badge></Link>
+                        <Link onClick={handleEnter}><Badge className="me-1" bg="dark">문의보기</Badge></Link>
                         <Link onClick={handleDelete}><Badge className="ms-1" bg="danger">삭제</Badge></Link>
                     </div>
                     <ModalCheck modalShow={modalShow} setModalShow={setModalShow}
-                    chatRoom={chatRoom} message={"해당 문의사항을 정말 삭제하시겠습니까?"}/>
+                        chatRoom={chatRoom} message={"해당 문의사항을 정말 삭제하시겠습니까?"}/>
                 </Card.Title>
             </Card.Body>
         </Card>
@@ -92,23 +90,31 @@ const ChatRoomItem = (props) => {
 }
 
 const ChatRoomList = (props) => {
+    const { chatRooms } = props;
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        UserAPI.fetchUser()
+        .then(response => setUser(response))
+        .catch(error => console.log(error));
+    }, []);
+
     return (
-        <Row>
-            {props.chatRooms.map((chatRoom, index) => (
-                <Col className="col-md-12" key={index}>
-                    <ChatRoomItem chatRoom={chatRoom} />
+        <Row className="justify-content-center mt-3">
+            {chatRooms.map((chatRoom, index) => (
+                <Col className="col-12 col-lg-12 mb-3" key={index}>
+                    <ChatRoomItem user={user} chatRoom={chatRoom} />
                 </Col>
             ))}
         </Row>
     );
 }
 
-export default function LiveChatList(props) {
-    const userId = "TestUserName";
+const LiveChatListBody = (props) => {
     const [chatRooms, setChatRooms] = useState([]);
 
     useEffect(() => {
-        fetchChatRooms(userId)
+        LiveChatAPI.fetchChatRooms()
         .then((response) => {
             setChatRooms(response);
         }).catch((error) => {
@@ -117,29 +123,37 @@ export default function LiveChatList(props) {
     }, []);
 
     return (
+        <Card>
+            <Card.Body className="border-bottom">
+                <Card.Title className="fs-2 fw-bold">
+                    LiveChat Support({chatRooms.length})
+                </Card.Title>
+            </Card.Body>
+
+            <Card.Body className="py-0" style={{ minHeight: "50vh", maxHeight: "75vh", overflow: "auto" }}>
+                <ChatRoomList chatRooms={chatRooms} />
+            </Card.Body>
+
+            <Card.Body className="border-top">
+                <div className="d-flex justify-content-end">
+                    <Link className="btn btn-dark" style={{ width: "100px" }} to={`/support/livechat/room`}>
+                        문의사항
+                    </Link>
+                </div>
+            </Card.Body>
+        </Card>
+    );
+}
+
+export default function LiveChatList() {
+    return (
         <Container fluid>
-            <Row className="justify-content-center">
-                <Col className="col-md-2 mx-2 my-4">
-                    <SideBar />
+            <Row className="justify-content-center mt-3">
+                <Col className="col-12 col-lg-2 mb-3">
+                    <SupportSideBar />
                 </Col>
-
-                <Col className="col-md-9 mx-2 my-4">
-                    <Card style={{ minHeight: "50vh", maxHeight: "75vh" }}>
-                        <Card.Body>
-                            <Card.Title><h2><strong>LiveChat Support({chatRooms.length})</strong></h2></Card.Title>
-                            <hr className="mb-0" />
-                        </Card.Body>
-
-                        <Card.Body style={{ overflow: "auto" }}>
-                            <ChatRoomList chatRooms={chatRooms} />
-                        </Card.Body>
-
-                        <div className="d-flex justify-content-end mx-3 my-3">
-                            <Link to={"/support/livechat/room"}>
-                                <Button variant="dark" style={{ width: "100px" }}>문의사항</Button>
-                            </Link>
-                        </div>
-                    </Card>
+                <Col className="col-12 col-lg-9 mb-3">
+                    <LiveChatListBody />
                 </Col>
             </Row>
         </Container>
