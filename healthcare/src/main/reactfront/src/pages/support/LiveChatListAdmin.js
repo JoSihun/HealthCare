@@ -91,7 +91,7 @@ const ChatRoomItem = (props) => {
                             <div><small>문의생성일자: {chatRoom.createdDate}</small></div>
                             <div><small>문의수정일자: {chatRoom.updatedDate}</small></div>
                         </div>
-                    </Card.Title>            
+                    </Card.Title>
                 </Card.Body>
             </Link>
 
