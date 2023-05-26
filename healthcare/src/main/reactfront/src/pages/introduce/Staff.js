@@ -5,6 +5,7 @@ import { Button, Card, Row, Col, Container, Table } from "react-bootstrap";
 import SideBar from "../../components/introduce/SideBar";
 import { fetchStaffV1, deleteStaffV1, createStaffV1 } from '../../api/Introduce/StaffAPI';
 import { searchUserList } from '../../api/user/UserAPI';
+import { Link } from 'react-router-dom';
 
 const AddForm = (props) => {
     const { setUsers, handleShow } = props;
@@ -103,7 +104,7 @@ const UserList = (props) => {
 }
 
 const SearchForm = (props) => {
-    const { setUsers, handleShow } = props;
+    const { setUsers } = props;
     const [value, setValue] = useState({
         username: ""
     });
@@ -155,7 +156,7 @@ const UserSearch = (props) => {
                 <hr/>
             </Card.Body>
             <Card.Body className='pt-0 pb-4'>
-                <SearchForm setUsers={setUsers} handleShow={handleShow} />
+                <SearchForm setUsers={setUsers} />
             </Card.Body>
             <Card.Body className='border-top border-bottom border-2 pt-0'>
                 <UserList users={users} setSelectedUser={setSelectedUser} />
