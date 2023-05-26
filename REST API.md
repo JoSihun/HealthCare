@@ -15,9 +15,28 @@
         - [2. 1. 5 게시글 데이터 수정](#2-1-5-게시글-데이터-수정---v1)
         - [2. 1. 6 게시글 데이터 삭제](#2-1-6-게시글-데이터-삭제---v1)
     - [2. 2 Comment API](#2-2-comment-api)
+        - [2. 2. 1 댓글 조회](#2-2-1-댓글-조회)
+        - [2. 2. 2 댓글 생성](#2-2-2-댓글-생성)
+        - [2. 2. 3 댓글 수정](#2-2-3-댓글-수정)
+        - [2. 2. 4 댓글 삭제](#2-2-4-댓글-삭제)
     - [2. 3 Attachment API](#2-3-attachment-api)
-    - [2. 4 ChatRoom API](#2-4-attachment-api)
-    - [2. 5 ChatMessage API](#2-5-attachment-api)
+        - [2. 3. 1 첨부파일 조회](#2-3-1-첨부파일-조회)
+        - [2. 3. 2 첨부파일 생성](#2-3-2-첨부파일-생성)
+        - [2. 3. 3 첨부파일 수정](#2-3-3-첨부파일-수정)
+        - [2. 3. 4 첨부파일 삭제](#2-3-4-첨부파일-삭제)
+        - [2. 3. 5 첨부파일 다운로드](#2-3-5-첨부파일-다운로드)
+        - [2. 3. 6 첨부파일 바이너리](#2-3-6-첨부파일-바이너리)
+    - [2. 4 ChatRoom API](#2-4-chatroom-api)
+        - [2. 4. 1 채팅방 조회](#2-3-1-채팅방-조회)
+        - [2. 4. 2 채팅방 생성](#2-3-2-채팅방-생성)
+        - [2. 4. 3 채팅방 수정](#2-3-3-채팅방-수정)
+        - [2. 4. 4 채팅방 삭제](#2-3-4-채팅방-삭제)
+        - [2. 4. 5 채팅방 검색조회 - UUID](#2-3-5-채팅방-검색조회---UUID)
+        - [2. 4. 6 채팅방 사용자 목록조회 - List](#2-3-6-채팅방-사용자-목록조회---List)
+        - [2. 4. 7 채팅방 사용자 목록조회 - Page](#2-3-7-채팅방-사용자-목록조회---Page)
+        - [2. 4. 8 채팅방 관리자 목록조회 - List](#2-3-8-채팅방-관리자-목록조회---List)
+        - [2. 4. 9 채팅방 관리자 목록조회 - Page](#2-3-9-채팅방-관리자-목록조회---Page)
+    - [2. 5 ChatMessage API](#2-5-chatmessage-api)
 - [3. User Management](#3-user-management)
     -
     -
@@ -27,7 +46,7 @@
 
 
 
-<br>
+
 
 
 
@@ -39,7 +58,7 @@
 
 
 
-<br>
+
 
 
 
@@ -48,19 +67,19 @@
 # 2. Support
 - [2. Support](#2-support)
     - [2. 1 Post API](#2-1-post-api)
-        - [2. 1. 1 게시글 상세조회](#2-1-1-게시글-상세조회)
-        - [2. 1. 2 게시판 목록조회](#2-1-2-게시판-목록조회)
-        - [2. 1. 3 게시판 검색조회](#2-1-3-게시판-검색조회)
-        - [2. 1. 4 게시글 데이터 삽입](#2-1-4-게시글-데이터-삽입---v1)
-        - [2. 1. 5 게시글 데이터 수정](#2-1-5-게시글-데이터-수정---v1)
-        - [2. 1. 6 게시글 데이터 삭제](#2-1-6-게시글-데이터-삭제---v1)
     - [2. 2 Comment API](#2-2-comment-api)
     - [2. 3 Attachment API](#2-3-attachment-api)
-    - [2. 4 ChatRoom API](#2-4-attachment-api)
-    - [2. 5 ChatMessage API](#2-5-attachment-api)
+    - [2. 4 ChatRoom API](#2-4-chatroom-api)
+    - [2. 5 ChatMessage API](#2-5-chatmessage-api)
 
 [ [처음으로](#rest-api) ]
 [ [뒤로가기](#rest-api) ]
+
+
+
+***
+
+
 
 ## 2. 1 Post API
 - [2. 1 Post API](#2-1-post-api)
@@ -398,39 +417,1216 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 2. 2 Comment API
+
+- [2. 2 Comment API](#2-2-comment-api)
+    - [2. 2. 1 댓글 조회](#2-2-1-댓글-조회)
+    - [2. 2. 2 댓글 생성](#2-2-2-댓글-생성)
+    - [2. 2. 3 댓글 수정](#2-2-3-댓글-수정)
+    - [2. 2. 4 댓글 삭제](#2-2-4-댓글-삭제)
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-support) ]
+
+
+
+***
+
+
+### 2. 2. 1 댓글 조회
+
+### Request
+
+- **URL**: `/api/v1/comment`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `post`: 게시글 아이디 (ex: `post=1`)
+
+### Response
+
+```json
+[
+    {
+        "id": 1,
+        "author": "Username",
+        "content": "Comment content",
+        "secretYn": false,
+        "createdDate": "2023-05-25T15:30:45.123",
+        "updatedDate": "2023-05-25T15:30:45.123"
+    },
+    {
+        "id": 2,
+        "author": "Username",
+        "content": "Comment content",
+        "secretYn": false,
+        "createdDate": "2023-05-25T15:30:45.123",
+        "updatedDate": "2023-05-25T15:30:45.123"
+    }
+]
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-2-comment-api) ]
+
+
+
+***
+
+
+
+### 2. 2. 2 댓글 생성
+
+### Request
+
+- **URL**: `/api/v1/comment`
+- **Method**: `POST`
+- **Query Parameters**:
+    - `post`: 게시글 아이디 (ex: `post=1`)
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Request Body**:
+    - **content**: String (ex: "댓글 내용")
+    - **secretYn**: Boolean (ex: `true`, `false`)
+    ```json
+    {
+        "content": "댓글 내용",
+        "secretYn": true,
+    }
+    ```
+
+### Response
+
+- **Type**: `Long`
+- **Description**: 생성된 댓글의 `ID`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-2-comment-api) ]
+
+
+
+***
+
+
+
+### 2. 2. 3 댓글 수정
+
+### Request
+
+- **URL**: `/api/v1/comment/{id}`
+- **Method**: `PUT`
+- **Path Parameters**:
+    - `id`: 댓글 아이디
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Request Body**:
+    - **content**: String (ex: `"댓글 내용"`)
+    - **secretYn**: Boolean (ex: `true`, `false`)
+    ```json
+    {
+        "content": "댓글 내용",
+        "secretYn": false,
+    }
+    ```
+
+### Response
+
+- **Type**: `Long`
+- **Description**: 수정된 댓글의 `ID`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-2-comment-api) ]
+
+
+
+***
+
+
+
+### 2. 2. 4 댓글 삭제
+
+### Request
+
+- **URL**: `/api/v1/comment/{id}`
+- **Method**: `DELETE`
+- **Path Parameters**:
+    - `id`: 댓글 아이디
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+- **Type**: `None`
+- **Description**: 아무것도 반환하지 않음
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-2-comment-api) ]
+
+
+
+***
+
+
+
 ## 2. 3 Attachment API
+
+- [2. 3 Attachment API](#2-3-attachment-api)
+    - [2. 3. 1 첨부파일 조회](#2-3-1-첨부파일-조회)
+    - [2. 3. 2 첨부파일 생성](#2-3-2-첨부파일-생성)
+    - [2. 3. 3 첨부파일 수정](#2-3-3-첨부파일-수정)
+    - [2. 3. 4 첨부파일 삭제](#2-3-4-첨부파일-삭제)
+    - [2. 3. 5 첨부파일 다운로드](#2-3-5-첨부파일-다운로드)
+    - [2. 3. 6 첨부파일 바이너리](#2-3-6-첨부파일-바이너리)
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-support) ]
+
+
+
+***
+
+
+
+### 2. 3. 1 첨부파일 조회
+
+### Request
+
+- **URL**: `/api/v1/attachment`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `post`: 게시글 아이디 (ex: `post=1`)
+
+### Response
+
+```json
+[
+    {
+        "id": 1,
+        "fileSize": 10000,
+        "fileName": "FileName",
+        "fileType": "FileType",
+        "createdDate": "2023-05-25T15:30:45.123",
+        "updatedDate": "2023-05-25T15:30:45.123"
+    },
+    {
+        "id": 2,
+        "fileSize": 10000,
+        "fileName": "FileName",
+        "fileType": "FileType",
+        "createdDate": "2023-05-25T15:30:45.123",
+        "updatedDate": "2023-05-25T15:30:45.123"
+    }
+]
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-3-attachment-api) ]
+
+
+
+***
+
+
+
+### 2. 3. 2 첨부파일 생성
+
+### Request
+- **URL**: `/api/v1/attachment`
+- **Method**: `POST`
+- **Query Parameters**:
+    - `post`: 게시글 아이디 (ex: `post=1`)
+- **Headers**:
+    - **Content-Type**: `multipart/form-data`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Request Body**:
+    - Form Fields:
+        - **files** (optional): 첨부할 File 객체 리스트
+
+### Response
+
+- **Type**: `Long`
+- **Description**: 첨부파일이 생성된 게시글의 `ID`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-3-attachment-api) ]
+
+
+
+***
+
+
+
+### 2. 3. 3 첨부파일 수정
+
+### Request
+- **URL**: `/api/v1/attachment`
+- **Method**: `PUT`
+- **Query Parameters**:
+    - `post`: 게시글 아이디 (ex: `post=1`)
+- **Headers**:
+    - **Content-Type**: `multipart/form-data`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Request Body**:
+    - Form Fields:
+        - **files** (optional): 첨부할 File 객체 리스트
+
+### Response
+
+- **Type**: `Long`
+- **Description**: 첨부파일이 수정된 게시글의 `ID`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-3-attachment-api) ]
+
+
+
+***
+
+
+
+### 2. 3. 4 첨부파일 삭제
+
+### Request
+- **URL**: `/api/v1/attachment`
+- **Method**: `DELETE`
+- **Query Parameters**:
+    - `post`: 게시글 아이디 (ex: `post=1`)
+- **Headers**:
+    - **Content-Type**: `multipart/form-data`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+- **Type**: `None`
+- **Description**: 아무것도 반환하지 않음
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-3-attachment-api) ]
+
+
+
+***
+
+
+
+### 2. 3. 5 첨부파일 다운로드
+
+### Request
+- **URL**: `/api/v1/attachment/download/{id}`
+- **Method**: `GET`
+- **Path Parameters**:
+    - `id`: 첨부파일 아이디
+- **Headers**:
+    - **Content-Type**: `multipart/form-data`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+- **Type**: `Binary Data`
+- **Description**: 해당 첨부파일의 `바이너리 데이터`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-3-attchment-api) ]
+
+
+
+***
+
+
+
+### 2. 3. 6 첨부파일 바이너리
+
+### Request
+- **URL**: `/api/v1/attachment/binary/{id}`
+- **Method**: `GET`
+- **Path Parameters**:
+    - `id`: 첨부파일 아이디
+- **Headers**:
+    - **Content-Type**: `multipart/form-data`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+- **Type**: `Binary Data`
+- **Description**: 해당 첨부파일의 `바이너리 데이터`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-3-attchment-api) ]
+
+
+
+***
+
+
+
 ## 2. 4 ChatRoom API
+
+- [2. 4 ChatRoom API](#2-4-chatroom-api)
+    - [2. 4. 1 채팅방 조회](#2-4-1-채팅방-조회)
+    - [2. 4. 2 채팅방 생성](#2-4-2-채팅방-생성)
+    - [2. 4. 3 채팅방 수정](#2-4-3-채팅방-수정)
+    - [2. 4. 4 채팅방 삭제](#2-4-4-채팅방-삭제)
+    - [2. 4. 5 채팅방 검색조회 - UUID](#2-4-5-채팅방-검색조회---UUID)
+    - [2. 4. 6 채팅방 사용자 목록조회 - List](#2-4-6-채팅방-사용자-목록조회---List)
+    - [2. 4. 7 채팅방 사용자 목록조회 - Page](#2-4-7-채팅방-사용자-목록조회---Page)
+    - [2. 4. 8 채팅방 관리자 목록조회 - List](#2-4-8-채팅방-관리자-목록조회---List)
+    - [2. 4. 9 채팅방 관리자 목록조회 - Page](#2-4-9-채팅방-관리자-목록조회---Page)
+    
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-support) ]
+
+
+
+***
+
+
+
+### 2. 4. 1 채팅방 조회
+
+### Request
+
+- **URL**: `/api/v1/livechat/room/{id}`
+- **Method**: `GET`
+- **Path Parameters**:
+    - `id`: 채팅방 ID
+
+### Response
+
+```json
+{
+    "id": 1,
+    "uuid": "e4d3d500-1967-4b43-9d57-66c2b1f63f5a",
+    "answerYn": false,
+    "users": [
+        {
+            "id": 1,
+            "name": "KorName",
+            "email": "example@example.com",
+            "contact": "010-1234-5678",
+            "username": "Username",
+            "birthday": "2000-01-01T00:00:00.000",
+            "createdDate": "2023-05-25T15:30:45.123",
+            "updatedDate": "2023-05-25T15:30:45.123"
+        },
+        {
+            "id": 2,
+            "name": "KorName",
+            "email": "example@example.com",
+            "contact": "010-1234-5678",
+            "username": "Username",
+            "birthday": "2000-01-01T00:00:00.000",
+            "createdDate": "2023-05-25T15:30:45.123",
+            "updatedDate": "2023-05-25T15:30:45.123"
+        }
+    ],
+    "createdDate": "2023-05-25T15:30:45.123",
+    "updatedDate": "2023-05-25T15:30:45.123"
+}
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-4-chatroom-api) ]
+
+
+
+***
+
+
+
+### 2. 4. 2 채팅방 생성
+
+### Request
+
+- **URL**: `/api/v1/livechat/room`
+- **Method**: `POST`
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+- **Type**: `Long`
+- **Description**: 생성된 채팅방의 `ID`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-4-chatroom-api) ]
+
+
+
+***
+
+
+
+### 2. 4. 3 채팅방 수정
+
+### Request
+
+- **URL**: `/api/v1/livechat/room/{id}`
+- **Method**: `PUT`
+- **Path Parameters**:
+    - `id`: 채팅방 ID
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Request Body**:
+    ```json
+    {
+        "uuid": "고유 UUID",
+        "answerYn": "답변 여부",
+    }
+    ```
+
+### Response
+
+- **Type**: `Long`
+- **Description**: 수정된 채팅방의 `ID`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-4-chatroom-api) ]
+
+
+
+***
+
+
+
+### 2. 4. 4 채팅방 삭제
+
+### Request
+
+- **URL**: `/api/v1/livechat/room/{id}`
+- **Method**: `DELETE`
+- **Path Parameters**:
+    - `id`: 채팅방 ID
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+- **Type**: `None`
+- **Description**: 아무것도 반환하지 않음
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-4-chatroom-api) ]
+
+
+
+***
+
+
+
+### 2. 4. 5 채팅방 검색조회 - UUID
+
+### Request
+
+- **URL**: `/api/v1/livechat/room`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `uuid`: 검색할 채팅방 `UUID` (ex: `uuid=e4d3d500-1967-4b43-9d57-66c2b1f63f5a`)
+
+### Response
+
+```json
+{
+    "id": 1,
+    "uuid": "e4d3d500-1967-4b43-9d57-66c2b1f63f5a",
+    "answerYn": false,
+    "users": [
+        {
+            "id": 1,
+            "name": "KorName",
+            "email": "example@example.com",
+            "contact": "010-1234-5678",
+            "username": "Username",
+            "birthday": "2000-01-01T00:00:00.000",
+            "createdDate": "2023-05-25T15:30:45.123",
+            "updatedDate": "2023-05-25T15:30:45.123"
+        },
+        {
+            "id": 2,
+            "name": "KorName",
+            "email": "example@example.com",
+            "contact": "010-1234-5678",
+            "username": "Username",
+            "birthday": "2000-01-01T00:00:00.000",
+            "createdDate": "2023-05-25T15:30:45.123",
+            "updatedDate": "2023-05-25T15:30:45.123"
+        }
+    ],
+    "createdDate": "2023-05-25T15:30:45.123",
+    "updatedDate": "2023-05-25T15:30:45.123"
+}
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-4-chatroom-api) ]
+
+
+
+***
+
+
+
+### 2. 4. 6 채팅방 사용자 목록조회 - List
+
+### Request
+
+- **URL**: `/api/v1/livechat/list`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `sort(optional, default: desc)`: 채팅방 목록 정렬 옵션, (ex: `sort=asc`, `sort=desc`)
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+```json
+[
+    {
+        "id": 1,
+        "uuid": "e4d3d500-1967-4b43-9d57-66c2b1f63f5a",
+        "answerYn": false,
+        "users": [
+            {
+                "id": 1,
+                "name": "KorName",
+                "email": "example@example.com",
+                "contact": "010-1234-5678",
+                "username": "Username",
+                "birthday": "2000-01-01T00:00:00.000",
+                "createdDate": "2023-05-25T15:30:45.123",
+                "updatedDate": "2023-05-25T15:30:45.123"
+            },
+            {
+                "id": 2,
+                "name": "KorName",
+                "email": "example@example.com",
+                "contact": "010-1234-5678",
+                "username": "Username",
+                "birthday": "2000-01-01T00:00:00.000",
+                "createdDate": "2023-05-25T15:30:45.123",
+                "updatedDate": "2023-05-25T15:30:45.123"
+            }
+        ],
+        "createdDate": "2023-05-25T15:30:45.123",
+        "updatedDate": "2023-05-25T15:30:45.123"
+    },
+    {
+        "id": 2,
+        "uuid": "abcd1234-5678-efgh-9012-ijklmnopqrst",
+        "answerYn": true,
+        "users": [
+            {
+                "id": 3,
+                "name": "AnotherName",
+                "email": "another@example.com",
+                "contact": "010-9876-5432",
+                "username": "AnotherUser",
+                "birthday": "1990-05-15T00:00:00.000",
+                "createdDate": "2023-05-26T10:45:30.456",
+                "updatedDate": "2023-05-26T10:45:30.456"
+            },
+            {
+                "id": 4,
+                "name": "AnotherName",
+                "email": "another@example.com",
+                "contact": "010-9876-5432",
+                "username": "AnotherUser",
+                "birthday": "1990-05-15T00:00:00.000",
+                "createdDate": "2023-05-26T10:45:30.456",
+                "updatedDate": "2023-05-26T10:45:30.456"
+            }
+        ],
+        "createdDate": "2023-05-26T10:45:30.456",
+        "updatedDate": "2023-05-26T10:45:30.456"
+    }
+]
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-4-chatroom-api) ]
+
+
+
+***
+
+
+
+### 2. 4. 7 채팅방 사용자 목록조회 - Page
+
+### Request
+
+- **URL**: `/api/v1/livechat/page`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `page (optional, default: 1)`: 채팅방 목록 페이지 번호, (ex: `page=1`)
+    - `size (optional, default: 10)`: 채팅방 목록 페이지 크기, (ex: `size=10`)
+    - `sort (optional, default: desc)`: 채팅방 목록 정렬 옵션, (ex: `sort=asc`, `sort=desc`)
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+```json
+{
+    "content": [
+        {
+            "id": 1,
+            "uuid": "e4d3d500-1967-4b43-9d57-66c2b1f63f5a",
+            "answerYn": false,
+            "users": [
+                {
+                    "id": 1,
+                    "name": "KorName",
+                    "email": "example@example.com",
+                    "contact": "010-1234-5678",
+                    "username": "Username",
+                    "birthday": "2000-01-01T00:00:00.000",
+                    "createdDate": "2023-05-25T15:30:45.123",
+                    "updatedDate": "2023-05-25T15:30:45.123"
+                },
+                {
+                    "id": 2,
+                    "name": "KorName",
+                    "email": "example@example.com",
+                    "contact": "010-1234-5678",
+                    "username": "Username",
+                    "birthday": "2000-01-01T00:00:00.000",
+                    "createdDate": "2023-05-25T15:30:45.123",
+                    "updatedDate": "2023-05-25T15:30:45.123"
+                }
+            ],
+            "createdDate": "2023-05-25T15:30:45.123",
+            "updatedDate": "2023-05-25T15:30:45.123"
+        },
+        {
+            "id": 2,
+            "uuid": "abcd1234-5678-efgh-9012-ijklmnopqrst",
+            "answerYn": true,
+            "users": [
+                {
+                    "id": 3,
+                    "name": "AnotherName",
+                    "email": "another@example.com",
+                    "contact": "010-9876-5432",
+                    "username": "AnotherUser",
+                    "birthday": "1990-05-15T00:00:00.000",
+                    "createdDate": "2023-05-26T10:45:30.456",
+                    "updatedDate": "2023-05-26T10:45:30.456"
+                },
+                {
+                    "id": 4,
+                    "name": "AnotherName",
+                    "email": "another@example.com",
+                    "contact": "010-9876-5432",
+                    "username": "AnotherUser",
+                    "birthday": "1990-05-15T00:00:00.000",
+                    "createdDate": "2023-05-26T10:45:30.456",
+                    "updatedDate": "2023-05-26T10:45:30.456"
+                }
+            ],
+            "createdDate": "2023-05-26T10:45:30.456",
+            "updatedDate": "2023-05-26T10:45:30.456"
+        }
+    ],
+    "pageable": {
+        "sort": {
+            "sorted": false,
+            "unsorted": true,
+            "empty": true
+        },
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 20,
+        "unpaged": false,
+        "paged": true
+    },
+    "totalElements": 2,
+    "totalPages": 1,
+    "last": true,
+    "number": 0,
+    "size": 10,
+    "sort": {
+        "sorted": false,
+        "unsorted": true,
+        "empty": true
+    },
+    "numberOfElements": 2,
+    "first": true,
+    "empty": false
+}
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-4-chatroom-api) ]
+
+
+
+***
+
+
+
+### 2. 4. 8 채팅방 관리자 목록조회 - List
+
+### Request
+
+- **URL**: `/api/v1/admin/livechat/list`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `sort(optional, default: desc)`: 채팅방 목록 정렬 옵션, (ex: `sort=asc`, `sort=desc`)
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+```json
+[
+    {
+        "id": 1,
+        "uuid": "e4d3d500-1967-4b43-9d57-66c2b1f63f5a",
+        "answerYn": false,
+        "users": [
+            {
+                "id": 1,
+                "name": "KorName",
+                "email": "example@example.com",
+                "contact": "010-1234-5678",
+                "username": "Username",
+                "birthday": "2000-01-01T00:00:00.000",
+                "createdDate": "2023-05-25T15:30:45.123",
+                "updatedDate": "2023-05-25T15:30:45.123"
+            },
+            {
+                "id": 2,
+                "name": "KorName",
+                "email": "example@example.com",
+                "contact": "010-1234-5678",
+                "username": "Username",
+                "birthday": "2000-01-01T00:00:00.000",
+                "createdDate": "2023-05-25T15:30:45.123",
+                "updatedDate": "2023-05-25T15:30:45.123"
+            }
+        ],
+        "createdDate": "2023-05-25T15:30:45.123",
+        "updatedDate": "2023-05-25T15:30:45.123"
+    },
+    {
+        "id": 2,
+        "uuid": "abcd1234-5678-efgh-9012-ijklmnopqrst",
+        "answerYn": true,
+        "users": [
+            {
+                "id": 3,
+                "name": "AnotherName",
+                "email": "another@example.com",
+                "contact": "010-9876-5432",
+                "username": "AnotherUser",
+                "birthday": "1990-05-15T00:00:00.000",
+                "createdDate": "2023-05-26T10:45:30.456",
+                "updatedDate": "2023-05-26T10:45:30.456"
+            },
+            {
+                "id": 4,
+                "name": "AnotherName",
+                "email": "another@example.com",
+                "contact": "010-9876-5432",
+                "username": "AnotherUser",
+                "birthday": "1990-05-15T00:00:00.000",
+                "createdDate": "2023-05-26T10:45:30.456",
+                "updatedDate": "2023-05-26T10:45:30.456"
+            }
+        ],
+        "createdDate": "2023-05-26T10:45:30.456",
+        "updatedDate": "2023-05-26T10:45:30.456"
+    }
+]
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-4-chatroom-api) ]
+
+
+
+***
+
+
+
+### 2. 4. 9 채팅방 관리자 목록조회 - Page
+
+### Request
+
+- **URL**: `/api/v1/admin/livechat/page`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `page (optional, default: 1)`: 채팅방 목록 페이지 번호, (ex: `page=1`)
+    - `size (optional, default: 10)`: 채팅방 목록 페이지 크기, (ex: `size=10`)
+    - `sort (optional, default: desc)`: 채팅방 목록 정렬 옵션, (ex: `sort=asc`, `sort=desc`)
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+```json
+{
+    "content": [
+        {
+            "id": 1,
+            "uuid": "e4d3d500-1967-4b43-9d57-66c2b1f63f5a",
+            "answerYn": false,
+            "users": [
+                {
+                    "id": 1,
+                    "name": "KorName",
+                    "email": "example@example.com",
+                    "contact": "010-1234-5678",
+                    "username": "Username",
+                    "birthday": "2000-01-01T00:00:00.000",
+                    "createdDate": "2023-05-25T15:30:45.123",
+                    "updatedDate": "2023-05-25T15:30:45.123"
+                },
+                {
+                    "id": 2,
+                    "name": "KorName",
+                    "email": "example@example.com",
+                    "contact": "010-1234-5678",
+                    "username": "Username",
+                    "birthday": "2000-01-01T00:00:00.000",
+                    "createdDate": "2023-05-25T15:30:45.123",
+                    "updatedDate": "2023-05-25T15:30:45.123"
+                }
+            ],
+            "createdDate": "2023-05-25T15:30:45.123",
+            "updatedDate": "2023-05-25T15:30:45.123"
+        },
+        {
+            "id": 2,
+            "uuid": "abcd1234-5678-efgh-9012-ijklmnopqrst",
+            "answerYn": true,
+            "users": [
+                {
+                    "id": 3,
+                    "name": "AnotherName",
+                    "email": "another@example.com",
+                    "contact": "010-9876-5432",
+                    "username": "AnotherUser",
+                    "birthday": "1990-05-15T00:00:00.000",
+                    "createdDate": "2023-05-26T10:45:30.456",
+                    "updatedDate": "2023-05-26T10:45:30.456"
+                },
+                {
+                    "id": 4,
+                    "name": "AnotherName",
+                    "email": "another@example.com",
+                    "contact": "010-9876-5432",
+                    "username": "AnotherUser",
+                    "birthday": "1990-05-15T00:00:00.000",
+                    "createdDate": "2023-05-26T10:45:30.456",
+                    "updatedDate": "2023-05-26T10:45:30.456"
+                }
+            ],
+            "createdDate": "2023-05-26T10:45:30.456",
+            "updatedDate": "2023-05-26T10:45:30.456"
+        }
+    ],
+    "pageable": {
+        "sort": {
+            "sorted": false,
+            "unsorted": true,
+            "empty": true
+        },
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 20,
+        "unpaged": false,
+        "paged": true
+    },
+    "totalElements": 2,
+    "totalPages": 1,
+    "last": true,
+    "number": 0,
+    "size": 10,
+    "sort": {
+        "sorted": false,
+        "unsorted": true,
+        "empty": true
+    },
+    "numberOfElements": 2,
+    "first": true,
+    "empty": false
+}
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-4-chatroom-api) ]
+
+
+
+
+
+***
+
+
+
+
+
 ## 2. 5 ChatMessage API
+- [2. 5 ChatMessage API](#2-5-chatmessage-api)
+    - [2. 5. 1 채팅 메세지 조회](#2-5-1-채팅-메세지-조회)
+    - [2. 5. 2 채팅 메세지 송신](#2-5-2-채팅-메세지-송신)
+    - [2. 5. 3 채팅 메세지 수신](#2-5-3-채팅-메세지-수신)
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-support) ]
+
+
+
+***
+
+
+
+### 2. 5. 1 채팅 메세지 조회
+
+### Request
+- **URL**: `/api/v1/livechat/message`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `chatRoom (optional)`: 채팅방 ID (ex: `chatRoom=1`)
+  - `uuid (optional)`: 채팅방 UUID (ex: `uuid=e4d3d500-1967-4b43-9d57-66c2b1f63f5a`)
+  - `sort (optional, default: `asc`)`: 채팅 메세지 정렬 옵션 (ex: `sort=asc`, `sort=desc`)
+
+### Response
+
+```json
+[
+    {
+        "id": 1,
+        "message": "Chat message 1",
+        "sender": {
+            "id": 1,
+            "name": "KorName 1",
+            "email": "example1@example.com",
+            "contact": "010-1234-5678",
+            "username": "Username1",
+            "birthday": "2000-01-01T00:00:00.000",
+            "createdDate": "2023-05-25T15:30:45.123",
+            "updatedDate": "2023-05-25T15:30:45.123"
+        },
+        "chatRoom": {
+            "id": 1,
+            "uuid": "e4d3d500-1967-4b43-9d57-66c2b1f63f5a",
+            "answerYn": false,
+            "users": [
+                {
+                    "id": 1,
+                    "name": "KorName 1",
+                    "email": "example1@example.com",
+                    "contact": "010-1234-5678",
+                    "username": "Username1",
+                    "birthday": "2000-01-01T00:00:00.000",
+                    "createdDate": "2023-05-25T15:30:45.123",
+                    "updatedDate": "2023-05-25T15:30:45.123"
+                },
+                {
+                    "id": 2,
+                    "name": "KorName 2",
+                    "email": "example2@example.com",
+                    "contact": "010-1234-5678",
+                    "username": "Username2",
+                    "birthday": "2000-01-01T00:00:00.000",
+                    "createdDate": "2023-05-25T15:30:45.123",
+                    "updatedDate": "2023-05-25T15:30:45.123"
+                }
+            ],
+            "createdDate": "2023-05-25T15:30:45.123",
+            "updatedDate": "2023-05-25T15:30:45.123"
+        },
+        "createdDate": "2023-05-25T15:30:45.123",
+        "updatedDate": "2023-05-25T15:30:45.123"
+    },
+    {
+        "id": 2,
+        "message": "Chat message 2",
+        "sender": {
+            "id": 2,
+            "name": "KorName 2",
+            "email": "example2@example.com",
+            "contact": "010-1234-5678",
+            "username": "Username2",
+            "birthday": "2000-01-02T00:00:00.000",
+            "createdDate": "2023-05-26T15:30:45.123",
+            "updatedDate": "2023-05-26T15:30:45.123"
+        },
+        "chatRoom": {
+            "id": 2,
+            "uuid": "abcd1234-5678-efgh-9012-ijklmnopqrst",
+            "answerYn": true,
+            "users": [
+                {
+                    "id": 3,
+                    "name": "KorName 3",
+                    "email": "example3@example.com",
+                    "contact": "010-9876-5432",
+                    "username": "Username3",
+                    "birthday": "2000-01-03T00:00:00.000",
+                    "createdDate": "2023-05-27T10:45:30.456",
+                    "updatedDate": "2023-05-27T10:45:30.456"
+                },
+                {
+                    "id": 4,
+                    "name": "KorName 4",
+                    "email": "example4@example.com",
+                    "contact": "010-9876-5432",
+                    "username": "Username4",
+                    "birthday": "2000-01-04T00:00:00.000",
+                    "createdDate": "2023-05-28T10:45:30.456",
+                    "updatedDate": "2023-05-28T10:45:30.456"
+                }
+            ],
+            "createdDate": "2023-05-26T10:45:30.456",
+            "updatedDate": "2023-05-26T10:45:30.456"
+        },
+        "createdDate": "2023-05-26T15:30:45.123",
+        "updatedDate": "2023-05-26T15:30:45.123"
+    }
+]
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-5-chatmessage-api) ]
+
+
+
+***
+
+
+
+### 2. 5. 2 채팅 메세지 송신
+
+### Request
+
+- **URL**: `/chat/{channel}`
+- **Method**: `MESSAGE`
+- **Path Parameters**:
+    - `channel`: 채팅방 UUID
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Request Body**:
+    ```json
+    {
+        "message": "채팅 메세지",
+    }
+    ```
+
+### Response
+
+- **Type**: `None`
+- **Description**: 아무것도 반환하지 않음
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-5-chatmessage-api) ]
+
+
+
+***
+
+
+
+### 2. 5. 3 채팅 메세지 수신
+
+### Request
+
+- **URL**: `/sub/chat/{channel}`
+- **Method**: `SUBSCRIBE`
+- **Path Parameters**:
+    - `channel`: 채팅방 UUID
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+```json
+{
+    "id": 1,
+    "message": "Chat message",
+    "sender": {
+        "id": 1,
+        "name": "KorName",
+        "email": "example@example.com",
+        "contact": "010-1234-5678",
+        "username": "Username",
+        "birthday": "2000-01-01T00:00:00.000",
+        "createdDate": "2023-05-25T15:30:45.123",
+        "updatedDate": "2023-05-25T15:30:45.123"
+    },
+    "chatRoom": {
+        "id": 1,
+        "uuid": "e4d3d500-1967-4b43-9d57-66c2b1f63f5a",
+        "answerYn": false,
+        "users": [
+            {
+                "id": 1,
+                "name": "KorName",
+                "email": "example@example.com",
+                "contact": "010-1234-5678",
+                "username": "Username",
+                "birthday": "2000-01-01T00:00:00.000",
+                "createdDate": "2023-05-25T15:30:45.123",
+                "updatedDate": "2023-05-25T15:30:45.123"
+            },
+            {
+                "id": 2,
+                "name": "KorName",
+                "email": "example@example.com",
+                "contact": "010-1234-5678",
+                "username": "Username",
+                "birthday": "2000-01-01T00:00:00.000",
+                "createdDate": "2023-05-25T15:30:45.123",
+                "updatedDate": "2023-05-25T15:30:45.123"
+            }
+        ],
+        "createdDate": "2023-05-25T15:30:45.123",
+        "updatedDate": "2023-05-25T15:30:45.123"
+    },
+    "createdDate": "2023-05-25T15:30:45.123",
+    "updatedDate": "2023-05-25T15:30:45.123"
+}
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#2-5-chatmessage-api) ]
 
 
 
 
 
-<br>
+***
 
 
 
