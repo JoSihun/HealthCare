@@ -87,98 +87,351 @@
 
 ## 2. 2 SpringBoot Architecture  
 `MVC Model 2`에 따른 `SpringBoot` `package` 구조
+
+- [2. 2. 1 Config](#2-2-1-config)
+- [2. 2. 2 Domain](#2-2-2-domain)
+- [2. 2. 3 DTO](#2-2-3-dto)
+- [2. 2. 4 Repository](#2-2-4-repository)
+- [2. 2. 5 Service](#2-2-5-service)
+- [2. 2. 6 Controller](#2-2-6-controller)
+
 ```
 ├── config
+│   ├── CustomUserDetails.java
+│   ├── CustomUserDetailsService.java
+│   ├── JwtTokenFilter.java
+│   ├── JwtTokenProvider.java
+│   ├── WebSecurityConfig.java
+│   └── WebSocketConfig.java
 ├── domain
+│   ├── introduce
+│   │   ├── Staff.java
+│   │   ├── Facility.java
+│   │   └── Image.java
+│   ├── support
+│   │   ├── board
+│   │   │   ├── Post.java
+│   │   │   ├── Comment.java
+│   │   │   ├── Attachment.java
+│   │   │   └── BoardType.java
+│   │   └── livechat
+│   │       ├── ChatRoom.java
+│   │       ├── ChatMessage.java
+│   │       └── UserChatRoom.java
+│   ├── management
+│   │   ├── BMI.java
+│   │   ├── Diet.java
+│   │   ├── Food.java
+│   │   └── DietFood.java
+│   ├── user
+│   │   ├── Auth.java
+│   │   ├── User.java
+│   │   └── Role.java
+│   └── BaseTime.java
 ├── dto
+│   ├── introduce
+│   │   ├── staff
+│   │   │   ├── StaffResponseDTO.java
+│   │   │   ├── StaffSaveRequestDTO.java
+│   │   │   └── StaffUpdateRequestDTO.java
+│   │   ├── facility
+│   │   │   ├── FacilityResponseDTO.java
+│   │   │   ├── FacilitySaveRequestDTO.java
+│   │   │   └── FacilityUpdateRequestDTO.java
+│   │   └── image
+│   │       ├── ImageRequestDTO.java
+│   │       └── ImageResponseDTO.java
+│   ├── support
+│   │   ├── post
+│   │   │   ├── PostResponseDTO.java
+│   │   │   ├── PostListResponseDTO.java
+│   │   │   ├── PostSaveRequestDTO.java
+│   │   │   └── PostUpdateRequestDTO.java
+│   │   ├── comment
+│   │   │   ├── CommentResponseDTO.java
+│   │   │   ├── CommentSaveRequestDTO.java
+│   │   │   └── CommentUpdateRequestDTO.java
+│   │   ├── attachment
+│   │   │   ├── AttachmentRequestDTO.java
+│   │   │   └── AttachmentResponseDTO.java
+│   │   └── livechat
+│   │       ├── ChatRoomRequestDTO.java
+│   │       ├── ChatRoomResponseDTO.java
+│   │       ├── ChatMessageRequestDTO.java
+│   │       ├── ChatMessageResponseDTO.java
+│   │       ├── UserChatRoomRequestDTO.java
+│   │       └── UserChatRoomResponseDTO.java
+│   ├── management
+│   │   ├── bmi
+│   │   │   ├── BMIResponseDTO.java
+│   │   │   ├── BMISaveRequestDTO.java
+│   │   │   └── BMIUpdateRequestDTO.java
+│   │   ├── diet
+│   │   │   ├── DietRequestDTO.java
+│   │   │   └── DietResponseDTO.java
+│   │   └── food
+│   │       ├── FoodRequestDTO.java
+│   │       └── FoodResponseDTO.java
+│   └── user
+│       ├── AuthRequestDTO.java
+│       ├── AuthResponseDTO.java
+│       ├── UserRequestDTO.java
+│       └── UserResponsetDTO.java
 ├── repository
+│   ├── introduce
+│   │   ├── StaffRepository.java
+│   │   ├── FacilityRepository.java
+│   │   └── ImageRepository.java
+│   ├── support
+│   │   ├── PostRepository.java
+│   │   ├── CommentRepository.java
+│   │   ├── AttachmentRepository.java
+│   │   ├── ChatRoomRepository.java
+│   │   ├── ChatMessageRepository.java
+│   │   └── UserChatRoomRepository.java
+│   ├── management
+│   │   ├── BMIRepository.java
+│   │   ├── DietRepository.java
+│   │   ├── FoodRepository.java
+│   │   └── DietFoodRepository.java
+│   └── user
+│       ├── AuthRepository.java
+│       └── UserRepository.java
 ├── service
+│   ├── introduce
+│   │   ├── StaffService.java
+│   │   ├── FacilityService.java
+│   │   └── ImageService.java
+│   ├── support
+│   │   ├── PostService.java
+│   │   ├── CommentService.java
+│   │   ├── AttachmentService.java
+│   │   ├── ChatRoomService.java
+│   │   └── ChatMessageService.java
+│   ├── management
+│   │   ├── BMIService.java
+│   │   ├── DietService.java
+│   │   └── FoodService.java
+│   └── user
+│       ├── AuthService.java
+│       └── UserService.java
 ├── controller
+│   ├── introduce
+│   │   ├── StaffController.java
+│   │   ├── FacilityController.java
+│   │   └── ImageController.java
+│   ├── support
+│   │   ├── PostController.java
+│   │   ├── PostRestController.java
+│   │   ├── CommentRestController.java
+│   │   ├── AttachmentRestController.java
+│   │   ├── ChatRoomRestController.java
+│   │   └── ChatMessageRestController.java
+│   ├── management
+│   │   ├── BMIController.java
+│   │   ├── BMIRestController.java
+│   │   ├── DietController.java
+│   │   └── DietRestController.java
+│   ├── user
+│   │   ├── AuthRestController.java
+│   │   └── UserRestController.java
+│   └── HomeController.java
+└── HealthCareApplication.java
 ```
+
+***
 
 ### **2. 2. 1 Config**
 ```
 ├── config
+│   ├── CustomUserDetails.java
+│   ├── CustomUserDetailsService.java
+│   ├── JwtTokenFilter.java
+│   ├── JwtTokenProvider.java
+│   ├── WebSecurityConfig.java
 │   └── WebSocketConfig.java
 ```
+
+[ [뒤로가기](#2-2-springboot-architecture) ]
+
+***
 
 ### **2. 2. 2 Domain**
 ```
 ├── domain
-│   ├── Attachment.java
-│   ├── BaseTime.java
-│   ├── ChatMessage.java
-│   ├── ChatRoom.java
-│   ├── Comment.java
-│   ├── Facility.java
-│   └── Post.java
+│   ├── introduce
+│   │   ├── Staff.java
+│   │   ├── Facility.java
+│   │   └── Image.java
+│   ├── support
+│   │   ├── board
+│   │   │   ├── Post.java
+│   │   │   ├── Comment.java
+│   │   │   ├── Attachment.java
+│   │   │   └── BoardType.java
+│   │   └── livechat
+│   │       ├── ChatRoom.java
+│   │       ├── ChatMessage.java
+│   │       └── UserChatRoom.java
+│   ├── management
+│   │   ├── BMI.java
+│   │   ├── Diet.java
+│   │   ├── Food.java
+│   │   └── DietFood.java
+│   ├── user
+│   │   ├── Auth.java
+│   │   ├── User.java
+│   │   └── Role.java
+│   └── BaseTime.java
 ```
+
+[ [뒤로가기](#2-2-springboot-architecture) ]
+
+***
 
 ### **2. 2. 3 DTO**
 ```
 ├── dto
-│   ├── attachment
-│   │   ├── AttachmentResponseDto.java
-│   │   ├── AttachmentSaveRequestDto.java
-│   │   └── AttachmentUpdateRequestDto.java
-│   ├── comment
-│   │   ├── CommentResponseDto.java
-│   │   ├── CommentSaveRequestDto.java
-│   │   └── CommentUpdateRequestDto.java
-│   ├── facility
-│   │   ├── FacilityResponseDto.java
-│   │   ├── FacilitySaveRequestDto.java
-│   │   └── FacilityUpdateRequestDto.java
-│   ├── livechat
-│   │   ├── ChatMessageRequestDto.java
-│   │   ├── ChatMessageResponseDto.java
-│   │   ├── ChatRoomRequestDto.java
-│   │   └── ChatRoomResponseDto.java
-│   └── post
-│       ├── PostResponseDto.java
-│       ├── PostSaveRequestDto.java
-│       └── PostUpdateRequestDto.java
+│   ├── introduce
+│   │   ├── staff
+│   │   │   ├── StaffResponseDTO.java
+│   │   │   ├── StaffSaveRequestDTO.java
+│   │   │   └── StaffUpdateRequestDTO.java
+│   │   ├── facility
+│   │   │   ├── FacilityResponseDTO.java
+│   │   │   ├── FacilitySaveRequestDTO.java
+│   │   │   └── FacilityUpdateRequestDTO.java
+│   │   └── image
+│   │       ├── ImageRequestDTO.java
+│   │       └── ImageResponseDTO.java
+│   ├── support
+│   │   ├── post
+│   │   │   ├── PostResponseDTO.java
+│   │   │   ├── PostListResponseDTO.java
+│   │   │   ├── PostSaveRequestDTO.java
+│   │   │   └── PostUpdateRequestDTO.java
+│   │   ├── comment
+│   │   │   ├── CommentResponseDTO.java
+│   │   │   ├── CommentSaveRequestDTO.java
+│   │   │   └── CommentUpdateRequestDTO.java
+│   │   ├── attachment
+│   │   │   ├── AttachmentRequestDTO.java
+│   │   │   └── AttachmentResponseDTO.java
+│   │   └── livechat
+│   │       ├── ChatRoomRequestDTO.java
+│   │       ├── ChatRoomResponseDTO.java
+│   │       ├── ChatMessageRequestDTO.java
+│   │       ├── ChatMessageResponseDTO.java
+│   │       ├── UserChatRoomRequestDTO.java
+│   │       └── UserChatRoomResponseDTO.java
+│   ├── management
+│   │   ├── bmi
+│   │   │   ├── BMIResponseDTO.java
+│   │   │   ├── BMISaveRequestDTO.java
+│   │   │   └── BMIUpdateRequestDTO.java
+│   │   ├── diet
+│   │   │   ├── DietRequestDTO.java
+│   │   │   └── DietResponseDTO.java
+│   │   └── food
+│   │       ├── FoodRequestDTO.java
+│   │       └── FoodResponseDTO.java
+│   └── user
+│       ├── AuthRequestDTO.java
+│       ├── AuthResponseDTO.java
+│       ├── UserRequestDTO.java
+│       └── UserResponsetDTO.java
 ```
+
+[ [뒤로가기](#2-2-springboot-architecture) ]
+
+***
 
 ### **2. 2. 4 Repository**
 ```
 ├── repository
-│   ├── AttachmentRepository.java
-│   ├── ChatMessageRepository.java
-│   ├── ChatRoomRepository.java
-│   ├── CommentRepository.java
-│   ├── FacilityRepository.java
-│   └── PostRepository.java
+│   ├── introduce
+│   │   ├── StaffRepository.java
+│   │   ├── FacilityRepository.java
+│   │   └── ImageRepository.java
+│   ├── support
+│   │   ├── PostRepository.java
+│   │   ├── CommentRepository.java
+│   │   ├── AttachmentRepository.java
+│   │   ├── ChatRoomRepository.java
+│   │   ├── ChatMessageRepository.java
+│   │   └── UserChatRoomRepository.java
+│   ├── management
+│   │   ├── BMIRepository.java
+│   │   ├── DietRepository.java
+│   │   ├── FoodRepository.java
+│   │   └── DietFoodRepository.java
+│   └── user
+│       ├── AuthRepository.java
+│       └── UserRepository.java
 ```
+
+[ [뒤로가기](#2-2-springboot-architecture) ]
+
+***
 
 ### **2. 2. 5 Service**
 ```
 ├── service
-│   ├── AttachmentService.java
-│   ├── ChatMessageService.java
-│   ├── ChatRoomService.java
-│   ├── CommentService.java
-│   ├── FacilityService.java
-│   └── PostService.java
+│   ├── introduce
+│   │   ├── StaffService.java
+│   │   ├── FacilityService.java
+│   │   └── ImageService.java
+│   ├── support
+│   │   ├── PostService.java
+│   │   ├── CommentService.java
+│   │   ├── AttachmentService.java
+│   │   ├── ChatRoomService.java
+│   │   └── ChatMessageService.java
+│   ├── management
+│   │   ├── BMIService.java
+│   │   ├── DietService.java
+│   │   └── FoodService.java
+│   └── user
+│       ├── AuthService.java
+│       └── UserService.java
 ```
+
+[ [뒤로가기](#2-2-springboot-architecture) ]
+
+***
 
 ### **2. 2. 6 Controller**
 ```
 ├── controller
 │   ├── introduce
-│   │   └── FacilityController.java
+│   │   ├── StaffController.java
+│   │   ├── FacilityController.java
+│   │   └── ImageController.java
 │   ├── support
-│   │   ├── AttachmentRestController.java
-│   │   ├── ChatMessageRestController.java
-│   │   ├── ChatRoomRestController.java
-│   │   ├── CommentRestController.java
-│   │   ├── FAQBoardController.java
-│   │   ├── FreeBoardController.java
+│   │   ├── PostController.java
 │   │   ├── PostRestController.java
-│   │   └── QNABoardController.java
+│   │   ├── CommentRestController.java
+│   │   ├── AttachmentRestController.java
+│   │   ├── ChatRoomRestController.java
+│   │   └── ChatMessageRestController.java
+│   ├── management
+│   │   ├── BMIController.java
+│   │   ├── BMIRestController.java
+│   │   ├── DietController.java
+│   │   └── DietRestController.java
+│   ├── user
+│   │   ├── AuthRestController.java
+│   │   └── UserRestController.java
 │   └── HomeController.java
-└── HealthCareApplication.java
 ```
+
+[ [뒤로가기](#2-2-springboot-architecture) ]
+
+***
+
+
+
+
 ## 2. 3 REST API  
 
 REST API에 대한 정보는 아래 링크를 참조
