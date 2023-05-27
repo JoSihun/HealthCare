@@ -2,31 +2,31 @@
 
 현재까지 하기의 기능들에 대해서 `RESTful` 하게 `API`를 구현
 
-- [1. Introduce](#1-introduce)
+- **[1. Introduce](#1-introduce)**
     -
     -
     -
-- [2. Support](#2-support)
-    - [2. 1 Post API](#2-1-post-api)
+- **[2. Support](#2-support)**
+    - **[2. 1 Post API](#2-1-post-api)**
         - [2. 1. 1 게시글 상세조회](#2-1-1-게시글-상세조회)
         - [2. 1. 2 게시판 목록조회](#2-1-2-게시판-목록조회)
         - [2. 1. 3 게시판 검색조회](#2-1-3-게시판-검색조회)
         - [2. 1. 4 게시글 데이터 삽입](#2-1-4-게시글-데이터-삽입---v1)
         - [2. 1. 5 게시글 데이터 수정](#2-1-5-게시글-데이터-수정---v1)
         - [2. 1. 6 게시글 데이터 삭제](#2-1-6-게시글-데이터-삭제---v1)
-    - [2. 2 Comment API](#2-2-comment-api)
+    - **[2. 2 Comment API](#2-2-comment-api)**
         - [2. 2. 1 댓글 조회](#2-2-1-댓글-조회)
         - [2. 2. 2 댓글 생성](#2-2-2-댓글-생성)
         - [2. 2. 3 댓글 수정](#2-2-3-댓글-수정)
         - [2. 2. 4 댓글 삭제](#2-2-4-댓글-삭제)
-    - [2. 3 Attachment API](#2-3-attachment-api)
+    - **[2. 3 Attachment API](#2-3-attachment-api)**
         - [2. 3. 1 첨부파일 조회](#2-3-1-첨부파일-조회)
         - [2. 3. 2 첨부파일 생성](#2-3-2-첨부파일-생성)
         - [2. 3. 3 첨부파일 수정](#2-3-3-첨부파일-수정)
         - [2. 3. 4 첨부파일 삭제](#2-3-4-첨부파일-삭제)
         - [2. 3. 5 첨부파일 다운로드](#2-3-5-첨부파일-다운로드)
         - [2. 3. 6 첨부파일 바이너리](#2-3-6-첨부파일-바이너리)
-    - [2. 4 ChatRoom API](#2-4-chatroom-api)
+    - **[2. 4 ChatRoom API](#2-4-chatroom-api)**
         - [2. 4. 1 채팅방 조회](#2-3-1-채팅방-조회)
         - [2. 4. 2 채팅방 생성](#2-3-2-채팅방-생성)
         - [2. 4. 3 채팅방 수정](#2-3-3-채팅방-수정)
@@ -36,11 +36,25 @@
         - [2. 4. 7 채팅방 사용자 목록조회 - Page](#2-3-7-채팅방-사용자-목록조회---Page)
         - [2. 4. 8 채팅방 관리자 목록조회 - List](#2-3-8-채팅방-관리자-목록조회---List)
         - [2. 4. 9 채팅방 관리자 목록조회 - Page](#2-3-9-채팅방-관리자-목록조회---Page)
-    - [2. 5 ChatMessage API](#2-5-chatmessage-api)
-- [3. User Management](#3-user-management)
-    -
-    -
-    -
+    - **[2. 5 ChatMessage API](#2-5-chatmessage-api)**
+        - [2. 5. 1 채팅 메세지 조회](#2-5-1-채팅-메세지-조회)
+        - [2. 5. 2 채팅 메세지 송신](#2-5-2-채팅-메세지-송신)
+        - [2. 5. 3 채팅 메세지 수신](#2-5-3-채팅-메세지-수신)
+- **[3. Management](#3-management)**
+    - **[3. 1 BMI API](#3-1-bmi-api)**
+        - [3. 1. 1 BMI 조회](#3-1-1-bmi-조회)
+        - [3. 1. 2 BMI 생성](#3-1-2-bmi-생성)
+        - [3. 1. 3 BMI 수정](#3-1-3-bmi-수정)
+        - [3. 1. 4 BMI 삭제](#3-1-4-bmi-삭제)
+        - [3. 1. 5 BMI 목록조회 - List](#3-1-5-bmi-목록조회---list)
+        - [3. 1. 6 BMI 목록조회 - Page](#3-1-6-bmi-목록조회---page)
+    - **[3. 2 Diet API](#3-2-diet-api)**
+        - [3. 2. 1 Diet 조회](#3-2-1-diet-조회)
+        - [3. 2. 2 Diet 생성](#3-2-2-diet-생성)
+        - [3. 2. 3 Diet 수정](#3-2-3-diet-수정)
+        - [3. 2. 4 Diet 삭제](#3-2-4-diet-삭제)
+        - [3. 2. 5 Diet 추천목록 - List](#3-2-5-diet-목록조회---list)
+        - [3. 2. 6 Diet 목록조회 - Page](#3-2-6-diet-목록조회---page)
 
 
 
@@ -1632,4 +1646,717 @@
 
 
 
-## 3. User Management
+## 3. Management
+- [3. Management](#3-management)
+    - [3. 1 BMI API](#3-1-bmi-api)
+    - [3. 2 Diet API](#3-2-diet-api)
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#rest-api) ]
+
+
+
+***
+
+
+
+## 3. 1 BMI API
+- [3. 1 BMI API](#3-1-bmi-api)
+    - [3. 1. 1 BMI 조회](#3-1-1-bmi-조회)
+    - [3. 1. 2 BMI 생성](#3-1-2-bmi-생성)
+    - [3. 1. 3 BMI 수정](#3-1-3-bmi-수정)
+    - [3. 1. 4 BMI 삭제](#3-1-4-bmi-삭제)
+    - [3. 1. 5 BMI 목록조회 - List](#3-1-5-bmi-목록조회---list)
+    - [3. 1. 6 BMI 목록조회 - Page](#3-1-6-bmi-목록조회---page)
+
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-management) ]
+
+
+
+***
+
+
+
+### 3. 1. 1 BMI 조회
+
+### Request
+
+- **URL**: `/api/v1/bmi/{id}`
+- **Method**: `GET`
+- **Path Parameters**:
+    - `id`: BMI ID
+
+### Response
+
+```json
+{
+    "id": 1,
+    "weight": 70.5,
+    "height": 175.2,
+    "fatMass": 15.3,
+    "fatRate": 18.6,
+    "bodyMassIndex": 22.9,
+    "bodyWaterFraction": 55.2,
+    "basalMetabolicRate": 1500,
+    "musculoskeletalMass": 60.8,
+    "musculoskeletalRate": 30.5,
+    "username": "Username",
+    "createdDate": "2023-05-26T10:45:30.123",
+    "updatedDate": "2023-05-26T10:45:30.123"
+}
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-1-bmi-api) ]
+
+
+
+***
+
+
+
+### 3. 1. 2 BMI 생성
+
+### Request
+
+- **URL**: `/api/v1/bmi`
+- **Method**: `POST`
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Request Body**:
+    ```json
+    {
+        "weight": 70.5,
+        "height": 175.2,
+        "fatMass": 15.3,
+        "fatRate": 18.6,
+        "bodyMassIndex": 22.9,
+        "bodyWaterFraction": 55.2,
+        "basalMetabolicRate": 1500,
+        "musculoskeletalMass": 60.8,
+        "musculoskeletalRate": 30.5
+    }
+    ```
+
+### Response
+
+- **Type**: `Long`
+- **Description**: 생성된 BMI 데이터의 `ID`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-1-bmi-api) ]
+
+
+
+***
+
+
+
+### 3. 1. 3 BMI 수정
+
+### Request
+
+- **URL**: `/api/v1/bmi/{id}`
+- **Method**: `PUT`
+- **Path Parameters**:
+    - `id`: BMI 데이터 ID
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Request Body**:
+    ```json
+    {
+        "weight": 70.5,
+        "height": 175.2,
+        "fatMass": 15.3,
+        "fatRate": 18.6,
+        "bodyMassIndex": 22.9,
+        "bodyWaterFraction": 55.2,
+        "basalMetabolicRate": 1500,
+        "musculoskeletalMass": 60.8,
+        "musculoskeletalRate": 30.5
+    }
+    ```
+
+### Response
+
+- **Type**: `Long`
+- **Description**: 생성된 BMI 데이터의 `ID`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-1-bmi-api) ]
+
+
+
+***
+
+
+
+### 3. 1. 4 BMI 삭제
+
+### Request
+
+- **URL**: `/api/v1/bmi/{id}`
+- **Method**: `PUT`
+- **Path Parameters**:
+    - `id`: BMI 데이터 ID
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+- **Type**: `None`
+- **Description**: 아무것도 반환하지 않음
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-1-bmi-api) ]
+
+
+
+***
+
+
+
+### 3. 1. 5 BMI 목록조회 - List
+
+### Request
+
+- **URL**: `/api/v1/bmi/list`
+- **Method**: `GET`
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+```json
+[
+    {
+        "id": 1,
+        "weight": 70.5,
+        "height": 175.2,
+        "fatMass": 15.3,
+        "fatRate": 18.6,
+        "bodyMassIndex": 22.9,
+        "bodyWaterFraction": 55.2,
+        "basalMetabolicRate": 1500,
+        "musculoskeletalMass": 60.8,
+        "musculoskeletalRate": 30.5,
+        "username": "Username1",
+        "createdDate": "2023-05-26T10:45:30.123",
+        "updatedDate": "2023-05-26T10:45:30.123"
+    },
+    {
+        "id": 2,
+        "weight": 65.2,
+        "height": 160.7,
+        "fatMass": 12.6,
+        "fatRate": 15.2,
+        "bodyMassIndex": 24.3,
+        "bodyWaterFraction": 58.9,
+        "basalMetabolicRate": 1400,
+        "musculoskeletalMass": 55.5,
+        "musculoskeletalRate": 28.9,
+        "username": "Username2",
+        "createdDate": "2023-05-27T09:30:45.456",
+        "updatedDate": "2023-05-27T09:30:45.456"
+    }
+]
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-1-bmi-api) ]
+
+
+
+***
+
+
+
+### 3. 1. 6 BMI 목록조회 - Page
+
+### Request
+
+- **URL**: `/api/v1/bmi/page`
+- **Method**: `GET`
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Query Parameters**:
+    - `page`: 게시글 목록 페이지 번호, (ex: `page=0`)
+    - `size`: 게시글 목록 페이지 크기, (ex: `size=20`)
+    - `sort`: 게시글 목록 정렬 옵션, (ex: `sort=id,desc&sort=title,desc`)
+
+### Response
+
+```json
+{
+    "content": [
+        {
+            "id": 1,
+            "weight": 70.5,
+            "height": 175.2,
+            "fatMass": 15.3,
+            "fatRate": 18.6,
+            "bodyMassIndex": 22.9,
+            "bodyWaterFraction": 55.2,
+            "basalMetabolicRate": 1500,
+            "musculoskeletalMass": 60.8,
+            "musculoskeletalRate": 30.5,
+            "username": "Username1",
+            "createdDate": "2023-05-26T10:45:30.123",
+            "updatedDate": "2023-05-26T10:45:30.123"
+        },
+        {
+            "id": 2,
+            "weight": 65.2,
+            "height": 160.7,
+            "fatMass": 12.6,
+            "fatRate": 15.2,
+            "bodyMassIndex": 24.3,
+            "bodyWaterFraction": 58.9,
+            "basalMetabolicRate": 1400,
+            "musculoskeletalMass": 55.5,
+            "musculoskeletalRate": 28.9,
+            "username": "Username2",
+            "createdDate": "2023-05-27T09:30:45.456",
+            "updatedDate": "2023-05-27T09:30:45.456"
+        }
+    ],
+    "pageable": {
+        "sort": {
+            "sorted": false,
+            "unsorted": true,
+            "empty": true
+        },
+        "offset": 0,
+        "pageNumber": 0,
+        "pageSize": 2,
+        "paged": true,
+        "unpaged": false
+    },
+    "totalElements": 2,
+    "totalPages": 1,
+    "last": true,
+    "size": 2,
+    "number": 0,
+    "sort": {
+        "sorted": false,
+        "unsorted": true,
+        "empty": true
+    },
+    "first": true,
+    "numberOfElements": 2,
+    "empty": false
+}
+```
+
+
+
+
+
+***
+
+
+
+
+
+## 3. 2 Diet API
+- [3. 2 Diet API](#3-2-diet-api)
+    - [3. 2. 1 Diet 조회](#3-2-1-diet-조회)
+    - [3. 2. 2 Diet 생성](#3-2-2-diet-생성)
+    - [3. 2. 3 Diet 수정](#3-2-3-diet-수정)
+    - [3. 2. 4 Diet 삭제](#3-2-4-diet-삭제)
+    - [3. 2. 5 Diet 추천목록 - List](#3-2-5-diet-목록조회---list)
+    - [3. 2. 6 Diet 목록조회 - Page](#3-2-6-diet-목록조회---page)
+
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-management) ]
+
+
+
+***
+
+
+
+### 3. 2. 1 Diet 조회
+
+### Request
+
+- **URL**: `/api/v1/diet/{id}`
+- **Method**: `GET`
+- **Path Parameters**:
+    - `id`: 식단 ID
+
+### Response
+
+```json
+{
+    "id": 1,
+    "title": "Sample Diet",
+    "totalCalories": 1500.0,
+    "basalMetabolicRate": 1200.0,
+    "recommendedCaloriesIntake": 1800.0,
+    "createdDate": "2023-05-28T12:00:00.000",
+    "updatedDate": "2023-05-28T12:00:00.000",
+    "foods": [
+        {
+            "id": 1,
+            "name": "Apple",
+            "weight": 100.0,
+            "calories": 52.0,
+            "carbohydrates": 14.0,
+            "proteins": 0.3,
+            "fats": 0.2,
+            "sugars": 10.3,
+            "sodium": 0.0,
+            "cholesterol": 0.0,
+            "saturatedFattyAcids": 0.0,
+            "transFattyAcids": 0.0,
+            "buildYear": 2022
+        },
+        {
+            "id": 2,
+            "name": "Chicken Breast",
+            "weight": 150.0,
+            "calories": 165.0,
+            "carbohydrates": 0.0,
+            "proteins": 31.0,
+            "fats": 3.6,
+            "sugars": 0.0,
+            "sodium": 68.0,
+            "cholesterol": 88.0,
+            "saturatedFattyAcids": 1.0,
+            "transFattyAcids": 0.0,
+            "buildYear": 2021
+        }
+    ]
+}
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-2-diet-api) ]
+
+
+
+***
+
+
+
+### Response
+
+### 3. 2. 2 Diet 생성
+
+### Request
+
+- **URL**: `/api/v1/diet`
+- **Method**: `POST`
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Request Body**:
+    ```json
+    {
+        "title": "Sample Diet",
+        "totalCalories": 1500.0,
+        "basalMetabolicRate": 1200.0,
+        "recommendedCaloriesIntake": 1800.0,
+        "foodIds": [1, 2, 3]
+    }
+    ```
+
+### Response
+
+- **Type**: `Long`
+- **Description**: 생성된 식단 데이터의 `ID`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-2-diet-api) ]
+
+
+
+***
+
+
+
+### 3. 2. 3 Diet 수정
+
+### Request
+
+- **URL**: `/api/v1/diet/{id}`
+- **Method**: `PUT`
+- **Path Parameters**:
+    - `id`: 식단 ID
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Request Body**:
+    ```json
+    {
+        "title": "Sample Diet",
+        "totalCalories": 1500.0,
+        "basalMetabolicRate": 1200.0,
+        "recommendedCaloriesIntake": 1800.0,
+        "foodIds": [1, 2, 3]
+    }
+    ```
+
+### Response
+
+- **Type**: `Long`
+- **Description**: 수정된 식단 데이터의 `ID`
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-2-diet-api) ]
+
+
+
+***
+
+
+
+### 3. 2. 4 Diet 삭제
+
+### Request
+
+- **URL**: `/api/v1/diet/{id}`
+- **Method**: `DELETE`
+- **Path Parameters**:
+    - `id`: 식단 ID
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+- **Type**: `None`
+- **Description**: 아무것도 반환하지 않음
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-2-diet-api) ]
+
+
+
+***
+
+
+
+### 3. 2. 5 Diet 추천목록 - List
+
+### Request
+
+- **URL**: `/api/v1/diet/recommend`
+- **Method**: `GET`
+- **Query Parameters**:
+    - `bmiId (Required)`: 추천식단의 기준이 될 BMI ID (ex: `bmiId=1`)
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+
+### Response
+
+```json
+[
+    {
+        "id": 1,
+        "name": "Sample Food 1",
+        "weight": 100.5,
+        "calories": 250.0,
+        "carbohydrates": 35.2,
+        "proteins": 15.7,
+        "fats": 8.9,
+        "sugars": 10.3,
+        "sodium": 200.0,
+        "cholesterol": 25.5,
+        "saturatedFattyAcids": 4.2,
+        "transFattyAcids": 0.8,
+        "buildYear": 2022
+    },
+    {
+        "id": 2,
+        "name": "Sample Food 2",
+        "weight": 150.0,
+        "calories": 300.0,
+        "carbohydrates": 40.0,
+        "proteins": 18.5,
+        "fats": 9.8,
+        "sugars": 12.1,
+        "sodium": 180.0,
+        "cholesterol": 30.2,
+        "saturatedFattyAcids": 3.5,
+        "transFattyAcids": 0.6,
+        "buildYear": 2021
+    },
+    ...
+    ...
+    ...
+    {
+        "id": 9,
+        "name": "Sample Food 9",
+        "weight": 120.3,
+        "calories": 275.8,
+        "carbohydrates": 38.7,
+        "proteins": 17.2,
+        "fats": 9.5,
+        "sugars": 11.9,
+        "sodium": 185.5,
+        "cholesterol": 27.8,
+        "saturatedFattyAcids": 3.9,
+        "transFattyAcids": 0.7,
+        "buildYear": 2023
+    }
+]
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-2-diet-api) ]
+
+
+
+***
+
+
+
+### 3. 2. 6 Diet 목록조회 - Page
+
+### Request
+
+- **URL**: `/api/v1/diet/list`
+- **Method**: `GET`
+- **Headers**:
+    - **Content-Type**: `application/json`
+    - **Authorization**: `Bearer {Your access token}`
+    - **X-Refresh-Token**: `{Your refresh token}`
+- **Query Parameters**:
+    - `page`: 게시글 목록 페이지 번호, (ex: `page=0`)
+    - `size`: 게시글 목록 페이지 크기, (ex: `size=20`)
+    - `sort`: 게시글 목록 정렬 옵션, (ex: `sort=id,desc&sort=title,desc`)
+
+### Response
+
+```json
+{
+    "content": [
+        {
+            "id": 1,
+            "title": "Sample Diet 1",
+            "totalCalories": 1500.0,
+            "basalMetabolicRate": 1200.0,
+            "recommendedCaloriesIntake": 1800.0,
+            "createdDate": "2023-05-28T12:00:00.000",
+            "updatedDate": "2023-05-28T12:00:00.000",
+            "foods": [
+                {
+                    "id": 1,
+                    "name": "Apple",
+                    "weight": 100.0,
+                    "calories": 52.0,
+                    "carbohydrates": 14.0,
+                    "proteins": 0.3,
+                    "fats": 0.2,
+                    "sugars": 10.3,
+                    "sodium": 0.0,
+                    "cholesterol": 0.0,
+                    "saturatedFattyAcids": 0.0,
+                    "transFattyAcids": 0.0,
+                    "buildYear": 2022
+                },
+                {
+                    "id": 2,
+                    "name": "Chicken Breast",
+                    "weight": 150.0,
+                    "calories": 165.0,
+                    "carbohydrates": 0.0,
+                    "proteins": 31.0,
+                    "fats": 3.6,
+                    "sugars": 0.0,
+                    "sodium": 68.0,
+                    "cholesterol": 88.0,
+                    "saturatedFattyAcids": 1.0,
+                    "transFattyAcids": 0.0,
+                    "buildYear": 2021
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "title": "Sample Diet 2",
+            "totalCalories": 1700.0,
+            "basalMetabolicRate": 1250.0,
+            "recommendedCaloriesIntake": 1900.0,
+            "createdDate": "2023-05-28T12:00:00.000",
+            "updatedDate": "2023-05-28T12:00:00.000",
+            "foods": [
+                {
+                    "id": 3,
+                    "name": "Banana",
+                    "weight": 120.0,
+                    "calories": 96.0,
+                    "carbohydrates": 23.0,
+                    "proteins": 1.2,
+                    "fats": 0.2,
+                    "sugars": 17.2,
+                    "sodium": 1.0,
+                    "cholesterol": 0.0,
+                    "saturatedFattyAcids": 0.1,
+                    "transFattyAcids": 0.0,
+                    "buildYear": 2022
+                },
+                {
+                    "id": 4,
+                    "name": "Salmon",
+                    "weight": 120.0,
+                    "calories": 280.0,
+                    "carbohydrates": 0.0,
+                    "proteins": 23.0,
+                    "fats": 20.0,
+                    "sugars": 0.0,
+                    "sodium": 50.0,
+                    "cholesterol": 70.0,
+                    "saturatedFattyAcids": 4.0,
+                    "transFattyAcids": 0.0,
+                    "buildYear": 2021
+                }
+            ]
+        },
+        ...
+    ],
+    "pageable": {
+        "pageNumber": 0,
+        "pageSize": 10,
+        "offset": 0,
+        "paged": true,
+        "unpaged": false
+    },
+    "last": true,
+    "totalPages": 1,
+    "totalElements": 2,
+    "size": 10,
+    "number": 0,
+    "numberOfElements": 2,
+    "first": true,
+    "sort": {
+        "sorted": false,
+        "unsorted": true,
+        "empty": true
+    },
+    "empty": false
+}
+```
+
+[ [처음으로](#rest-api) ]
+[ [뒤로가기](#3-2-diet-api) ]
