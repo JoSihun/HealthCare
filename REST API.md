@@ -53,7 +53,7 @@
         - [3. 2. 2 Diet 생성](#3-2-2-diet-생성)
         - [3. 2. 3 Diet 수정](#3-2-3-diet-수정)
         - [3. 2. 4 Diet 삭제](#3-2-4-diet-삭제)
-        - [3. 2. 5 Diet 추천목록 - List](#3-2-5-diet-목록조회---list)
+        - [3. 2. 5 Diet 추천목록 - List](#3-2-5-diet-추천목록---list)
         - [3. 2. 6 Diet 목록조회 - Page](#3-2-6-diet-목록조회---page)
 
 
@@ -357,7 +357,7 @@
             - **answerYn**: 답변 여부 (ex: `true`, `false`)
             - **secretYn**: 비밀글 여부 (ex: `true`, `false`)
         ```json
-        data: {
+        "data": {
             "title": "글 제목",
             "content": "글 내용",
             "answerYn": false,
@@ -1976,7 +1976,7 @@
     - [3. 2. 2 Diet 생성](#3-2-2-diet-생성)
     - [3. 2. 3 Diet 수정](#3-2-3-diet-수정)
     - [3. 2. 4 Diet 삭제](#3-2-4-diet-삭제)
-    - [3. 2. 5 Diet 추천목록 - List](#3-2-5-diet-목록조회---list)
+    - [3. 2. 5 Diet 추천목록 - List](#3-2-5-diet-추천목록---list)
     - [3. 2. 6 Diet 목록조회 - Page](#3-2-6-diet-목록조회---page)
 
 
