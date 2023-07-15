@@ -1,0 +1,12 @@
+//    /** 첨부파일 목록조회 API - <input> 태그를 위한 */
+//    @GetMapping("/api/v2/attachment")
+//    public ResponseEntity<List<byte[]>> fetchAttachments2(@RequestParam(value = "post") Long postId) {
+//        List<byte[]> fileBytesList = this.attachmentService.getFileBytes(postId);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//        headers.setContentLength(fileBytesList.get(0).length);
+//        headers.setContentDispositionFormData("attachment", "attachments.zip");
+//
+//        return new ResponseEntity<>(fileBytesList, headers, HttpStatus.OK);
+//    }

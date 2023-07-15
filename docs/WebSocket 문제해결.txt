@@ -1,0 +1,26 @@
+확실한건 uuid를 subscribe channel로 설정해야할 듯?
+
+-> Subscribe Channel 후보
+roomId
+roomUuid
+Sender
+message
+=============================================================================
+# 일련의 과정
+
+1) Front 에서 uuid=null 인채로 MessageMapping
+2) Back 에서 uuid 생성 후 해당 채널로 message return
+3) Front 에서 생성된 uuid로 채널변경을 해야함
+But, Back에서 생성된 uuid를 Front에서 전달받을 방법이 없음
+-> 만약 첫 메세지에 한해 Sender 채널을 구독하고 이후 uuid로 변경한다면?
+
+Front에서 방을 변경하면 어떻게 되지?
+Admin 입장에서는 무조건 생성된 방에 한해서 답장을 하는 것이므로 Uuid가 반드시 존재함
+-> Admin 은 항상 Uuid를 Subscribe
+
+User 입장에서는 첫 메세지 전송 시 Uuid가 없음
+-> User 는 첫 메세지에 한해 Sender를 Subscribe
+-> User 는 이후 메세지에 대해 Uuid를 Subscribe
+
+Front 기준 User 입장에서의 첫 메세지 Subscribe Channel 후보
+userId?

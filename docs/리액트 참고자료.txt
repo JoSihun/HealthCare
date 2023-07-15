@@ -1,0 +1,57 @@
+[React.js 라우터 듀토리얼]
+https://velog.io/@velopert/react-router-v6-tutorial#62-navlink
+
+[React.js 파일 업로드]
+https://cookinghoil.tistory.com/114
+
+[React.js 파일 다운로드]
+https://7942yongdae.tistory.com/174
+https://velog.io/@jun_n3/React-Axios%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-%ED%8C%8C%EC%9D%BC-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
+
+=============================================================================
+[SpringBoot 파일 다운로드]
+https://velog.io/@nestour95/Spring-Boot-Form-%EC%9C%BC%EB%A1%9C-%ED%8C%8C%EC%9D%BC-%EC%97%85%EB%A1%9C%EB%93%9C-%EB%B0%8F-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%ED%95%98%EA%B8%B0
+
+[SpringBoot WebSocket Basic]
+https://learnote-dev.com/java/Spring-%EA%B2%8C%EC%8B%9C%ED%8C%90-API-%EB%A7%8C%EB%93%A4%EA%B8%B0-webSocket%EC%9C%BC%EB%A1%9C-%EC%B1%84%ED%8C%85%EC%84%9C%EB%B2%84-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/
+
+[SpringBoot WebSocket STOMP]
+https://ws-pace.tistory.com/106
+https://dev-gorany.tistory.com/235
+https://ppaksang.tistory.com/18
+https://velog.io/@rainbowweb/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-STOMP%EB%A1%9C-%EC%B1%84%ED%8C%85%EB%B0%A9-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
+
+[SpringBoot WebSocket with React]
+https://velog.io/@postlist/SpringBoot-WebSocket-%EB%A7%8C%EB%93%A4%EA%B8%B0-React-%EC%B1%84%ED%8C%85%EA%B5%AC%ED%98%84
+
+=============================================================================
+[DEBUGGING 영속성 삭제 문제] - java.lang.IllegalArgumentException: Removing a detached instance
+https://www.inflearn.com/questions/56718/cascade-cascadetype-all%EC%A7%88%EB%AC%B8
+https://okky.kr/articles/439344
+
+결론부터 말씀드리면 upload를 삭제해도, post->upload 연관관계가 cascade로 남아있기 때문에 삭제가 안됩니다.
+em.remove()와 post->upload의 cascade 연관관계가 서로 충돌하는 것이지요. 하나는 지우려 하고, 하나는 cascade 관계인데 연관관계에 객체가 남아있으니 저장하려고 하고... 그래서 삭제되지 않고, 남아있습니다.
+해결방법은 post->upload의 연관관계를 다음처럼 끊어주면 됩니다.
+post.getUploadList().remove(findUpload);
+그려면 연관관계가 없으니 cascade의 효과가 사라지겠지요
+
+Hibernate는 트렌젝션이 끝나거나 em.detach(entity); 를 하면 영속성 컨텍스트에서 해당 엔티티를 관리하지 않는데 이미 detach된 그니까 영속성 컨텍스트가 관리하고 있지 않은 entity를 remove하려고 난 에러입니다.
+
+=============================================================================
+[React 디렉토리 구조 1]
+https://velog.io/@sisofiy626/React-%EB%A6%AC%EC%95%A1%ED%8A%B8%EC%9D%98-%ED%8F%B4%EB%8D%94-%EA%B5%AC%EC%A1%B0
+
+[React 디렉토리 구조 2]
+https://thinkforthink.tistory.com/373
+
+[React API 모듈 분리 기초 - 1]
+https://ghost4551.tistory.com/163
+
+[React API 모듈 분리 기초 - 2]
+https://velog.io/@edie_ko/React-%EC%9C%A0%EC%A7%80-%EB%B3%B4%EC%88%98%EB%A5%BC-%EC%9C%84%ED%95%9C-API-%ED%86%B5%EC%8B%A0%EC%9D%80-%EC%96%B4%EB%96%BB%EA%B2%8C-%ED%95%A0%EA%B9%8C-Axios-%EB%AA%A8%EB%93%88%ED%99%94#%EC%9E%90-%EC%9D%BC%EB%8B%A8-%EB%B0%9B%EC%9D%80-%ED%94%BC%EB%93%9C%EB%B0%B1%EC%9D%84-%EC%A0%95%EB%A6%AC%ED%95%B4%EB%B3%B4%EC%9E%90%EB%A9%B4
+
+[React API 모듈 분리 핵심 - 1]
+https://pinokio0702.tistory.com/373
+
+[React API 모듈 분리 핵심 - 2]
+https://velog.io/@yiyb0603/React%EC%97%90%EC%84%9C-axios-%EC%BB%A4%EC%8A%A4%ED%85%80%ED%95%98%EA%B8%B0

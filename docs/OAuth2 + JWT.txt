@@ -1,0 +1,57 @@
+[SpringSecurity + JWT + MySQL] - 10분 동영상 강의, 정리 깔끔
+https://www.youtube.com/watch?v=DCKE-bWYFxg&ab_channel=KyeongrokKim
+
+[SpringSecurity + JWT + React] - 기초 수준, 정리 깔끔, 내용이 별로
+https://coor.tistory.com/11
+
+[SpringSecurity + JWT + React] - 기초 수준, 정리 깔끔, 아직 미시도
+https://dgblog.tistory.com/276
+
+[SpringSecurity + JWT + MySQL + React] - 기초 수준, 정리 깔끔
+https://velog.io/@juno0713/Spring-Security-JWT-React-w3wpg5yi
+
+=============================================================================
+[OAuth2 + JWT] - 깔끔하지만 파일 많음
+https://europani.github.io/spring/2022/01/15/036-oauth2-jwt.html#h-oauth2--jwt-flow
+
+[OAuth2 + JWT] - 깔끔한데 파일 일부 빠짐
+https://velog.io/@jkijki12/Spring-Boot-OAuth2-JWT-%EC%A0%81%EC%9A%A9%ED%95%B4%EB%B3%B4%EB%A6%AC%EA%B8%B0#oauth2-atrribute-%EA%B5%AC%ED%98%84
+
+[OAuth2 + JWT] - 너무 복잡합
+https://deeplify.dev/back-end/spring/oauth2-social-login#%EB%B0%B1%EC%97%94%EB%93%9C-oauth-%EB%A1%9C%EA%B7%B8%EC%9D%B8
+
+=============================================================================
+com.example.myapp
+├── controller
+│   ├── UserController.java
+│   └── AuthController.java
+├── service
+│   ├── UserService.java
+│   └── AuthService.java
+├── repository
+│   ├── UserRepository.java
+│   └── AuthRepository.java
+├── entity
+│   ├── User.java
+│   └── Auth.java
+├── config
+│   ├── JwtTokenProvider.java
+│   └── WebSecurityConfig.java
+├── dto
+│   ├── user
+│   │   ├── UserRequestDto.java
+│   │   └── UserResponseDto.java
+│   └── auth
+│       ├── AuthRequestDto.java
+│       └── AuthResponseDto.java
+├── security
+│   ├── JwtAuthenticationEntryPoint.java
+│   ├── JwtAuthenticationException.java
+│   ├── JwtAuthenticationFilter.java
+│   └── UserDetailsServiceImpl.java
+└── util
+    └── JwtUtils.java
+
+
+Based on following structure and codes, Give me the detail codes about DTOs considering the use of JWT later:
+Based on following structure, Give me the detail codes about configs considering the use of JWT later:
